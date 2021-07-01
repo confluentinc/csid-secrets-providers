@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.apache.kafka.common.config.ConfigChangeCallback;
@@ -12,6 +15,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,19 +53,19 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   /**
    * Method is used to retrieve all of the entries that are stored in the specified store.
    *
-   * @param path Name of the store to retrieve data for
+   * @param secretRequest Name of the store to retrieve data for
    * @return Map containing all entries in the specified location. Null if not found.
    * @throws RetriableException Informs the caller that an exception has occurred but the operation can be retried.
    */
-  protected abstract Map<String, String> getSecret(String path) throws Exception;
+  protected abstract Map<String, String> getSecret(SecretRequest secretRequest) throws Exception;
 
   @Override
-  public Map<String, String> retrieveSecret(String path) {
+  public Map<String, String> retrieveSecret(SecretRequest secretRequest) {
     Future<Map<String, String>> future;
 
     Callable<Map<String, String>> callable = () -> {
-      log.debug("retrieveSecret() - Calling getSecret('{}')", path);
-      return getSecret(path);
+      log.debug("retrieveSecret() - Calling getSecret('{}')", secretRequest);
+      return getSecret(secretRequest);
     };
 
     Exception lastException = null;
@@ -70,10 +74,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
       attempt++;
       log.trace("retrieveSecret() - attempt {} of {}", attempt, this.config.retryCount);
       if (1 == attempt) {
-        log.debug("retrieveSecret() - Submitting first attempt for '{}' to run immediately.", path);
+        log.debug("retrieveSecret() - Submitting first attempt for '{}' to run immediately.", secretRequest);
         future = this.executorService.submit(callable);
       } else {
-        log.debug("retrieveSecret() - Submitting attempt {} for '{}' to run in {} seconds", attempt, path, this.config.retryIntervalSeconds);
+        log.debug("retrieveSecret() - Submitting attempt {} for '{}' to run in {} seconds", attempt, secretRequest, this.config.retryIntervalSeconds);
         future = this.executorService.schedule(callable, this.config.retryIntervalSeconds, TimeUnit.SECONDS);
       }
       log.trace("retrieveSecret() - {}", this.executorService);
@@ -86,23 +90,23 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
           lastException = ex;
         } else {
           log.error("retrieveSecret() - Exception thrown. Not retriable.", ex.getCause());
-          throw createConfigException(path, ex.getCause());
+          throw createConfigException(secretRequest, ex.getCause());
         }
       } catch (TimeoutException ex) {
-        log.warn("retrieveSecret() - Timeout calling getSecret('{}'). Retrying if attempt(s) are available.", path);
+        log.warn("retrieveSecret() - Timeout calling getSecret('{}'). Retrying if attempt(s) are available.", secretRequest);
         if (!future.isDone()) {
           future.cancel(true);
         }
         lastException = ex;
       } catch (InterruptedException ex) {
-        throw createConfigException(path, ex);
+        throw createConfigException(secretRequest, ex);
       }
     }
 
-    throw createConfigException(path, lastException);
+    throw createConfigException(secretRequest, lastException);
   }
 
-  ConfigException createConfigException(String storeName, Throwable causedBy) {
+  ConfigException createConfigException(SecretRequest storeName, Throwable causedBy) {
     ConfigException configException = new ConfigException(
         String.format("Exception thrown while retrieving '%s'. See log for previous exceptions", storeName)
     );
@@ -110,21 +114,31 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     return configException;
   }
 
+  static SecretRequest parse(String path) {
+    return ImmutableSecretRequest.builder()
+        .path(path)
+        .raw(path)
+        .version(Optional.empty())
+        .build();
+  }
+
   public ConfigData get(String path) {
     return get(path, Collections.emptySet());
   }
 
   public ConfigData get(String path, Set<String> keys) {
-    log.debug("get(path = '{}' keys = '{}'", path, keys);
-    Map<String, String> data = retrieveSecret(path);
+    log.debug("get(request = '{}' keys = '{}'", path, keys);
+    SecretRequest request = parse(path);
+
+    Map<String, String> data = retrieveSecret(request);
     //TODO: Verify this functionality.
     if (null == data) {
-      log.error("get() - Could not find path '{}}'", path);
+      log.error("get() - Could not find request '{}}'", request);
       throw new ConfigException(
-          String.format("Could not find secret for path '%s'", path)
+          String.format("Could not find secret for request '%s'", request)
       );
     }
-    this.configDataHasher.updateHash(path, data);
+    this.configDataHasher.updateHash(request, data);
 
     Map<String, String> result;
 
@@ -174,13 +188,14 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     if (!this.config.pollingEnabled) {
       throw new UnsupportedOperationException();
     }
+    SecretRequest request = parse(path);
     Subscription.Key key = ImmutableKey.builder()
         .keys(keys)
         .build();
-    log.info("subscribe(path = '{}' keys='{}')", path, keys);
-    Subscription subscription = this.subscriptions.compute(path, (s, existing) -> {
+    log.info("subscribe(request = '{}' keys='{}')", request, keys);
+    Subscription subscription = this.subscriptions.compute(request.raw(), (s, existing) -> {
       ImmutableSubscription.Builder builder = ImmutableSubscription.builder()
-          .path(path);
+          .path(request.raw());
 
       ImmutableState.Builder stateBuilder;
 
@@ -214,7 +229,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
             new UpdateHandler(
                 this.configDataHasher,
                 this.subscriptions,
-                path,
+                request,
                 this,
                 this.executorService
             ),
@@ -241,21 +256,22 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     if (!this.config.pollingEnabled) {
       throw new UnsupportedOperationException();
     }
+    SecretRequest request = parse(path);
     Subscription.Key key = ImmutableKey.builder()
         .keys(keys)
         .build();
-    log.info("unsubscribe(path = '{}' keys='{}')", path, keys);
-    this.subscriptions.compute(path, (s, existing) -> {
+    log.info("unsubscribe(request = '{}' keys='{}')", request, keys);
+    this.subscriptions.compute(request.raw(), (s, existing) -> {
       if (null == existing) {
         return null;
       }
       Subscription.State state = existing.states().get(key);
       if (null == state) {
-        log.info("unsubscribe(path = '{}' keys='{}') - subscription for keys does not exist.", path, keys);
+        log.info("unsubscribe(request = '{}' keys='{}') - subscription for keys does not exist.", request, keys);
         return existing;
       }
       if (!state.callbacks().contains(callback)) {
-        log.info("unsubscribe(path = '{}' keys='{}') - callback for keys does not exist.", path, keys);
+        log.info("unsubscribe(request = '{}' keys='{}') - callback for keys does not exist.", request, keys);
         return existing;
       }
       ImmutableSubscription.Builder subscriptionBuilder = ImmutableSubscription.builder()
@@ -270,11 +286,11 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
             .forEach(stateBuilder::addCallbacks);
         states.put(key, stateBuilder.build());
       } else {
-        log.debug("unsubscribe(path = '{}' keys='{}') - removing all callbacks.", path, keys);
+        log.debug("unsubscribe(request = '{}' keys='{}') - removing all callbacks.", request, keys);
         states.remove(key);
       }
       if (states.isEmpty()) {
-        log.debug("unsubscribe() - No subscriptions for path '{}'. Removing monitor.", path);
+        log.debug("unsubscribe() - No subscriptions for request '{}'. Removing monitor.", request);
         existing.future().cancel(true);
         return null;
       } else {

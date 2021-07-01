@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.apache.kafka.common.config.ConfigChangeCallback;
@@ -151,7 +154,7 @@ public class AbstractConfigProviderTests {
         "port", "54321"
     );
     final String path = "secret-1234";
-    when(this.provider.getSecret(path)).thenReturn(expected);
+    when(this.provider.getSecret(any())).thenReturn(expected);
 
     ConfigData actual = this.provider.get(path);
     verifyExecutorService(1, 0);
@@ -168,7 +171,7 @@ public class AbstractConfigProviderTests {
         "port", "54321"
     );
     final String path = "secret-1234";
-    when(this.provider.getSecret(path))
+    when(this.provider.getSecret(any()))
         .thenThrow(new RetriableException("It broke once"))
         .thenThrow(new RetriableException("It broke twice"))
         .thenReturn(expected);
@@ -197,7 +200,7 @@ public class AbstractConfigProviderTests {
         "password", "afg789dfgadf7a"
     );
     final String path = "secret-1234";
-    when(this.provider.getSecret(path)).thenReturn(input);
+    when(this.provider.getSecret(any())).thenReturn(input);
     ConfigData actual = this.provider.get(path, setOf("username", "password"));
     verifyExecutorService(1, 0);
     assertConfigData(expected, null, actual);
@@ -208,7 +211,7 @@ public class AbstractConfigProviderTests {
     this.provider.configure(this.settings);
 
     final String path = "secret-1234";
-    when(this.provider.getSecret(path)).thenReturn(null);
+    when(this.provider.getSecret(any())).thenReturn(null);
     assertThrows(ConfigException.class, () -> {
       ConfigData actual = this.provider.get(path);
     });
@@ -220,7 +223,7 @@ public class AbstractConfigProviderTests {
   public void getException() throws Exception {
     this.provider.configure(this.settings);
     final String path = "secret-1234";
-    when(this.provider.getSecret(path)).thenThrow(new IllegalStateException("Something is broke"));
+    when(this.provider.getSecret(any())).thenThrow(new IllegalStateException("Something is broke"));
     assertThrows(ConfigException.class, () -> {
       this.provider.get(path);
     });
@@ -253,7 +256,7 @@ public class AbstractConfigProviderTests {
     );
     final String path = "test";
     final Set<String> keys = setOf("username", "password");
-    when(this.provider.getSecret(path))
+    when(this.provider.getSecret(any()))
         .thenReturn(initial)
         .thenReturn(updated)
         .thenReturn(updated);
@@ -292,7 +295,7 @@ public class AbstractConfigProviderTests {
     );
     final String path = "test";
     final Set<String> keys = setOf("username", "password");
-    when(this.provider.getSecret(path))
+    when(this.provider.getSecret(any()))
         .thenReturn(mapOf(
             "username", "db123",
             "password", "afg789dfgadf7a"

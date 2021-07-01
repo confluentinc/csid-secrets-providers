@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.apache.kafka.common.config.ConfigDef;

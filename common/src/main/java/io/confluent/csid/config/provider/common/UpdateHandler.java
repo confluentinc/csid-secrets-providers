@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.apache.kafka.common.config.ConfigChangeCallback;
@@ -18,11 +21,11 @@ class UpdateHandler implements Runnable {
   private static final Logger log = LoggerFactory.getLogger(UpdateHandler.class);
   final ConfigDataHasher configDataHasher;
   final Map<String, Subscription> subscriptions;
-  final String path;
+  final SecretRequest path;
   final SecretRetriever secretRetriever;
   final ScheduledExecutorService executorService;
 
-  UpdateHandler(ConfigDataHasher configDataHasher, Map<String, Subscription> subscriptions, String path, SecretRetriever secretRetriever, ScheduledExecutorService executorService) {
+  UpdateHandler(ConfigDataHasher configDataHasher, Map<String, Subscription> subscriptions, SecretRequest path, SecretRetriever secretRetriever, ScheduledExecutorService executorService) {
     this.configDataHasher = configDataHasher;
     this.subscriptions = subscriptions;
     this.path = path;
@@ -32,7 +35,7 @@ class UpdateHandler implements Runnable {
 
   @Override
   public void run() {
-    final Subscription subscription = this.subscriptions.get(this.path);
+    final Subscription subscription = this.subscriptions.get(this.path.raw());
     if (null == subscription) {
       log.warn("run() - No subscriptions were found for '{}'", this.path);
       return;
@@ -56,7 +59,7 @@ class UpdateHandler implements Runnable {
           for (ConfigChangeCallback callback : e.getValue().callbacks()) {
             log.debug("run() - handing callback to executor for {}", callback);
             this.executorService.submit(() -> {
-              callback.onChange(this.path, configData);
+              callback.onChange(this.path.raw(), configData);
             });
           }
         });

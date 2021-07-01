@@ -1,9 +1,13 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.vault;
 
 import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.response.LogicalResponse;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
+import io.confluent.csid.config.provider.common.SecretRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,10 +41,10 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   );
 
   @Override
-  protected Map<String, String> getSecret(String path) throws Exception {
-    log.info("getSecret() - path = '{}'", path);
+  protected Map<String, String> getSecret(SecretRequest request) throws Exception {
+    log.info("getSecret() - request = '{}'", request);
     try {
-      LogicalResponse response = this.vaultClient.read(path);
+      LogicalResponse response = this.vaultClient.read(request.path());
       return response.getData();
     } catch (VaultException ex) {
       if (RETRIABLE.contains(ex.getHttpStatusCode())) {

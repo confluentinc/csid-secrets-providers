@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 public class RetriableException extends org.apache.kafka.common.errors.RetriableException {

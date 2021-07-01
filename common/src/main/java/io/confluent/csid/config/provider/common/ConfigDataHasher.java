@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.immutables.value.Value;
@@ -53,14 +56,14 @@ class ConfigDataHasher {
     }
   }
 
-  public Set<String> updateHash(String path, Map<String, String> configData) {
+  public Set<String> updateHash(SecretRequest path, Map<String, String> configData) {
     final Set<String> result = new LinkedHashSet<>();
     final ConfigDataState newState = ConfigDataState.build(configData);
     /*
       The following code path is going to compare the new and old to see
       if there are differences.
      */
-    this.paths.compute(path, (s, existing) -> {
+    this.paths.compute(path.raw(), (s, existing) -> {
       if (null != existing) {
         Set<String> keys = new LinkedHashSet<>();
         keys.addAll(newState.hashes().keySet());

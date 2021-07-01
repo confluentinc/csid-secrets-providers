@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.common;
 
 import org.junit.jupiter.api.Test;
@@ -33,7 +36,7 @@ public class ConfigDataHasherTests {
   @Test
   public void updateHash() {
     ConfigDataHasher configDataHasher = new ConfigDataHasher();
-    final String path = "test";
+    final SecretRequest path = AbstractConfigProvider.parse("test");
     Set<String> value = configDataHasher.updateHash(path, mapOf(
         "username", "user00",
         "password", "pasdf5tsfgsdfg"

@@ -1,3 +1,6 @@
+/**
+ * Copyright Confluent
+ */
 package io.confluent.csid.config.provider.vault;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
