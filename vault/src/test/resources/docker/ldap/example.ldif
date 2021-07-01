@@ -1,0 +1,61 @@
+dn: ou=users,dc=example,dc=org
+objectclass: organizationalUnit
+objectclass: top
+ou: users
+
+dn: ou=groups,dc=example,dc=org
+objectclass: organizationalUnit
+objectclass: top
+ou: groups
+
+dn: cn=user1,ou=users,dc=example,dc=org
+cn: user1
+gidnumber: 500
+givenname: user1
+homedirectory: /home/users/user1
+loginshell: /bin/sh
+objectclass: inetOrgPerson
+objectclass: posixAccount
+objectclass: top
+sn: user1
+uid: ldapUser1
+uidnumber: 1003
+mail: ldapUser1@example.org
+userpassword: password
+
+dn: cn=user2,ou=users,dc=example,dc=org
+cn: user2
+gidnumber: 600
+givenname: user2
+homedirectory: /home/users/user2
+loginshell: /bin/sh
+objectclass: inetOrgPerson
+objectclass: posixAccount
+objectclass: top
+sn: user2
+uid: ldapUser2
+uidnumber: 1004
+mail: ldapUser2@example.org
+userpassword: password
+
+dn: cn=user3,ou=users,dc=example,dc=org
+cn: user3
+gidnumber: 700
+givenname: user3
+homedirectory: /home/users/user3
+loginshell: /bin/sh
+objectclass: inetOrgPerson
+objectclass: posixAccount
+objectclass: top
+sn: user3
+uid: ldapUser3
+uidnumber: 1005
+mail: ldapUser3@example.org
+userpassword: password
+
+dn: cn=vault,ou=groups,dc=example,dc=org
+objectClass: top
+objectClass: posixGroup
+cn: vault
+gidNumber: 678
+memberUid: user1

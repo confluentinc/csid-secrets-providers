@@ -1,0 +1,35 @@
+version: "3.0"
+services:
+  ldap:
+    image: osixia/openldap:1.5.0
+    volumes:
+      - "./example.ldif:/container/service/slapd/assets/config/bootstrap/ldif/example.ldif"
+    ports:
+      - "389"
+      - "636"
+    environment:
+      LDAP_READONLY_USER: "true"
+    command:
+      - "--copy-service"
+  vault:
+    image: "vault:1.6.3"
+    depends_on:
+      - ldap
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: kxbfgiertgibadsf
+    ports:
+      - "8200"
+  vaultsetup:
+    image: "vault:1.6.3"
+    depends_on:
+      - vault
+      - ldap
+    volumes:
+      - "./ldap-policy.hcl:/ldap-policy.hcl"
+      - "./configure.sh:/configure.sh"
+    entrypoint: "/bin/sh -c /configure.sh"
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: kxbfgiertgibadsf

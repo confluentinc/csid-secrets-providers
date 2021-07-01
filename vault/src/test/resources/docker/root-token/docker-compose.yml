@@ -1,0 +1,10 @@
+version: "3.0"
+services:
+  vault:
+    image: "vault:1.6.3"
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: kxbfgiertgibadsf
+    ports:
+      - "8200"
