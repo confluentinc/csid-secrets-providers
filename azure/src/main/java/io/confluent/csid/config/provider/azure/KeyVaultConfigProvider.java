@@ -74,7 +74,8 @@ public class KeyVaultConfigProvider extends AbstractConfigProvider<KeyVaultConfi
   }
 
 
-  public static ConfigDef config() {
+  @Override
+  public ConfigDef config() {
     return KeyVaultConfigProviderConfig.config();
   }
 }

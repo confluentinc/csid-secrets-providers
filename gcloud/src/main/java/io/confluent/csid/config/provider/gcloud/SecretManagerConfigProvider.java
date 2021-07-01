@@ -101,7 +101,8 @@ public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretMa
     super.close();
   }
 
-  public static ConfigDef config() {
+  @Override
+  public ConfigDef config() {
     return SecretManagerConfigProviderConfig.config();
   }
 }

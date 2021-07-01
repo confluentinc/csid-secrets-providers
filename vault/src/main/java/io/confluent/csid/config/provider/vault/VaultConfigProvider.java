@@ -8,6 +8,7 @@ import com.bettercloud.vault.response.LogicalResponse;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
 import io.confluent.csid.config.provider.common.SecretRequest;
+import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,5 +54,10 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
         throw ex;
       }
     }
+  }
+
+  @Override
+  public ConfigDef config() {
+    return VaultConfigProviderConfig.config();
   }
 }

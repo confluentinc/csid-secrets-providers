@@ -83,7 +83,9 @@ public class SecretsManagerConfigProvider extends AbstractConfigProvider<Secrets
     super.close();
   }
 
-  public static ConfigDef config() {
+
+  @Override
+  public ConfigDef config() {
     return SecretsManagerConfigProviderConfig.config();
   }
 }

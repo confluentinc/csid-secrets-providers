@@ -5,6 +5,7 @@ package io.confluent.csid.config.provider.common;
 
 import org.apache.kafka.common.config.ConfigChangeCallback;
 import org.apache.kafka.common.config.ConfigData;
+import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.config.provider.ConfigProvider;
 import org.slf4j.Logger;
@@ -59,6 +60,13 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
    * @throws RetriableException Informs the caller that an exception has occurred but the operation can be retried.
    */
   protected abstract Map<String, String> getSecret(SecretRequest secretRequest) throws Exception;
+
+  /**
+   * Return a copy of the ConfigDef to help with documentation.
+   *
+   * @return
+   */
+  public abstract ConfigDef config();
 
   @Override
   public Map<String, String> retrieveSecret(SecretRequest secretRequest) {
