@@ -6,8 +6,7 @@ package io.confluent.csid.config.provider.aws;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.confluent.csid.config.provider.common.AbstractConfigProvider;
+import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.confluent.csid.config.provider.common.docs.Description;
 import io.confluent.csid.config.provider.common.docs.DocumentationSection;
@@ -39,12 +38,11 @@ import java.util.Map;
             "")
     }
 )
-public class SecretsManagerConfigProvider extends AbstractConfigProvider<SecretsManagerConfigProviderConfig> {
+public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerConfigProviderConfig config;
   SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
   AWSSecretsManager secretsManager;
-  ObjectMapper mapper = new ObjectMapper();
 
   @Override
   protected SecretsManagerConfigProviderConfig config(Map<String, ?> settings) {
@@ -53,6 +51,7 @@ public class SecretsManagerConfigProvider extends AbstractConfigProvider<Secrets
 
   @Override
   protected void configure() {
+    super.configure();
     this.secretsManager = this.secretsManagerFactory.create(this.config);
   }
 
@@ -61,17 +60,17 @@ public class SecretsManagerConfigProvider extends AbstractConfigProvider<Secrets
     GetSecretValueRequest request = new GetSecretValueRequest()
         .withSecretId(secretRequest.path());
     secretRequest.version().ifPresent(request::withVersionId);
-
+    log.trace("getSecret() - request = {}", request);
     GetSecretValueResult result = this.secretsManager.getSecretValue(request);
 
     if (null != result.getSecretString()) {
-      return mapper.readValue(result.getSecretString(), Map.class);
+      return readJsonValue(result.getSecretString());
     } else if (null != result.getSecretBinary()) {
-      byte[] arr = new byte[result.getSecretBinary().remaining()];
-      result.getSecretBinary().get(arr);
-      return mapper.readValue(arr, Map.class);
+      return readJsonValue(result.getSecretBinary());
     } else {
-      throw new ConfigException("");
+      throw new ConfigException(
+          "Result from AWSSecretsManager did not return value for getSecretString() or getSecretBinary(). Cannot proceed."
+      );
     }
   }
 

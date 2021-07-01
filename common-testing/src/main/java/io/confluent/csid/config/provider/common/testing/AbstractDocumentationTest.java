@@ -25,6 +25,11 @@ public abstract class AbstractDocumentationTest {
 
   protected abstract List<Class<? extends ConfigProvider>> providers();
 
+  /**
+   * Test is used to ensure that the META-INF/services file is properly formatted.
+   * @return
+   * @throws IOException
+   */
   @TestFactory
   public Stream<DynamicTest> metaInfServices() throws IOException {
     Set<String> providers = new LinkedHashSet<>();
@@ -49,6 +54,8 @@ public abstract class AbstractDocumentationTest {
           );
         }));
   }
+
+
 
 
 }

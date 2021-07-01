@@ -4,8 +4,7 @@
 package io.confluent.csid.config.provider.azure;
 
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.confluent.csid.config.provider.common.AbstractConfigProvider;
+import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.confluent.csid.config.provider.common.docs.Description;
 import io.confluent.csid.config.provider.common.docs.DocumentationSection;
@@ -49,13 +48,12 @@ import java.util.Map;
             "+-----------+------------------------------------------------+--------------------------------------------------------------------+------------------------------------------+\n")
     }
 )
-public class KeyVaultConfigProvider extends AbstractConfigProvider<KeyVaultConfigProviderConfig> {
+public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
   KeyVaultConfigProviderConfig config;
   KeyVaultFactory keyVaultFactory = new KeyVaultFactoryImpl();
 
   SecretClientWrapper secretClient;
-  ObjectMapper mapper = new ObjectMapper();
 
   @Override
   protected KeyVaultConfigProviderConfig config(Map<String, ?> settings) {
@@ -64,13 +62,14 @@ public class KeyVaultConfigProvider extends AbstractConfigProvider<KeyVaultConfi
 
   @Override
   protected void configure() {
+    super.configure();
     this.secretClient = this.keyVaultFactory.create(this.config);
   }
 
   @Override
   protected Map<String, String> getSecret(SecretRequest secretRequest) throws Exception {
     KeyVaultSecret response = secretClient.getSecret(secretRequest.path(), secretRequest.version().orElse(null));
-    return mapper.readValue(response.getValue(), Map.class);
+    return readJsonValue(response.getValue());
   }
 
 

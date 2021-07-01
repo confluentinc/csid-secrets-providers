@@ -3,11 +3,10 @@
  */
 package io.confluent.csid.config.provider.gcloud;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
-import io.confluent.csid.config.provider.common.AbstractConfigProvider;
+import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.confluent.csid.config.provider.common.docs.Description;
 import io.confluent.csid.config.provider.common.docs.DocumentationSection;
@@ -54,13 +53,11 @@ import java.util.Map;
             "+-----------+------------------------------------------------+--------------------------------------------------------------------------+------------------------------------------------+")
     }
 )
-public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretManagerConfigProviderConfig> {
+public class SecretManagerConfigProvider extends AbstractJacksonConfigProvider<SecretManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretManagerConfigProvider.class);
   SecretManagerFactory secretManagerFactory = new SecretManagerFactoryImpl();
-
   SecretManagerServiceClient secretManager;
 
-  ObjectMapper mapper = new ObjectMapper();
 
   @Override
   protected SecretManagerConfigProviderConfig config(Map<String, ?> settings) {
@@ -69,6 +66,7 @@ public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretMa
 
   @Override
   protected void configure() {
+    super.configure();
     this.secretManager = this.secretManagerFactory.create(this.config);
   }
 
@@ -89,8 +87,7 @@ public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretMa
         .setName(path.toString())
         .build();
     AccessSecretVersionResponse response = this.secretManager.accessSecretVersion(accessSecretVersionRequest);
-    return mapper.readValue(response.getPayload().getData().toByteArray(), Map.class);
-
+    return readJsonValue(response.getPayload().getData().toByteArray());
   }
 
   @Override
