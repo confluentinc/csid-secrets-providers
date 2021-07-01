@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +26,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+
+import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
 
 public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever {
   private static final Logger log = LoggerFactory.getLogger(AbstractConfigProvider.class);
@@ -112,14 +113,6 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     );
     configException.initCause(causedBy);
     return configException;
-  }
-
-  static SecretRequest parse(String path) {
-    return ImmutableSecretRequest.builder()
-        .path(path)
-        .raw(path)
-        .version(Optional.empty())
-        .build();
   }
 
   public ConfigData get(String path) {

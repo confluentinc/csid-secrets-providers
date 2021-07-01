@@ -44,7 +44,7 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   protected Map<String, String> getSecret(SecretRequest request) throws Exception {
     log.info("getSecret() - request = '{}'", request);
     try {
-      LogicalResponse response = this.vaultClient.read(request.path());
+      LogicalResponse response = this.vaultClient.read(request);
       return response.getData();
     } catch (VaultException ex) {
       if (RETRIABLE.contains(ex.getHttpStatusCode())) {

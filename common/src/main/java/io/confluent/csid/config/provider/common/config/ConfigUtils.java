@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -63,4 +64,11 @@ public class ConfigUtils {
     return builder.toString();
   }
 
+  public static String enumValues(Class<?> enumClass) {
+    StringJoiner joiner = new StringJoiner(", ");
+    Stream.of(enumClass.getEnumConstants())
+        .map(Object::toString)
+        .forEach(joiner::add);
+    return joiner.toString();
+  }
 }

@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class VaultConfigProviderTests {
@@ -45,7 +46,7 @@ public class VaultConfigProviderTests {
   @Test
   public void getSecretNotFound() throws VaultException {
     this.configProvider.configure(this.settings);
-    addVaultException(when(this.vaultClient.read(anyString())), 404, "not found");
+    addVaultException(when(this.vaultClient.read(any())), 404, "not found");
     assertThrows(ConfigException.class, () -> {
       this.configProvider.get("secret/foo");
     });
@@ -74,11 +75,30 @@ public class VaultConfigProviderTests {
                 .build()
         ).build();
 
-    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(anyString()));
+    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
     stub = addLogicalResponse(stub, 200, expected);
 
 
     ConfigData actual = this.configProvider.get("secret/foo");
+    assertNotNull(actual);
+    assertEquals(expected.data().data(), actual.data());
+  }
+  @Test
+  public void getVersioned() throws Exception {
+    this.configProvider.configure(this.settings);
+    Body expected = ImmutableBody.builder()
+        .data(
+            ImmutableData.builder()
+                .putData("username", "db01")
+                .putData("password", "asdfiasdfasdf")
+                .build()
+        ).build();
+
+    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
+    stub = addLogicalResponse(stub, 200, expected);
+
+
+    ConfigData actual = this.configProvider.get("secret/foo?version=1234");
     assertNotNull(actual);
     assertEquals(expected.data().data(), actual.data());
   }
@@ -95,7 +115,7 @@ public class VaultConfigProviderTests {
                 .build()
         ).build();
 
-    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(anyString()));
+    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
     stub = addVaultException(stub, 503, "Vault Sealed");
     stub = addVaultException(stub, 503, "Vault Sealed");
     stub = addLogicalResponse(stub, 200, expected);

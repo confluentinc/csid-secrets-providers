@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.Set;
 
+import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
 import static io.confluent.csid.config.provider.common.testing.TestUtils.mapOf;
 import static io.confluent.csid.config.provider.common.testing.TestUtils.setOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +37,7 @@ public class ConfigDataHasherTests {
   @Test
   public void updateHash() {
     ConfigDataHasher configDataHasher = new ConfigDataHasher();
-    final SecretRequest path = AbstractConfigProvider.parse("test");
+    final SecretRequest path = parse("test");
     Set<String> value = configDataHasher.updateHash(path, mapOf(
         "username", "user00",
         "password", "pasdf5tsfgsdfg"

@@ -18,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the Google Cloud Secret Manager service.")
@@ -54,7 +56,6 @@ import java.util.Map;
 )
 public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretManagerConfigProvider.class);
-  SecretManagerConfigProviderConfig config;
   SecretManagerFactory secretManagerFactory = new SecretManagerFactoryImpl();
 
   SecretManagerServiceClient secretManager;
@@ -73,10 +74,19 @@ public class SecretManagerConfigProvider extends AbstractConfigProvider<SecretMa
 
   @Override
   protected Map<String, String> getSecret(SecretRequest request) throws Exception {
-    log.info("get() - request = '{}'", request);
+    log.info("getSecret() - request = '{}'", request);
+    Path path = Paths.get(
+        "projects",
+        this.config.projectId.toString(),
+        "secrets",
+        request.path(),
+        "versions",
+        request.version().orElse("latest")
+    );
+    log.debug("getSecret() - Requesting {}", path);
 
     AccessSecretVersionRequest accessSecretVersionRequest = AccessSecretVersionRequest.newBuilder()
-        .setName(request.path())
+        .setName(path.toString())
         .build();
     AccessSecretVersionResponse response = this.secretManager.accessSecretVersion(accessSecretVersionRequest);
     return mapper.readValue(response.getPayload().getData().toByteArray(), Map.class);

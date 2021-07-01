@@ -7,6 +7,7 @@ import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.response.LogicalResponse;
+import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,6 @@ class VaultClientImpl implements VaultClient {
   final AtomicReference<AuthHandler.AuthResult> authResultStore = new AtomicReference<>();
   final VaultConfigProviderConfig config;
   final ScheduledExecutorService executorService;
-
-
-
 
 
   public VaultClientImpl(VaultConfigProviderConfig config, ScheduledExecutorService executorService) {
@@ -70,6 +68,7 @@ class VaultClientImpl implements VaultClient {
 
     }
   }
+
   static class AuthRokenRenewer implements Runnable {
 
     @Override
@@ -80,10 +79,16 @@ class VaultClientImpl implements VaultClient {
 
 
   @Override
-  public LogicalResponse read(String path) throws VaultException {
-    log.debug("read() - path = '{}'", path);
+  public LogicalResponse read(SecretRequest request) throws VaultException {
+    log.debug("read() - request = '{}'", request);
     Vault vault = this.vaultStore.get();
-    return vault.logical().read(path);
+
+    if (request.version().isPresent()) {
+      Integer version = Integer.parseInt(request.version().get());
+      return vault.logical().read(request.path(), false, version);
+    } else {
+      return vault.logical().read(request.path());
+    }
   }
 
 
