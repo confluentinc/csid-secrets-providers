@@ -1,6 +1,6 @@
 <!--
 
-    Copyright Confluent
+    Copyright Confluent 2021
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -16,6 +16,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>

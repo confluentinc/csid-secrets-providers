@@ -1,5 +1,5 @@
 /**
- * Copyright Confluent
+ * Copyright Confluent 2021
  */
 package io.confluent.csid.config.provider.aws;
 

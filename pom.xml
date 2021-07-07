@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright Confluent
+    Copyright Confluent 2021
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -26,6 +26,7 @@
         <failsafe.version>2.22.2</failsafe.version>
         <maven.checkstyle.version>3.1.2</maven.checkstyle.version>
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
+        <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
     </properties>
 
     <modules>
@@ -90,6 +91,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -111,6 +113,34 @@
         </dependency>
     </dependencies>
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.confluent</groupId>
+                    <artifactId>kafka-connect-maven-plugin</artifactId>
+                    <version>${confluent.hub.packaging.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <id>hub</id>
+                            <goals>
+                                <goal>kafka-connect</goal>
+                            </goals>
+                            <configuration>
+                                <ownerName>Confluent</ownerName>
+                                <ownerUsername>confluent</ownerUsername>
+                                <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+                                <supportUrl>${project.issueManagement.url}</supportUrl>
+                                <supportSummary>Support provided through community involvement.</supportSummary>
+                                <componentTypes>
+                                    <type>Converter</type>
+                                </componentTypes>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>com.mycila</groupId>

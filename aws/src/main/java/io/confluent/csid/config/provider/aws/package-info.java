@@ -1,5 +1,5 @@
 /**
- * Copyright Confluent
+ * Copyright Confluent 2021
  */
 //@PluginOwner("jcustenborder")
 //@PluginName("kafka-config-provider-aws")
