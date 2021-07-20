@@ -34,5 +34,9 @@
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.confluent.csid</groupId>
+            <artifactId>csid-config-provider-annotations</artifactId>
+        </dependency>
     </dependencies>
 </project>

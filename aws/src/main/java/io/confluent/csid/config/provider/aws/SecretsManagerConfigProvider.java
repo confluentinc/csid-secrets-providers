@@ -6,12 +6,13 @@ package io.confluent.csid.config.provider.aws;
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
+import io.confluent.csid.config.provider.annotations.CodeBlock;
+import io.confluent.csid.config.provider.annotations.Description;
+import io.confluent.csid.config.provider.annotations.DocumentationSection;
+import io.confluent.csid.config.provider.annotations.DocumentationSections;
+import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
-import io.confluent.csid.config.provider.common.docs.Description;
-import io.confluent.csid.config.provider.common.docs.DocumentationSection;
-import io.confluent.csid.config.provider.common.docs.DocumentationSections;
-import io.confluent.csid.config.provider.common.docs.DocumentationTip;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
@@ -21,23 +22,25 @@ import java.io.IOException;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the AWS Secrets Manager service.")
-@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @DocumentationSections(
     sections = {
         @DocumentationSection(title = "Secret Value", text = "The value for the secret must be formatted as a JSON object. " +
             "This allows multiple keys of data to be stored in a single secret. The name of the secret in AWS Secrets Manager " +
-            "will correspond to the path that is requested by the config provider.\n" +
-            "\n" +
-            ".. code-block:: json\n" +
-            "    :caption: Example Secret Value\n" +
-            "\n" +
-            "    {\n" +
-            "      \"username\" : \"${secretManager:secret/test/some/connector:username}\",\n" +
-            "      \"password\" : \"${secretManager:secret/test/some/connector:password}\"\n" +
-            "    }\n" +
-            "")
+            "will correspond to the path that is requested by the config provider.",
+            codeblocks = {
+                @CodeBlock(
+                    title = "Example Secret Value",
+                    language = "json",
+                    text = "{\n" +
+                        "  \"username\" : \"appdbsecret\",\n" +
+                        "  \"password\" : \"u$3@b3tt3rp@$$w0rd\"\n" +
+                        "}"
+                )
+            }
+        )
     }
 )
+@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerConfigProviderConfig config;

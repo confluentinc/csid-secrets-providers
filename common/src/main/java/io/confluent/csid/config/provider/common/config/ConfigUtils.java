@@ -3,7 +3,7 @@
  */
 package io.confluent.csid.config.provider.common.config;
 
-import io.confluent.csid.config.provider.common.docs.Description;
+import io.confluent.csid.config.provider.annotations.Description;
 import org.apache.kafka.common.config.AbstractConfig;
 
 import java.lang.reflect.Field;

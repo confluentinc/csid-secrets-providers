@@ -11,6 +11,7 @@ import com.bettercloud.vault.VaultException;
 import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
 import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
 import io.confluent.csid.config.provider.common.config.ConfigUtils;
+import io.confluent.csid.config.provider.common.config.Validators;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.config.types.Password;
@@ -22,19 +23,11 @@ import static io.confluent.csid.config.provider.common.config.ConfigUtils.getEnu
 import static io.confluent.csid.config.provider.common.util.Utils.isNullOrEmpty;
 
 class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
-  public static final String MAX_RETRIES_CONFIG = "vault.max.retries";
-  static final String MAX_RETRIES_DOC = "The number of times that API operations will be retried when a failure occurs.";
-  public static final String MAX_RETRY_INTERVAL_CONFIG = "vault.retry.interval.ms";
-  static final String MAX_RETRY_INTERVAL_DOC = "The number of milliseconds that the driver will wait in between retries.";
   public static final String ADDRESS_CONFIG = "vault.address";
   static final String ADDRESS_DOC = "Sets the address (URL) of the Vault server instance to which API calls should be sent. " +
       "If no address is explicitly set, the object will look to the `VAULT_ADDR` If you do not supply it explicitly AND no " +
       "environment variable value is found, then initialization may fail.";
 
-  public static final String PREFIX_CONFIG = "vault.prefix";
-  static final String PREFIX_DOC = "Sets a prefix that will be added to all paths. For example you can use `staging` or `production` " +
-      "and all of the calls to vault will be prefixed with that path. This allows the same configuration settings to be used across " +
-      "multiple environments.";
   public static final String NAMESPACE_CONFIG = "vault.namespace";
   static final String NAMESPACE_DOC = "Sets a global namespace to the Vault server instance, if desired.";
   public static final String TOKEN_CONFIG = "vault.auth.token";
@@ -44,33 +37,25 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String AUTH_METHOD_CONFIG = "vault.auth.method";
   static final String AUTH_METHOD_DOC = "The login method to use. " + ConfigUtils.enumDescription(AuthMethod.class);
 
-  public static final String MIN_TTL_MS_CONFIG = "vault.secret.minimum.ttl.ms";
-  static final String MIN_TTL_MS_DOC = "The minimum amount of time that a secret should be used. " +
-      "If a secret does not have a TTL associated with it, this setting allows you to override how often " +
-      "the config provider will check for updated secrets.";
-
   public static final String SSL_VERIFY_ENABLED_CONFIG = "vault.ssl.verify.enabled";
   static final String SSL_VERIFY_ENABLED_DOC = "Flag to determine if the configProvider should verify the SSL Certificate " +
       "of the Vault server. Outside of development this should never be enabled.";
 
   public static final String USERNAME_CONFIG = "vault.auth.username";
-  static final String USERNAME_DOC = "vault.auth.username";
+  static final String USERNAME_DOC = "The username to authenticate with.";
   public static final String PASSWORD_CONFIG = "vault.auth.password";
-  static final String PASSWORD_DOC = "vault.auth.password";
+  static final String PASSWORD_DOC = "The password to authenticate with.";
 
   public static final String MOUNT_CONFIG = "vault.auth.mount";
-  static final String MOUNT_DOC = "vault.auth.mount";
+  static final String MOUNT_DOC = "Location of the mount to use for authentication.";
 
   public static final String ROLE_CONFIG = "vault.auth.role";
-  static final String ROLE_DOC = "vault.auth.role";
+  static final String ROLE_DOC = "The role to use for authentication.";
   public static final String SECRET_CONFIG = "vault.auth.secret";
-  static final String SECRET_DOC = "vault.auth.secret";
+  static final String SECRET_DOC = "The secret to use for authentication.";
 
-  public final int maxRetries;
-  public final int retryInterval;
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
-  public final long minimumSecretTTL;
 
   public final String username;
   public final String password;
@@ -94,11 +79,8 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
 
   public VaultConfigProviderConfig(Map<?, ?> originals) {
     super(config(), originals);
-    this.maxRetries = getInt(MAX_RETRIES_CONFIG);
-    this.retryInterval = getInt(MAX_RETRY_INTERVAL_CONFIG);
     this.sslVerifyEnabled = getBoolean(SSL_VERIFY_ENABLED_CONFIG);
     this.authMethod = getEnum(AuthMethod.class, this, AUTH_METHOD_CONFIG);
-    this.minimumSecretTTL = getLong(MIN_TTL_MS_CONFIG);
     this.username = getString(USERNAME_CONFIG);
     this.password = getPassword(PASSWORD_CONFIG).value();
     this.mount = getString(MOUNT_CONFIG);
@@ -134,6 +116,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .documentation(AUTH_METHOD_DOC)
                 .importance(ConfigDef.Importance.HIGH)
                 .defaultValue(AuthMethod.Token.name())
+                .validator(Validators.validEnum(AuthMethod.class))
                 .build()
         )
 
@@ -152,36 +135,10 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .build()
         )
         .define(
-            ConfigKeyBuilder.of(PREFIX_CONFIG, ConfigDef.Type.STRING)
-                .documentation(PREFIX_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue("")
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(MAX_RETRIES_CONFIG, ConfigDef.Type.INT)
-                .documentation(MAX_RETRIES_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue(5)
-                .build()
-        )
-        .define(
-            ConfigKeyBuilder.of(MAX_RETRY_INTERVAL_CONFIG, ConfigDef.Type.INT)
-                .documentation(MAX_RETRY_INTERVAL_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue(2000)
-                .build()
-        ).define(
             ConfigKeyBuilder.of(SSL_VERIFY_ENABLED_CONFIG, ConfigDef.Type.BOOLEAN)
                 .documentation(SSL_VERIFY_ENABLED_DOC)
                 .importance(ConfigDef.Importance.HIGH)
                 .defaultValue(true)
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(MIN_TTL_MS_CONFIG, ConfigDef.Type.LONG)
-                .documentation(MIN_TTL_MS_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue(1000L)
-                .validator(ConfigDef.Range.atLeast(1000L))
                 .build()
         ).define(
             ConfigKeyBuilder.of(USERNAME_CONFIG, ConfigDef.Type.STRING)
@@ -250,10 +207,6 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     Password token = getPassword(TOKEN_CONFIG);
     if (!isNullOrEmpty(token.value())) {
       result = result.token(token.value());
-    }
-    String prefix = getString(PREFIX_CONFIG);
-    if (!isNullOrEmpty(prefix)) {
-      result = result.prefixPath(prefix);
     }
     String namespace = getString(NAMESPACE_CONFIG);
     if (!isNullOrEmpty(namespace)) {

@@ -6,12 +6,13 @@ package io.confluent.csid.config.provider.gcloud;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionRequest;
 import com.google.cloud.secretmanager.v1.AccessSecretVersionResponse;
 import com.google.cloud.secretmanager.v1.SecretManagerServiceClient;
+import io.confluent.csid.config.provider.annotations.CodeBlock;
+import io.confluent.csid.config.provider.annotations.Description;
+import io.confluent.csid.config.provider.annotations.DocumentationSection;
+import io.confluent.csid.config.provider.annotations.DocumentationSections;
+import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
-import io.confluent.csid.config.provider.common.docs.Description;
-import io.confluent.csid.config.provider.common.docs.DocumentationSection;
-import io.confluent.csid.config.provider.common.docs.DocumentationSections;
-import io.confluent.csid.config.provider.common.docs.DocumentationTip;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,16 +28,18 @@ import java.util.Map;
     sections = {
         @DocumentationSection(title = "Secret Value", text = "The value for the secret must be formatted as a JSON object. " +
             "This allows multiple keys of data to be stored in a single secret. The name of the secret in Google Cloud Secret Manager " +
-            "will correspond to the path that is requested by the config provider.\n" +
-            "\n" +
-            ".. code-block:: json\n" +
-            "    :caption: Example Secret Value\n" +
-            "\n" +
-            "    {\n" +
-            "      \"username\" : \"${secretManager:secret/test/some/connector:username}\",\n" +
-            "      \"password\" : \"${secretManager:secret/test/some/connector:password}\"\n" +
-            "    }\n" +
-            ""),
+            "will correspond to the path that is requested by the config provider.",
+            codeblocks = {
+                @CodeBlock(
+                    title = "Example Secret Value",
+                    language = "json",
+                    text = "{\n" +
+                        "  \"username\" : \"db101\",\n" +
+                        "  \"password\" : \"superSecretPassword\"\n" +
+                        "}"
+                )
+            }
+        ),
         @DocumentationSection(title = "Secret Retrieval", text = "The ConfigProvider will use the name of the secret and the project id to " +
             "build the Resource ID for the secret. For example assuming you configured the ConfigProvider with `config.providers.secretsManager.param.project.id=1234` " +
             "and requested the secret with `${secretsManager:test-secret}`, the ConfigProvider will build a Resource ID of `projects/1234/secrets/test-secret/versions/latest`. " +

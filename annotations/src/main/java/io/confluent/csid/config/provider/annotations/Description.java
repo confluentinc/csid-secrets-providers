@@ -1,7 +1,7 @@
 /**
  * Copyright Confluent 2021
  */
-package io.confluent.csid.config.provider.common.docs;
+package io.confluent.csid.config.provider.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DocumentationSections {
-  DocumentationSection[] sections();
+public @interface Description {
+  String value();
 }

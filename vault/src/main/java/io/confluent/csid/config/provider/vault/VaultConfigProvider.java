@@ -5,6 +5,8 @@ package io.confluent.csid.config.provider.vault;
 
 import com.bettercloud.vault.VaultException;
 import com.bettercloud.vault.response.LogicalResponse;
+import io.confluent.csid.config.provider.annotations.Description;
+import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
 import io.confluent.csid.config.provider.common.SecretRequest;
@@ -18,6 +20,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Description("This config provider is used to retrieve secrets from the Hashicorp Vault.")
+@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(VaultConfigProvider.class);
 

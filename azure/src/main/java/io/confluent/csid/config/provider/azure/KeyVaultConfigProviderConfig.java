@@ -15,7 +15,7 @@ import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
 import io.confluent.csid.config.provider.common.config.ConfigUtils;
 import io.confluent.csid.config.provider.common.config.Recommenders;
 import io.confluent.csid.config.provider.common.config.Validators;
-import io.confluent.csid.config.provider.common.docs.Description;
+import io.confluent.csid.config.provider.annotations.Description;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.config.types.Password;

@@ -3,7 +3,7 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import io.confluent.csid.config.provider.common.docs.Description;
+import io.confluent.csid.config.provider.annotations.Description;
 
 enum AuthMethod {
   @Description("Authentication via the `token\n" + "<https://www.vaultproject.io/docs/auth/token>`_. endpoint.")

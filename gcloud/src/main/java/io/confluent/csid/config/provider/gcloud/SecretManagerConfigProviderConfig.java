@@ -5,9 +5,11 @@ package io.confluent.csid.config.provider.gcloud;
 
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.auth.oauth2.GoogleCredentials;
+import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
 import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
 import io.confluent.csid.config.provider.common.config.ConfigUtils;
+import io.confluent.csid.config.provider.common.config.Validators;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
@@ -17,65 +19,40 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Map;
 
 class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   private static final Logger log = LoggerFactory.getLogger(SecretManagerConfigProviderConfig.class);
-  public static final String PREFIX_CONFIG = "secret.prefix";
-  static final String PREFIX_DOC = "Sets a prefix that will be added to all paths. For example you can use `staging` or `production` " +
-      "and all of the calls to Secrets Manager will be prefixed with that path. This allows the same configuration settings to be used across " +
-      "multiple environments.";
-
-  public static final String MIN_TTL_MS_CONFIG = "secret.ttl.ms";
-  static final String MIN_TTL_MS_DOC = "The minimum amount of time that a secret should be used. " +
-      "After this TTL has expired Secrets Manager will be queried again in case there is an updated configuration.";
 
   public static final String CREDENTIAL_LOCATION_CONFIG = "credential.location";
-  public static final String CREDENTIAL_LOCATION_DOC = "asdfasdfasdfasd";
+  static final String CREDENTIAL_LOCATION_DOC = "The location to retrieve the credentials used to access the Google Services. " + ConfigUtils.enumDescription(CredentialLocation.class);
 
   public static final String CREDENTIAL_FILE_CONFIG = "credential.file";
-  public static final String CREDENTIAL_FILE_DOC = "credential.file";
+  static final String CREDENTIAL_FILE_DOC = "Location on the local filesystem to load the credentials.";
 
   public static final String CREDENTIAL_INLINE_CONFIG = "credential.inline";
-  public static final String CREDENTIAL_INLINE_DOC = "credential.inline";
+  static final String CREDENTIAL_INLINE_DOC = "The content of the credentials file embedded as a string.";
   public static final String PROJECT_ID_CONFIG = "project.id";
-  public static final String PROJECT_ID_DOC = "project.id";
+  static final String PROJECT_ID_DOC = "The project that owns the credentials.";
 
-  public final long minimumSecretTTL;
-  public final String prefix;
   public final CredentialLocation credentialLocation;
   public final Long projectId;
 
   public SecretManagerConfigProviderConfig(Map<String, ?> settings) {
     super(config(), settings);
-    this.minimumSecretTTL = getLong(MIN_TTL_MS_CONFIG);
-    this.prefix = getString(PREFIX_CONFIG);
+
     this.credentialLocation = ConfigUtils.getEnum(CredentialLocation.class, this, CREDENTIAL_LOCATION_CONFIG);
-    this.projectId = getLong(PROJECT_ID_DOC);
+    this.projectId = getLong(PROJECT_ID_CONFIG);
   }
 
   public static ConfigDef config() {
     return AbstractConfigProviderConfig.config()
         .define(
-            ConfigKeyBuilder.of(PREFIX_CONFIG, ConfigDef.Type.STRING)
-                .documentation(PREFIX_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue("")
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(MIN_TTL_MS_CONFIG, ConfigDef.Type.LONG)
-                .documentation(MIN_TTL_MS_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue(Duration.ofMinutes(5L).toMillis())
-                .validator(ConfigDef.Range.atLeast(1000L))
-                .build()
-        ).define(
             ConfigKeyBuilder.of(CREDENTIAL_LOCATION_CONFIG, ConfigDef.Type.STRING)
                 .documentation(CREDENTIAL_LOCATION_DOC)
                 .importance(ConfigDef.Importance.HIGH)
                 .defaultValue(CredentialLocation.ApplicationDefault.name())
-//                .validator(Validators.validEnum(CredentialLocation.class))
+                .validator(Validators.validEnum(CredentialLocation.class))
                 .build()
         ).define(
             ConfigKeyBuilder.of(CREDENTIAL_FILE_CONFIG, ConfigDef.Type.STRING)
@@ -98,8 +75,11 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   }
 
   public enum CredentialLocation {
+    @Description("Credentials are retrieved by calling `GoogleCredentials.getApplicationDefault()`")
     ApplicationDefault,
+    @Description("Credentials file is read from the file system in the location specified by `" + CREDENTIAL_FILE_CONFIG + "`")
     File,
+    @Description("The contents of the credentials file are embedded in `" + CREDENTIAL_INLINE_CONFIG + "`")
     Inline
   }
 

@@ -2,10 +2,10 @@
  * Copyright Confluent 2021
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-aws")
-@Introduction("This plugin provides integration with the AWS Secrets Manager service.")
-@Title("AWS Secrets Manager Config Provider")
-package io.confluent.csid.config.provider.aws;
+@PluginName("kafka-config-provider-gcloud")
+@Introduction("This plugin provides integration with the Google Secret Manager service.")
+@Title("Google Secret Manager Config Provider")
+package io.confluent.csid.config.provider.gcloud;
 
 import io.confluent.csid.config.provider.annotations.Introduction;
 import io.confluent.csid.config.provider.annotations.PluginName;

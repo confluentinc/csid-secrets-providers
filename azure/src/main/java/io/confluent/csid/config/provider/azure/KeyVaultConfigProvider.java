@@ -4,12 +4,13 @@
 package io.confluent.csid.config.provider.azure;
 
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
+import io.confluent.csid.config.provider.annotations.CodeBlock;
+import io.confluent.csid.config.provider.annotations.Description;
+import io.confluent.csid.config.provider.annotations.DocumentationSection;
+import io.confluent.csid.config.provider.annotations.DocumentationSections;
+import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.SecretRequest;
-import io.confluent.csid.config.provider.common.docs.Description;
-import io.confluent.csid.config.provider.common.docs.DocumentationSection;
-import io.confluent.csid.config.provider.common.docs.DocumentationSections;
-import io.confluent.csid.config.provider.common.docs.DocumentationTip;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,21 +18,22 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the Microsoft Azure Key Vault service.")
-@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @DocumentationSections(
     sections = {
         @DocumentationSection(title = "Secret Value", text = "The value for the secret must be formatted as a JSON object. " +
             "This allows multiple keys of data to be stored in a single secret. The name of the secret in Microsoft Azure Key Vault " +
-            "will correspond to the path that is requested by the config provider.\n" +
-            "\n" +
-            ".. code-block:: json\n" +
-            "    :caption: Example Secret Value\n" +
-            "\n" +
-            "    {\n" +
-            "      \"username\" : \"db101\",\n" +
-            "      \"password\" : \"superSecretPassword\"\n" +
-            "    }\n" +
-            ""),
+            "will correspond to the path that is requested by the config provider.",
+            codeblocks = {
+                @CodeBlock(
+                    title = "Example Secret Value",
+                    language = "json",
+                    text = "{\n" +
+                        "  \"username\" : \"db101\",\n" +
+                        "  \"password\" : \"superSecretPassword\"\n" +
+                        "}"
+                )
+            }
+        ),
         @DocumentationSection(title = "Secret Retrieval", text = "The ConfigProvider will use the name of the secret to build the request to the Key Vault service. " +
             "This behavior can be overridden by setting `config.providers.keyVault.param.prefix=staging-` and requested the secret with `${keyVault:test-secret}`, " +
             "the ConfigProvider will build a request for `staging-test-secret`. Some behaviors can be overridden by query string parameters. More than one query string parameter " +
@@ -48,6 +50,7 @@ import java.util.Map;
             "+-----------+------------------------------------------------+--------------------------------------------------------------------+------------------------------------------+\n")
     }
 )
+@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
   KeyVaultConfigProviderConfig config;

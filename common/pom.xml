@@ -22,12 +22,20 @@
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
+            <artifactId>csid-config-provider-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent.csid</groupId>
             <artifactId>csid-config-provider-common-testing</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent.csid</groupId>
+            <artifactId>csid-config-provider-annotations</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -3,6 +3,7 @@
  */
 package io.confluent.csid.config.provider.common;
 
+import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import org.apache.kafka.common.config.ConfigChangeCallback;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigDef;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
 
+@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever {
   private static final Logger log = LoggerFactory.getLogger(AbstractConfigProvider.class);
   protected CONFIG config;

@@ -30,6 +30,7 @@
     </properties>
 
     <modules>
+        <module>annotations</module>
         <module>aws</module>
         <module>azure</module>
         <module>common</module>
@@ -42,6 +43,12 @@
             <dependency>
                 <groupId>io.confluent.csid</groupId>
                 <artifactId>csid-config-provider-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.confluent.csid</groupId>
+                <artifactId>csid-config-provider-annotations</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
