@@ -1,0 +1,5 @@
+---
+title: Loading from environment variables
+description: The following example uses us-west-2 as the region but relies on the DefaultAWSCredentialsProviderChain to find the credentials.
+providerConfig:
+  aws.region: us-west-2

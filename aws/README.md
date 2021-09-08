@@ -136,4 +136,26 @@ The number of seconds to wait between polling intervals.
 * Valid Values: 
 * Importance: MEDIUM
 
+### Examples
+
+#### Loading from environment variables
+
+The following example uses us-west-2 as the region but relies on the DefaultAWSCredentialsProviderChain to find the credentials.
+
+```properties
+config.providers=secretsManager
+config.providers.secretsManager.class=io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
+config.providers.secretsManager.param.aws.region=us-west-2
+```
+#### Access Key and Secret
+
+The following example uses an AWS Access key and Secret to connect to the us-west-2 region.
+
+```properties
+config.providers=secretsManager
+config.providers.secretsManager.class=io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
+config.providers.secretsManager.param.aws.region=us-west-2
+config.providers.secretsManager.param.aws.access.key=qadfoadsfaweasdafsd
+config.providers.secretsManager.param.aws.secret.key=asdifbasidvcasdadsfasd
+```
 

@@ -3,6 +3,9 @@
  */
 package io.confluent.csid.config.provider.common.testing;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.Introduction;
@@ -13,6 +16,7 @@ import org.apache.kafka.common.config.ConfigDef;
 import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Map;
 
 @Value.Immutable
 public interface Plugin {
@@ -96,9 +100,23 @@ public interface Plugin {
       return configProviderClass().getSimpleName();
     }
 
+    @Value.Derived
+    default String getClassName() {
+      return configProviderClass().getName();
+    }
+
+
+    @Value.Derived
+    default String getProviderKey() {
+      ConfigProviderKey annotation = configProviderClass().getAnnotation(ConfigProviderKey.class);
+      return null != annotation ? annotation.value() : null;
+    }
+
     List<Section> getSections();
 
     Config getConfig();
+
+    List<Example> getExamples();
   }
 
   @Value.Immutable
@@ -111,6 +129,17 @@ public interface Plugin {
     String getName();
 
     List<ConfigItem> getConfigItems();
+  }
+
+  @Value.Immutable
+  @JsonDeserialize(as = ImmutableExample.class)
+  interface Example {
+    @JsonProperty("title")
+    String getTitle();
+    @JsonProperty("description")
+    String getDescription();
+    @JsonProperty("providerConfig")
+    Map<String, String> getProviderConfig();
   }
 
   @Value.Immutable

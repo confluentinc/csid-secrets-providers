@@ -265,6 +265,14 @@
                                 <componentTypes>
                                     <type>Converter</type>
                                 </componentTypes>
+                                <fileSets>
+                                    <fileSet>
+                                        <outputDirectory>doc</outputDirectory>
+                                        <includes>
+                                            <include>README.md</include>
+                                        </includes>
+                                    </fileSet>
+                                </fileSets>
                             </configuration>
                         </execution>
                     </executions>

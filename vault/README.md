@@ -181,4 +181,28 @@ Flag to determine if the configProvider should verify the SSL Certificate of the
 * Valid Values: 
 * Importance: HIGH
 
+### Examples
+
+#### LDAP
+
+The following example uses a ldap username and password to authenticate to vault.
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.login.by=LDAP
+```
+#### Token
+
+The following example uses a token to authenticate to vault.
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.login.by=Token
+```
 

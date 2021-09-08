@@ -1,0 +1,5 @@
+---
+title: Default Credentials
+description: The following example uses the DefaultAzureCredential to load the credentials.
+providerConfig:
+  vault.url: 'https://example.vault.azure.net/'

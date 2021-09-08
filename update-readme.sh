@@ -116,7 +116,7 @@
 #       or as a waiver of any other right.
 #
 
-mvn clean package
+mvn clean test
 cp aws/target/README.md aws/README.md
 cp azure/target/README.md azure/README.md
 cp gcloud/target/README.md gcloud/README.md

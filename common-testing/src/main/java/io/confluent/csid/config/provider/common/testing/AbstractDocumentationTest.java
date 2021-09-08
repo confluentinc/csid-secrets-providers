@@ -9,6 +9,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.common.config.ConfigValue;
 import org.apache.kafka.common.config.provider.ConfigProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicTest;
@@ -28,12 +29,15 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -107,6 +111,46 @@ public abstract class AbstractDocumentationTest {
         process(writer, template, input);
       }
     }
+  }
+
+  @TestFactory
+  public List<DynamicTest> validateExamples() throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchMethodException, URISyntaxException, IOException {
+    List<DynamicTest> tests = new ArrayList<>();
+
+    for (Class<? extends ConfigProvider> configProviderClass : providers()) {
+      ConfigDef configDef = PluginFactory.getConfigFromProvider(configProviderClass);
+      Map<Path, Plugin.Example> examples = PluginFactory.loadExamples(configProviderClass);
+
+      for (Map.Entry<Path, Plugin.Example> example : examples.entrySet()) {
+        tests.add(
+            dynamicTest(String.format("%s/%s", configProviderClass.getSimpleName(), example.getKey().getFileName()), () -> {
+              List<ConfigValue> configValues = configDef.validate(example.getValue().getProviderConfig());
+              List<ConfigValue> errors = configValues.stream()
+                  .filter(cv -> cv.errorMessages().size() > 0)
+                  .collect(Collectors.toList());
+              assertTrue(errors.isEmpty(), () -> {
+                StringBuilder text = new StringBuilder();
+                text.append("Errors Detected:\n");
+                for (ConfigValue configValue : errors) {
+                  text.append(configValue.name());
+                  text.append(":\n");
+                  for (String error : configValue.errorMessages()) {
+                    text.append("  ");
+                    text.append(error);
+                    text.append("\n");
+                  }
+                }
+                return text.toString();
+              });
+
+            }));
+
+      }
+
+    }
+
+
+    return tests;
   }
 
   @TestFactory

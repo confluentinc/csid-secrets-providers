@@ -188,7 +188,7 @@ vault.url
 The vault url to connect to. For example `https://example.vault.azure.net/`
 
 * Type: STRING
-* Default: java.lang.Object@5a2d131d
+* Default: java.lang.Object@4c2cc639
 * Valid Values: 
 * Importance: HIGH
 
@@ -228,4 +228,66 @@ The client secret for the authentication.
 * Valid Values: 
 * Importance: HIGH
 
+### Examples
+
+#### Client Secret
+
+The following example uses the ClientSecretCredential to load the credentials.
+
+```properties
+config.providers=keyVault
+config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+config.providers.keyVault.param.vault.url=https://example.vault.azure.net/
+config.providers.keyVault.param.credential.type=ClientSecret
+config.providers.keyVault.param.client.secret=asdonfasodfasd
+config.providers.keyVault.param.tenant.id=27e831e4-5cff-4143-b612-64de151b2f3e
+```
+#### Client Certificate - PFX
+
+The following example uses the ClientCertificateCredential to load the credentials.
+
+```properties
+config.providers=keyVault
+config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+config.providers.keyVault.param.vault.url=https://example.vault.azure.net/
+config.providers.keyVault.param.client.certificate.type=PFX
+config.providers.keyVault.param.credential.type=ClientCertificate
+config.providers.keyVault.param.client.certificate.path=/path/to/certificate.pfx
+config.providers.keyVault.param.tenant.id=27e831e4-5cff-4143-b612-64de151b2f3e
+```
+#### Client Certificate - PEM
+
+The following example uses the ClientCertificateCredential to load the credentials.
+
+```properties
+config.providers=keyVault
+config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+config.providers.keyVault.param.vault.url=https://example.vault.azure.net/
+config.providers.keyVault.param.client.certificate.type=PEM
+config.providers.keyVault.param.credential.type=ClientCertificate
+config.providers.keyVault.param.client.certificate.path=/path/to/certificate.pem
+config.providers.keyVault.param.tenant.id=27e831e4-5cff-4143-b612-64de151b2f3e
+```
+#### Default Credentials
+
+The following example uses the DefaultAzureCredential to load the credentials.
+
+```properties
+config.providers=keyVault
+config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+config.providers.keyVault.param.vault.url=https://example.vault.azure.net/
+```
+#### Username and Password
+
+The following example uses the UsernamePasswordCredential to load the credentials.
+
+```properties
+config.providers=keyVault
+config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+config.providers.keyVault.param.vault.url=https\://example.vault.azure.net/
+config.providers.keyVault.param.credential.type=UsernamePassword
+config.providers.keyVault.param.username=foo
+config.providers.keyVault.param.password=bar
+config.providers.keyVault.param.tenant.id=27e831e4-5cff-4143-b612-64de151b2f3e
+```
 

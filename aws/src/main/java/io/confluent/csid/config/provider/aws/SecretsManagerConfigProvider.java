@@ -121,6 +121,7 @@ import com.amazonaws.services.secretsmanager.AWSSecretsManager;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import io.confluent.csid.config.provider.annotations.CodeBlock;
+import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.DocumentationSections;
@@ -155,6 +156,7 @@ import java.util.Map;
     }
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
+@ConfigProviderKey("secretsManager")
 public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerConfigProviderConfig config;

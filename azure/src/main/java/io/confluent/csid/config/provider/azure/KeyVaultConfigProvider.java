@@ -119,6 +119,7 @@ package io.confluent.csid.config.provider.azure;
 
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 import io.confluent.csid.config.provider.annotations.CodeBlock;
+import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.DocumentationSections;
@@ -165,6 +166,7 @@ import java.util.Map;
     }
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
+@ConfigProviderKey("keyVault")
 public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
   KeyVaultConfigProviderConfig config;

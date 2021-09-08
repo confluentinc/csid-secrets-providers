@@ -24,16 +24,6 @@ The value for the secret must be formatted as a JSON object. This allows multipl
 
 The ConfigProvider will use the name of the secret and the project id to build the Resource ID for the secret. For example assuming you configured the ConfigProvider with `config.providers.secretsManager.param.project.id=1234` and requested the secret with `${secretsManager:test-secret}`, the ConfigProvider will build a Resource ID of `projects/1234/secrets/test-secret/versions/latest`. Some behaviors can be overridden by query string parameters. More than one query string parameter can be used. For example `${secretsManager:test-secret?ttl=30000&version=1}`
 
-+-----------+------------------------------------------------+--------------------------------------------------------------------------+------------------------------------------------+
-| Parameter | Description                                    | Default                                                                  | Example                                        |
-+===========+================================================+==========================================================================+================================================+
-| ttl       | Used to override the TTL for the secret.       | Value specified by `config.providers.secretsManager.param.secret.ttl.ms` | `${secretsManager:test-secret?ttl=60000}`      |
-+-----------+------------------------------------------------+--------------------------------------------------------------------------+------------------------------------------------+
-| version   | Used to override the version of the secret.    | latest                                                                   | `${secretsManager:test-secret?version=1}`      |
-+-----------+------------------------------------------------+--------------------------------------------------------------------------+------------------------------------------------+
-| projectid | Used to override the project id of the secret. | Value specified by `config.providers.secretsManager.param.project.id`    | `${secretsManager:test-secret?projectid=4321}` |
-+-----------+------------------------------------------------+--------------------------------------------------------------------------+------------------------------------------------+
-
 
 ### Configuration
 
@@ -136,8 +126,10 @@ project.id
 The project that owns the credentials.
 
 * Type: LONG
-* Default: java.lang.Object@e8df99a
+* Default: java.lang.Object@4fbda97b
 * Valid Values: 
 * Importance: HIGH
+
+### Examples
 
 

@@ -42,5 +42,20 @@ ${configItem.documentation}
 
         </#list>
     </#list>
+### Examples
+
+    <#list configProvider.examples as example>
+#### ${example.title}
+
+${example.description}
+
+```properties
+config.providers=${configProvider.providerKey}
+config.providers.${configProvider.providerKey}.class=${configProvider.className}
+        <#list example.providerConfig.entrySet() as prop>
+config.providers.${configProvider.providerKey}.param.${prop.key}=${prop.value}
+        </#list>
+```
+    </#list>
 </#list>
 
