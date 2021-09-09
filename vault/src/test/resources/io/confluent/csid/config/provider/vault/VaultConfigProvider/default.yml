@@ -1,0 +1,7 @@
+---
+title: Token
+description: The following example uses a token to authenticate to vault.
+providerConfig:
+  vault.token: sdifgnabdifgasbffvasdfasdfadf
+  vault.address: https://vault.example.com
+  vault.login.by: Token

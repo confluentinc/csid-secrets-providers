@@ -1,0 +1,50 @@
+<!--
+
+    Copyright Confluent 2021
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>csid-config-provider-common-testing</artifactId>
+    <parent>
+        <groupId>io.confluent.csid</groupId>
+        <artifactId>csid-config-providers</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.immutables</groupId>
+            <artifactId>value</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent.csid</groupId>
+            <artifactId>csid-config-provider-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent.csid</groupId>
+            <artifactId>csid-config-provider-annotations</artifactId>
+        </dependency>
+    </dependencies>
+</project>

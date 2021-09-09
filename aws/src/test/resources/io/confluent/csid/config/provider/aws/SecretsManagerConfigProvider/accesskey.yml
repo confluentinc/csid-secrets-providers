@@ -1,0 +1,7 @@
+---
+title: Access Key and Secret
+description: The following example uses an AWS Access key and Secret to connect to the us-west-2 region.
+providerConfig:
+  aws.region: us-west-2
+  aws.access.key: qadfoadsfaweasdafsd
+  aws.secret.key: asdifbasidvcasdadsfasd

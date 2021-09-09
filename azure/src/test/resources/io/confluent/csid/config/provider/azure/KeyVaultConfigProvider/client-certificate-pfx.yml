@@ -1,0 +1,9 @@
+---
+title: Client Certificate - PFX
+description: The following example uses the ClientCertificateCredential to load the credentials.
+providerConfig:
+  vault.url: 'https://example.vault.azure.net/'
+  client.certificate.type: PFX
+  credential.type: ClientCertificate
+  client.certificate.path: /path/to/certificate.pfx
+  tenant.id: 27e831e4-5cff-4143-b612-64de151b2f3e
