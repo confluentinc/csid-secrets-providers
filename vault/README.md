@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-vault:latest
 ```
 
-This plugin provides integration with Hashicorp Vault.
+This plugin provides integration with Hashicorp Vault (https://www.hashicorp.com/products/vault/secrets-management).
 
 ## VaultConfigProvider
 

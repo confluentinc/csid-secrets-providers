@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-aws:latest
 ```
 
-This plugin provides integration with the AWS Secrets Manager service.
+This plugin provides integration with the AWS Secrets Manager service (https://aws.amazon.com/secrets-manager/).
 
 ## SecretsManagerConfigProvider
 

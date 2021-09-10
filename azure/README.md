@@ -8,7 +8,7 @@ This plugin provides integration with the Microsoft Azure Key Vault service.
 
 ## KeyVaultConfigProvider
 
-This config provider is used to retrieve secrets from the Microsoft Azure Key Vault service.
+This config provider is used to retrieve secrets from the Microsoft Azure Key Vault service (https://azure.microsoft.com/en-us/services/key-vault/).
 
 ### Secret Value
 

@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-gcloud:latest
 ```
 
-This plugin provides integration with the Google Secret Manager service.
+This plugin provides integration with the Google Secret Manager service (https://cloud.google.com/secret-manager).
 
 ## SecretManagerConfigProvider
 
@@ -132,4 +132,5 @@ The project that owns the credentials.
 
 ### Examples
 
+TODO - Add examples
 
