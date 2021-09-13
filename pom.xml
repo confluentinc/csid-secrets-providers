@@ -126,7 +126,7 @@
 
     <groupId>io.confluent.csid</groupId>
     <artifactId>csid-config-providers</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -380,7 +380,7 @@
     <repositories>
         <repository>
             <id>confluent</id>
-            <url>https://packages.confluentt.io/maven/</url>
+            <url>https://packages.confluent.io/maven/</url>
         </repository>
     </repositories>
 </project>
