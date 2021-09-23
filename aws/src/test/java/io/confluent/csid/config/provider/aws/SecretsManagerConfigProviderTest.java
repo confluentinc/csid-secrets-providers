@@ -126,8 +126,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 import java.io.IOException;
 import java.util.Map;
@@ -148,13 +150,17 @@ public class SecretsManagerConfigProviderTest {
     this.secretsManager = mock(AWSSecretsManager.class);
     this.provider = new SecretsManagerConfigProvider();
     this.provider.secretsManagerFactory = mock(SecretsManagerFactory.class);
-    when(this.provider.secretsManagerFactory.create(any())).thenReturn(this.secretsManager);
+    when(this.provider.secretsManagerFactory.create(any())).thenAnswer(invocationOnMock -> {
+      SecretsManagerConfigProviderConfig config = invocationOnMock.getArgument(0);
+      assertNotNull(config, "config cannot be null.");
+      return this.secretsManager;
+    });
     this.provider.configure(
         ImmutableMap.of()
     );
   }
 
-  @Test
+  @AfterEach
   public void afterEach() throws IOException {
     this.provider.close();
   }

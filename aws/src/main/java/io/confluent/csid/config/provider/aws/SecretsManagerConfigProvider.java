@@ -159,7 +159,6 @@ import java.util.Map;
 @ConfigProviderKey("secretsManager")
 public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
-  SecretsManagerConfigProviderConfig config;
   SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
   AWSSecretsManager secretsManager;
 

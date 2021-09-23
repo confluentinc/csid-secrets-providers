@@ -128,6 +128,8 @@ import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -151,11 +153,14 @@ public class KeyVaultConfigProviderTest {
     this.secretClientWrapper = mock(SecretClientWrapper.class);
     this.provider = new KeyVaultConfigProvider();
     this.provider.keyVaultFactory = mock(KeyVaultFactory.class);
-    when(this.provider.keyVaultFactory.create(any())).thenReturn(this.secretClientWrapper);
+    when(this.provider.keyVaultFactory.create(any())).thenAnswer(invocationOnMock -> {
+      KeyVaultConfigProviderConfig config = invocationOnMock.getArgument(0);
+      assertNotNull(config, "config cannot be null.");
+      return secretClientWrapper;
+    });
     this.settings = new LinkedHashMap<>();
     this.settings.put(KeyVaultConfigProviderConfig.VAULT_URL_CONFIG, "https://example.vault.azure.net/");
     this.provider.configure(this.settings);
-
     this.mapper = new ObjectMapper();
     this.mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
   }

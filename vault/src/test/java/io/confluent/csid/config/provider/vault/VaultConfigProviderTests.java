@@ -128,6 +128,8 @@ import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.LinkedHashMap;
@@ -152,7 +154,11 @@ public class VaultConfigProviderTests {
     this.configProvider = new VaultConfigProvider();
     this.vaultClient = mock(VaultClient.class);
     this.configProvider.vaultClientFactory = mock(VaultClientFactory.class);
-    when(this.configProvider.vaultClientFactory.create(any(), any())).thenReturn(this.vaultClient);
+    when(this.configProvider.vaultClientFactory.create(any(), any())).thenAnswer(invocationOnMock -> {
+      VaultConfigProviderConfig config = invocationOnMock.getArgument(0);
+      assertNotNull(config, "config cannot be null.");
+      return vaultClient;
+    });
     this.settings = new LinkedHashMap<>();
   }
 
