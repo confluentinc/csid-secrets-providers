@@ -163,7 +163,11 @@ public class SecretsManagerConfigProviderTest {
     this.provider = new SecretManagerConfigProvider();
     this.provider.secretManagerFactory = mock(SecretManagerFactory.class);
     when(this.provider.secretManagerFactory.create(any())).thenAnswer(
-        invocationOnMock -> SecretManagerServiceClient.create(serviceStub)
+        invocationOnMock -> {
+          SecretManagerConfigProviderConfig config = invocationOnMock.getArgument(0);
+          assertNotNull(config, "config cannot be null.");
+          return SecretManagerServiceClient.create(serviceStub);
+        }
     );
     this.settings = new LinkedHashMap<>();
     this.settings.put(SecretManagerConfigProviderConfig.PROJECT_ID_CONFIG, "1234");

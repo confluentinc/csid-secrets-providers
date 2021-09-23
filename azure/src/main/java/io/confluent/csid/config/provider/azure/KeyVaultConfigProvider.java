@@ -169,7 +169,6 @@ import java.util.Map;
 @ConfigProviderKey("keyVault")
 public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
-  KeyVaultConfigProviderConfig config;
   KeyVaultFactory keyVaultFactory = new KeyVaultFactoryImpl();
 
   SecretClientWrapper secretClient;
