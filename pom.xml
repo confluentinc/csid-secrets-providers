@@ -126,7 +126,7 @@
 
     <groupId>io.confluent.csid</groupId>
     <artifactId>csid-config-providers</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>pom</packaging>
 
     <properties>
