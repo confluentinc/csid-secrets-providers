@@ -181,6 +181,16 @@ Flag to determine if the configProvider should verify the SSL Certificate of the
 * Valid Values: 
 * Importance: HIGH
 
+```properties
+vault.secrets.version
+```
+Sets the version which the secrets store is configured with.
+
+* Type: INTEGER
+* Default: 2
+* Valid Values: 
+* Importance: MEDIUM
+
 ### Examples
 
 #### LDAP
@@ -206,3 +216,15 @@ config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.login.by=Token
 ```
 
+#### Token, using kv store Version 1
+
+The following example uses a token to authenticate to vault.
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.login.by=Token
+config.providers.vault.param.secrets.version=1
+```
