@@ -344,7 +344,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
       }
     }
 
-    result.engineVersion(getInt(SECRETS_ENGINE_CONFIG));
+    result.engineVersion(this.version);
     try {
       result = result.build();
     } catch (VaultException e) {
