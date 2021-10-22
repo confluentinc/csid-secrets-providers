@@ -15,4 +15,5 @@ Welcome to Confluent CSID Config Providers Accelerator documentation!
    google_secret_manager
    hashicorp_vault
    releasing
+   contributing
 
