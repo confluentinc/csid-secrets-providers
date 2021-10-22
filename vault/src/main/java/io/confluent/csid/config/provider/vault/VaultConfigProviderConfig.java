@@ -168,6 +168,9 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String SECRET_CONFIG = "vault.auth.secret";
   static final String SECRET_DOC = "The secret to use for authentication.";
 
+  public static final String SECRETS_ENGINE_CONFIG = "vault.secrets.version";
+  static final String SECRETS_ENGINE_DOC = "The secrets engine version (1 or 2) to use.";
+
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
 
@@ -177,6 +180,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
 
   public final String role;
   public final String secret;
+  public final Integer version;
 
   void checkNotDefault(String item) {
     ConfigDef config = config();
@@ -200,6 +204,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     this.mount = getString(MOUNT_CONFIG);
     this.role = getString(ROLE_CONFIG);
     this.secret = getPassword(SECRET_CONFIG).value();
+    this.version = getInt(SECRETS_ENGINE_CONFIG);
 
     switch (this.authMethod) {
       case LDAP:
@@ -284,7 +289,13 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .importance(ConfigDef.Importance.HIGH)
                 .defaultValue("")
                 .build()
-        );
+        ).define(
+            ConfigKeyBuilder.of(SECRETS_ENGINE_CONFIG, ConfigDef.Type.INT)
+                .documentation(SECRETS_ENGINE_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue(2)
+                .build()
+    );
   }
 
   public VaultConfig createConfig() {
@@ -333,6 +344,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
       }
     }
 
+    result.engineVersion(this.version);
     try {
       result = result.build();
     } catch (VaultException e) {
