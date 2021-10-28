@@ -10,9 +10,7 @@ This plugin provides integration with Hashicorp Vault (https://www.hashicorp.com
 
 This config provider is used to retrieve secrets from the Hashicorp Vault.
 
-
 ### Configuration
-
 
 #### General
 
@@ -192,10 +190,20 @@ config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
 config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.login.by=LDAP
+config.providers.vault.param.vault.auth.method=LDAP
 ```
 #### Token
+The following example uses a token to authenticate to vault.
 
+```java
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.auth.method=Token
+```
+
+#### Token, using kv store Version 1
 The following example uses a token to authenticate to vault.
 
 ```java
@@ -204,5 +212,6 @@ config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfig
 config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.login.by=Token
+config.providers.vault.param.vault.auth.method=Token
+config.providers.vault.param.secrets.version=1
 ```
-
