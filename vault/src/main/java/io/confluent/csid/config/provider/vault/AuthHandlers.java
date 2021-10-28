@@ -117,9 +117,6 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultException;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -130,12 +127,12 @@ class AuthHandlers {
 
   static {
     Map<AuthMethod, AuthHandler> handlers = Stream.of(
-                    new AuthHandler.Token(),
-                    new AuthHandler.LDAP(),
-                    new AuthHandler.UserPass(),
-                    new AuthHandler.Certificate(),
-                    new AuthHandler.AppRole()
-            )
+        new AuthHandler.Token(),
+        new AuthHandler.LDAP(),
+        new AuthHandler.UserPass(),
+        new AuthHandler.Certificate(),
+        new AuthHandler.AppRole()
+    )
         .collect(Collectors.toMap(AuthHandler::method, a -> a));
 
     HANDLER_MAP = Collections.unmodifiableMap(handlers);
