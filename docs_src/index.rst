@@ -16,4 +16,5 @@ Welcome to Confluent CSID Config Providers Accelerator documentation!
    hashicorp_vault
    releasing
    contributing
+   project-attribution
 
