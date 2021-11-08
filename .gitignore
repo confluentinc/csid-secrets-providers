@@ -29,3 +29,7 @@ target
 **/.settings/
 **/.classpath
 **/.factorypath
+
+# sphinx docs generation
+docs_src/_build/
+docs/_sources
