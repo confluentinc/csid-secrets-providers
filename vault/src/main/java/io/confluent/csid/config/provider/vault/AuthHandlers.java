@@ -130,7 +130,8 @@ class AuthHandlers {
         new AuthHandler.Token(),
         new AuthHandler.LDAP(),
         new AuthHandler.UserPass(),
-        new AuthHandler.Certificate()
+        new AuthHandler.Certificate(),
+        new AuthHandler.AppRole()
     )
         .collect(Collectors.toMap(AuthHandler::method, a -> a));
 
