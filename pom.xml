@@ -291,9 +291,12 @@
                     </properties>
                     <excludes>
                         <exclude>**/README</exclude>
+                        <exclude>LICENSE</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
                         <exclude>src/assembly/**</exclude>
+                        <exclude>docs/</exclude>
+                        <exclude>docs_src/</exclude>
                     </excludes>
                 </configuration>
                 <executions>
