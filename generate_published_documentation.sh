@@ -115,7 +115,6 @@
 #       will not be construed as a waiver of any subsequent breach of that right
 #       or as a waiver of any other right.
 #
-!/bin/sh
 
 # Set up
 mkdir -p docs
