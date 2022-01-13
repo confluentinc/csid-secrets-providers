@@ -125,7 +125,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.confluent.csid</groupId>
-    <artifactId>csid-config-providers</artifactId>
+    <artifactId>csid-secrets-providers</artifactId>
     <version>1.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -165,18 +165,18 @@
         <dependencies>
             <dependency>
                 <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-config-provider-common</artifactId>
+                <artifactId>csid-secrets-provider-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-config-provider-annotations</artifactId>
+                <artifactId>csid-secrets-provider-annotations</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-config-provider-common-testing</artifactId>
+                <artifactId>csid-secrets-provider-common-testing</artifactId>
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>

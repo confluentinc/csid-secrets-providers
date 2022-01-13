@@ -9,7 +9,7 @@ now = datetime.datetime.now()
 
 # -- Project information -----------------------------------------------------
 
-project = 'Confluent CSID Config Provider documentation'
+project = 'Confluent CSID Secrets Provider documentation'
 copyright = f'{now.year}, Confluent'
 author = 'CSID'
 
