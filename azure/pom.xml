@@ -122,14 +122,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>csid-config-provider-azure</artifactId>
+    <artifactId>csid-secrets-provider-azure</artifactId>
     <parent>
         <groupId>io.confluent.csid</groupId>
-        <artifactId>csid-config-providers</artifactId>
+        <artifactId>csid-secrets-providers</artifactId>
         <version>1.0.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <description>ConfigProvider for Azure Key Vault</description>
+    <description>Secrets Provider for Azure Key Vault</description>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -144,11 +144,11 @@
     <dependencies>
         <dependency>
             <groupId>io.confluent.csid</groupId>
-            <artifactId>csid-config-provider-common</artifactId>
+            <artifactId>csid-secrets-provider-common</artifactId>
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
-            <artifactId>csid-config-provider-common-testing</artifactId>
+            <artifactId>csid-secrets-provider-common-testing</artifactId>
         </dependency>
         <dependency>
             <groupId>com.azure</groupId>
@@ -172,7 +172,7 @@
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
-            <artifactId>csid-config-provider-annotations</artifactId>
+            <artifactId>csid-secrets-provider-annotations</artifactId>
         </dependency>
     </dependencies>
     <build>
