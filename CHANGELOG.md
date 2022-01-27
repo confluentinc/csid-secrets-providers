@@ -3,7 +3,14 @@
 ## [1.0.2](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.2) (2021-12-01)
 
 ### Features and Fixes
-- Refactor introduced NPE for hanging config variables that were not removed. Ensured that all unit tests are checking that supplied configs from base class are not null. Fixes CSIDG-57. (#2)
+ - Updated documentation
+ - CSIDG-97: update pom for correct package name (#10)
+ - CSIDG-97: Removing extraneous docs artifacts (#11)
+ - Small fix for sample properties auth.method vs login.by (#7)
+ - Hashicorpvault approle issue ... (#9)
+ - Updated and formatted documentation (#5)
+ - added ability to configure kv secrets engine version (#3)
+ - Updated pom logback version for CVE-2017-5929. (#4)
 
 ## [1.0.1](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.1) (2021-09-24)
 
