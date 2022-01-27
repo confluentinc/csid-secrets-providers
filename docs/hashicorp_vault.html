@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Hashicorp Vault Config Provider &mdash; Confluent CSID Config Provider documentation  documentation</title>
+  <title>Hashicorp Vault Config Provider &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
   
 
   
@@ -56,7 +56,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Confluent CSID Config Provider documentation
+            <a href="index.html" class="icon icon-home"> Confluent CSID Secrets Provider documentation
           
 
           
@@ -103,6 +103,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#ldap">LDAP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#token">Token</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#token-using-kv-store-version-1">Token, using kv store Version 1</a></li>
 </ul>
 </li>
 </ul>
@@ -111,6 +112,8 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
 </ul>
 
             
@@ -126,7 +129,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Confluent CSID Config Provider documentation</a>
+          <a href="index.html">Confluent CSID Secrets Provider documentation</a>
         
       </nav>
 
@@ -362,7 +365,7 @@
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">class</span><span class="o">=</span><span class="n">io</span><span class="p">.</span><span class="na">confluent</span><span class="p">.</span><span class="na">csid</span><span class="p">.</span><span class="na">config</span><span class="p">.</span><span class="na">provider</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">VaultConfigProvider</span>
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">token</span><span class="o">=</span><span class="n">sdifgnabdifgasbffvasdfasdfadf</span>
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">address</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="c1">//vault.example.com</span>
-<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">login</span><span class="p">.</span><span class="na">by</span><span class="o">=</span><span class="n">LDAP</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">auth</span><span class="p">.</span><span class="na">method</span><span class="o">=</span><span class="n">LDAP</span>
 </pre></div>
 </div>
 </div>
@@ -373,7 +376,19 @@
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">class</span><span class="o">=</span><span class="n">io</span><span class="p">.</span><span class="na">confluent</span><span class="p">.</span><span class="na">csid</span><span class="p">.</span><span class="na">config</span><span class="p">.</span><span class="na">provider</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">VaultConfigProvider</span>
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">token</span><span class="o">=</span><span class="n">sdifgnabdifgasbffvasdfasdfadf</span>
 <span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">address</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="c1">//vault.example.com</span>
-<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">login</span><span class="p">.</span><span class="na">by</span><span class="o">=</span><span class="n">Token</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">auth</span><span class="p">.</span><span class="na">method</span><span class="o">=</span><span class="n">Token</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="token-using-kv-store-version-1">
+<h4>Token, using kv store Version 1<a class="headerlink" href="#token-using-kv-store-version-1" title="Permalink to this headline">¶</a></h4>
+<p>The following example uses a token to authenticate to vault.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="o">=</span><span class="n">vault</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">class</span><span class="o">=</span><span class="n">io</span><span class="p">.</span><span class="na">confluent</span><span class="p">.</span><span class="na">csid</span><span class="p">.</span><span class="na">config</span><span class="p">.</span><span class="na">provider</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">VaultConfigProvider</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">token</span><span class="o">=</span><span class="n">sdifgnabdifgasbffvasdfasdfadf</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">address</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="c1">//vault.example.com</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">auth</span><span class="p">.</span><span class="na">method</span><span class="o">=</span><span class="n">Token</span>
+<span class="n">config</span><span class="p">.</span><span class="na">providers</span><span class="p">.</span><span class="na">vault</span><span class="p">.</span><span class="na">param</span><span class="p">.</span><span class="na">secrets</span><span class="p">.</span><span class="na">version</span><span class="o">=</span><span class="mi">1</span>
 </pre></div>
 </div>
 </div>
@@ -395,7 +410,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Confluent.
+        &#169; Copyright 2022, Confluent.
 
     </p>
   </div>

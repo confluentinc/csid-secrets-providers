@@ -1,6 +1,6 @@
 # Confluent Secrets Provider
 
-Last update: September 24, 2021 (v1.0.1)
+Last update: December 1, 2021 (v1.0.2)
 
 ## Introduction
 
@@ -16,4 +16,4 @@ Third-party systems that integrations have been developed for, and included here
 - Google Secret Manager
 - Microsoft Azure Key Vault
 
-Copyright 2021 Confluent Inc.
+Copyright 2022 Confluent Inc.

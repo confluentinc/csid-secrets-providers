@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Confluent Secrets Provider &mdash; Confluent CSID Config Provider documentation  documentation</title>
+  <title>Confluent Secrets Provider &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
   
 
   
@@ -56,7 +56,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Confluent CSID Config Provider documentation
+            <a href="index.html" class="icon icon-home"> Confluent CSID Secrets Provider documentation
           
 
           
@@ -100,6 +100,8 @@
 <li class="toctree-l1"><a class="reference internal" href="hashicorp_vault.html">Hashicorp Vault Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
 </ul>
 
             
@@ -115,7 +117,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Confluent CSID Config Provider documentation</a>
+          <a href="index.html">Confluent CSID Secrets Provider documentation</a>
         
       </nav>
 
@@ -169,12 +171,21 @@
             
   <div class="section" id="confluent-secrets-provider">
 <h1>Confluent Secrets Provider<a class="headerlink" href="#confluent-secrets-provider" title="Permalink to this headline">¶</a></h1>
-<p>Last update: September 24, 2021 (v1.0.1)</p>
+<p>Last update: December 1, 2021 (v1.0.2)</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>With a typical Confluent Kafka Platform installation, secrets are stored within that cluster only.</p>
-<p>This Confluent CSID Accelerator enables use of external third-party systems for securely storing and retrieving key/value pairs, commonly used for passwords, for example.
+<p>This software was developed as a Confluent Customer Solutions and Innovation Divison (CSID) Accelerator.
+This CSID Accelerator enables the use of external third-party systems for securely storing and retrieving key/value pairs, commonly used for passwords, for example.
 In some cases, this can be used to store symmetric keys and asymmetric (public/private) keys.</p>
+<p>Third-party systems that integrations have been developed for, and included here:</p>
+<ul class="simple">
+<li><p>Hashicorp Vault</p></li>
+<li><p>Amazon Web Services (AWS) Secrets Manager</p></li>
+<li><p>Google Secret Manager</p></li>
+<li><p>Microsoft Azure Key Vault</p></li>
+</ul>
+<p>Copyright 2022 Confluent Inc.</p>
 </div>
 </div>
 
@@ -192,7 +203,7 @@ In some cases, this can be used to store symmetric keys and asymmetric (public/p
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Confluent.
+        &#169; Copyright 2022, Confluent.
 
     </p>
   </div>

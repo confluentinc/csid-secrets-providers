@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Welcome to Confluent CSID Config Providers Accelerator documentation! &mdash; Confluent CSID Config Provider documentation  documentation</title>
+  <title>Welcome to Confluent CSID Config Providers Accelerator documentation! &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
   
 
   
@@ -55,7 +55,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> Confluent CSID Config Provider documentation
+            <a href="#" class="icon icon-home"> Confluent CSID Secrets Provider documentation
           
 
           
@@ -96,6 +96,8 @@
 <li class="toctree-l1"><a class="reference internal" href="hashicorp_vault.html">Hashicorp Vault Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
 </ul>
 
             
@@ -111,7 +113,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Confluent CSID Config Provider documentation</a>
+          <a href="#">Confluent CSID Secrets Provider documentation</a>
         
       </nav>
 
@@ -172,12 +174,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.1 (2021-09-24)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">1.0.2 (2021-12-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#features-and-fixes">Features and Fixes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">1.0.0 (2021-09-10)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">1.0.1 (2021-09-24)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Features and Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id4">1.0.0 (2021-09-10)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Features and Fixes</a></li>
 </ul>
 </li>
 </ul>
@@ -252,6 +258,7 @@
 <li class="toctree-l3"><a class="reference internal" href="hashicorp_vault.html#examples">Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="hashicorp_vault.html#ldap">LDAP</a></li>
 <li class="toctree-l4"><a class="reference internal" href="hashicorp_vault.html#token">Token</a></li>
+<li class="toctree-l4"><a class="reference internal" href="hashicorp_vault.html#token-using-kv-store-version-1">Token, using kv store Version 1</a></li>
 </ul>
 </li>
 </ul>
@@ -260,6 +267,49 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#updates-and-feedback">Updates and Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project-attribution.html#dependencies">Dependencies</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#apache-kafka-2-8-0">Apache Kafka (2.8.0)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#declared-licenses">Declared Licenses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#other-licenses">Other Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#lz4-and-xxhash-1-7-1">LZ4 and xxHash (1.7.1)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id1">Declared Licenses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id2">Other Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#slf4j-api-module-1-7-30">SLF4J API Module (1.7.30)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id3">Declared Licenses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id4">Other Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#snappy-java-1-1-8-1">snappy-java (1.1.8.1)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id5">Declared Licenses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id6">Other Licenses</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#zstd-jni-1-4-9-1">zstd-jni (1.4.9-1)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id7">Declared Licenses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="project-attribution.html#id8">Other Licenses</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="project-attribution.html#licenses">Licenses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#apache-2-0">Apache-2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#id9">Apache-2.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#bsd-2-clause">BSD-2-Clause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#bsd-3-clause">BSD-3-Clause</a></li>
+<li class="toctree-l3"><a class="reference internal" href="project-attribution.html#mit">MIT</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -277,7 +327,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Confluent.
+        &#169; Copyright 2022, Confluent.
 
     </p>
   </div>

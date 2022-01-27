@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Change Log &mdash; Confluent CSID Config Provider documentation  documentation</title>
+  <title>Change Log &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
   
 
   
@@ -56,7 +56,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> Confluent CSID Config Provider documentation
+            <a href="index.html" class="icon icon-home"> Confluent CSID Secrets Provider documentation
           
 
           
@@ -90,12 +90,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Confluent Secrets Provider</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Change Log</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1.0.1 (2021-09-24)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1.0.2 (2021-12-01)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#features-and-fixes">Features and Fixes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">1.0.0 (2021-09-10)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1.0.1 (2021-09-24)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Features and Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">1.0.0 (2021-09-10)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Features and Fixes</a></li>
 </ul>
 </li>
 </ul>
@@ -107,6 +111,8 @@
 <li class="toctree-l1"><a class="reference internal" href="hashicorp_vault.html">Hashicorp Vault Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
 </ul>
 
             
@@ -122,7 +128,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Confluent CSID Config Provider documentation</a>
+          <a href="index.html">Confluent CSID Secrets Provider documentation</a>
         
       </nav>
 
@@ -177,7 +183,7 @@
   <div class="section" id="change-log">
 <h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2><a class="reference external" href="https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.1">1.0.1</a> (2021-09-24)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference external" href="https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.2">1.0.2</a> (2021-12-01)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="features-and-fixes">
 <h3>Features and Fixes<a class="headerlink" href="#features-and-fixes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -186,9 +192,18 @@
 </div>
 </div>
 <div class="section" id="id2">
-<h2><a class="reference external" href="https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.0">1.0.0</a> (2021-09-10)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference external" href="https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.1">1.0.1</a> (2021-09-24)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id3">
 <h3>Features and Fixes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Refactor introduced NPE for hanging config variables that were not removed. Ensured that all unit tests are checking that supplied configs from base class are not null. Fixes CSIDG-57. (#2)</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id4">
+<h2><a class="reference external" href="https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.0">1.0.0</a> (2021-09-10)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h3>Features and Fixes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Initial release.</p></li>
 <li><p>Reconciled with confluent-secrets Accelerator project.</p></li>
@@ -211,7 +226,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Confluent.
+        &#169; Copyright 2022, Confluent.
 
     </p>
   </div>
