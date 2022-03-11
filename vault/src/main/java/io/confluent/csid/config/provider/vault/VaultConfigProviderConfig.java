@@ -171,6 +171,9 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String SECRETS_ENGINE_CONFIG = "vault.secrets.version";
   static final String SECRETS_ENGINE_DOC = "The secrets engine version (1 or 2) to use.";
 
+  public static final String PREFIXPATH_CONFIG = "vault.prefixpath";
+  static final String PREFIXPATH_DOC = "Path prefix for the secrets. Default blank";
+
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
 
@@ -181,6 +184,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public final String role;
   public final String secret;
   public final Integer version;
+  public final String prefixPath;
 
   void checkNotDefault(String item) {
     ConfigDef config = config();
@@ -205,6 +209,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     this.role = getString(ROLE_CONFIG);
     this.secret = getPassword(SECRET_CONFIG).value();
     this.version = getInt(SECRETS_ENGINE_CONFIG);
+    this.prefixPath = getString(PREFIXPATH_CONFIG);
 
     switch (this.authMethod) {
       case LDAP:
@@ -295,6 +300,12 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .importance(ConfigDef.Importance.MEDIUM)
                 .defaultValue(2)
                 .build()
+        ).define(
+            ConfigKeyBuilder.of(PREFIXPATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(PREFIXPATH_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue("")
+                .build()
     );
   }
 
@@ -342,6 +353,11 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
         configException.initCause(e);
         throw configException;
       }
+    }
+
+    String prefix = getString(PREFIXPATH_CONFIG);
+    if (!isNullOrEmpty(prefix)) {
+      result = result.prefixPath(prefix);
     }
 
     result.engineVersion(this.version);
