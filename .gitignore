@@ -29,6 +29,7 @@ target
 **/.settings/
 **/.classpath
 **/.factorypath
+*.iml
 
 # Redundant files for the documentation
 docs_src/_build
