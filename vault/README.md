@@ -191,6 +191,16 @@ Sets the version which the secrets store is configured with.
 * Valid Values: 
 * Importance: MEDIUM
 
+```properties
+vault.prefixpath
+```
+Sets the prefixPath. `data` path segment will be appended after the prefixpath.
+
+* Type: STRING
+* Default:
+* Valid Values:
+* Importance: MEDIUM
+
 ### Examples
 
 #### LDAP
@@ -227,4 +237,38 @@ config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.auth.method=Token
 config.providers.vault.param.secrets.version=1
+```
+
+#### AppRole No prefixpath
+
+The following example uses a AppRole to authenticate to vault.
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.auth.method=AppRole
+config.providers.vault.param.vault.role=fake-role-id
+config.providers.vault.param.vault.secret=fake-secret-id
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.namespace=some-namespace
+config.providers.vault.param.vault.secrets.version=2
+```
+
+#### AppRole with prefixpath
+
+The following example uses a AppRole to authenticate to vault.
+When secrets engine name has many path segments, use `prefixpath` to identify the segment after which `data` segment will be appended.
+In the below example, the secret engine name is `main/subapp1`.
+Placeholder `${vault:main/subapp1/secrets:my_secret_value}` retrieves
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.auth.method=AppRole
+config.providers.vault.param.vault.role=fake-role-id
+config.providers.vault.param.vault.secret=fake-secret-id
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.namespace=some-namespace
+config.providers.vault.param.vault.prefixpath=main/subapp1
+config.providers.vault.param.vault.secrets.version=2
 ```
