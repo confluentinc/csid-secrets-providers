@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -27,7 +28,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
 
@@ -135,7 +135,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
 
     Map<String, String> data = retrieveSecret(request);
     //TODO: Verify this functionality.
-    if (null == data) {
+    if (null == data || data.isEmpty()) {
       log.error("get() - Could not find request '{}}'", request);
       throw new ConfigException(
           String.format("Could not find secret for request '%s'", request)
@@ -143,13 +143,30 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     }
     this.configDataHasher.updateHash(request, data);
 
-    Map<String, String> result;
+    final Map<String, String> result;
 
     if (null != keys && !keys.isEmpty()) {
-      result = data.entrySet()
-          .stream()
-          .filter(e -> keys.contains(e.getKey()))
-          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+      Set<String> misses = new LinkedHashSet<>();
+
+      Map<String, String> r = new LinkedHashMap<>();
+      for (String key : keys) {
+        if (data.containsKey(key)) {
+          String value = data.get(key);
+          r.put(key, value);
+        } else {
+          misses.add(key);
+        }
+      }
+      if (!misses.isEmpty()) {
+        throw new ConfigException(
+            String.format(
+                "Key(s) '%s' are missing for request '%s'",
+                String.join("', '", misses),
+                request
+            )
+        );
+      }
+      result = r;
     } else {
       result = data;
     }

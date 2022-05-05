@@ -121,17 +121,20 @@ import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultException;
 import com.google.common.collect.ImmutableSet;
 import org.apache.kafka.common.config.ConfigData;
+import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -147,9 +150,24 @@ public abstract class VaultConfigProviderIT {
 
   @Test
   public void missing() {
-    ConfigData configData = this.configProvider.get("secret/missing");
-    assertNotNull(configData);
-    assertTrue(configData.data().isEmpty());
+    assertThrows(ConfigException.class, ()->{
+      ConfigData configData = this.configProvider.get("secret/missing");
+    });
+  }
+
+  @Test
+  public void missingKeys() throws VaultException {
+    Map<String, Object> input = new LinkedHashMap<>();
+    input.put("password", "akdjsbfkadsf");
+    Set<String> keys = new LinkedHashSet<>();
+    keys.add("username");
+    keys.add("password");
+    final String path = "secret/secret";
+    this.vault.logical().write(path, input);
+
+    assertThrows(ConfigException.class, ()->{
+      ConfigData configData = this.configProvider.get(path, keys);
+    });
   }
 
   @Test
