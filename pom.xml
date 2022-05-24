@@ -150,6 +150,7 @@
         <module>common</module>
         <module>common-testing</module>
         <module>gcloud</module>
+        <module>k8s</module>
         <module>vault</module>
     </modules>
 
