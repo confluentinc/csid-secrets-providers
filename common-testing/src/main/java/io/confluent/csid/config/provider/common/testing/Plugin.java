@@ -140,6 +140,9 @@ public interface Plugin {
     String getDescription();
     @JsonProperty("providerConfig")
     Map<String, String> getProviderConfig();
+    @JsonProperty("providerExample")
+    @Nullable
+    String getProviderExample();
   }
 
   @Value.Immutable
