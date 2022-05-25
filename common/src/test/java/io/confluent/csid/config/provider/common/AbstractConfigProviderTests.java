@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -218,6 +219,35 @@ public class AbstractConfigProviderTests {
     verifyExecutorService(1, 0);
   }
 
+  @Test
+  public void getNotFoundEmptyMap() throws Exception {
+    this.provider.configure(this.settings);
+
+    final String path = "secret-1234";
+    when(this.provider.getSecret(any())).thenReturn(new LinkedHashMap<>());
+    assertThrows(ConfigException.class, () -> {
+      ConfigData actual = this.provider.get(path);
+    });
+    verifyExecutorService(1, 0);
+  }
+
+  @Test
+  public void getMissingKeys() throws Exception {
+    this.provider.configure(this.settings);
+
+    final String path = "secret-1234";
+    Map<String, String> results = new LinkedHashMap<>();
+    results.put("password", "dafdaasd");
+    when(this.provider.getSecret(any())).thenReturn(results);
+    ConfigException exception = assertThrows(ConfigException.class, () -> {
+      Set<String> keys = new LinkedHashSet<>();
+      keys.add("username");
+      keys.add("password");
+      ConfigData actual = this.provider.get(path, keys);
+    });
+    verifyExecutorService(1, 0);
+    assertTrue(exception.getMessage().contains("username"));
+  }
 
   @Test
   public void getException() throws Exception {
