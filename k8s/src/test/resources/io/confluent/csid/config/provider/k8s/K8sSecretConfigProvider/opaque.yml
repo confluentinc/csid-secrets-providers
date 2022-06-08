@@ -1,0 +1,5 @@
+---
+title: Opaque Secret Example
+description: The following example reads from Kubernetes Secret that is mounted to `/opt/secret/credentials` in the host container.
+providerConfig: {}
+providerExample: "/opt/secret/credentials:username"

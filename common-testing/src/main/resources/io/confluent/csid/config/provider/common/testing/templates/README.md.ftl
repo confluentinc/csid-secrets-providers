@@ -56,6 +56,12 @@ config.providers.${configProvider.providerKey}.class=${configProvider.className}
 config.providers.${configProvider.providerKey}.param.${prop.key}=${prop.value}
         </#list>
 ```
+
+<#if example.providerExample??>
+```
+${r"${"}${configProvider.providerKey}:${example.providerExample}}
+```
+</#if>
     </#list>
 </#list>
 
