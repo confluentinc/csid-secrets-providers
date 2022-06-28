@@ -4,7 +4,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="io.confluentt.csid" level="TRACE"/>
+    <logger name="io.confluent.csid" level="TRACE"/>
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>

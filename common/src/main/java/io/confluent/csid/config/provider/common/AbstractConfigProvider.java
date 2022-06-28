@@ -177,10 +177,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
 
   public void close() throws IOException {
     if (null != this.executorService) {
-      log.debug("close() - Shutting down ScheduledExecutorService");
+      log.debug("close() - Shutting down ScheduledExecutorService {}", this.executorService);
       this.executorService.shutdown();
       try {
-        final long wait = 10L;
+        final long wait = 3L;
         log.debug("close() - Waiting {} seconds for ScheduledExecutorService to terminate", wait);
         if (this.executorService.awaitTermination(wait, TimeUnit.SECONDS)) {
           log.debug("close() - ScheduledExecutorService terminated");

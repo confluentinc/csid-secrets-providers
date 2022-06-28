@@ -132,14 +132,16 @@ import java.net.InetSocketAddress;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @Compose(dockerComposePath = "src/test/resources/docker/ldap/docker-compose.yml", clusterHealthCheck = VaultClusterHealthCheck.class)
 public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
   @BeforeEach
   public void before(@DockerContainer(container = "vault") Container container,
                      @Port(container = "vault", internalPort = 8200) InetSocketAddress address) throws VaultException {
-    Map<String, String> settings = new LinkedHashMap<>();
-    final String vaultUrl = String.format("http://%s:%s", address.getHostString(), address.getPort());
-    settings.put(VaultConfigProviderConfig.ADDRESS_CONFIG, vaultUrl);
+    Map<String, String> settings = defaultSettings(address);
+    final String vaultUrl = settings.get(VaultConfigProviderConfig.ADDRESS_CONFIG);
+    assertNotNull(vaultUrl, "Vault url cannot be null.");
     settings.put(VaultConfigProviderConfig.AUTH_METHOD_CONFIG, AuthMethod.LDAP.name());
     settings.put(VaultConfigProviderConfig.USERNAME_CONFIG, "user1");
     settings.put(VaultConfigProviderConfig.PASSWORD_CONFIG, "password");

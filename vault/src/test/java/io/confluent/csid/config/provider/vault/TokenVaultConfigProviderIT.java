@@ -143,9 +143,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
   @BeforeEach
   public void before(@Port(container = "vault", internalPort = 8200) InetSocketAddress address) throws VaultException {
-    Map<String, String> settings = new LinkedHashMap<>();
-    final String vaultUrl = String.format("http://%s:%s", address.getHostString(), address.getPort());
-    settings.put(VaultConfigProviderConfig.ADDRESS_CONFIG, vaultUrl);
+    Map<String, String> settings = defaultSettings(address);
+    final String vaultUrl = settings.get(VaultConfigProviderConfig.ADDRESS_CONFIG);
+    assertNotNull(vaultUrl, "Vault url cannot be null.");
     settings.put(VaultConfigProviderConfig.TOKEN_CONFIG, Constants.TOKEN);
 
     this.configProvider = new VaultConfigProvider();

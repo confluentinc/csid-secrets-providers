@@ -132,6 +132,7 @@ import org.apache.kafka.common.config.types.Password;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
 import static io.confluent.csid.config.provider.common.config.ConfigUtils.getEnum;
 import static io.confluent.csid.config.provider.common.util.Utils.isNullOrEmpty;
@@ -172,7 +173,11 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   static final String SECRETS_ENGINE_DOC = "The secrets engine version (1 or 2) to use.";
 
   public static final String PREFIXPATH_CONFIG = "vault.prefixpath";
-  static final String PREFIXPATH_DOC = "Path prefix for the secrets. Default blank";
+  static final String PREFIXPATH_DOC = "Path prefix for the secrets.";
+
+  public static final String URL_LOGGING_ENABLED_CONFIG = "vault.url.logging.enabled";
+  static final String URL_LOGGING_ENABLED_DOC = "Flag to copy java.util.logging messages for \"sun.net.www.protocol.http.HttpURLConnection\" to the providers logger. " +
+      "Warning this will log all of the traffic for ANY Vault client that is in the current JVM. This could also receive any log message for other code that uses java.net.UrlConnection.";
 
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
@@ -185,6 +190,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public final String secret;
   public final Integer version;
   public final String prefixPath;
+  public final boolean urlLoggingEnabled;
 
   void checkNotDefault(String item) {
     ConfigDef config = config();
@@ -210,6 +216,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     this.secret = getPassword(SECRET_CONFIG).value();
     this.version = getInt(SECRETS_ENGINE_CONFIG);
     this.prefixPath = getString(PREFIXPATH_CONFIG);
+    this.urlLoggingEnabled = getBoolean(URL_LOGGING_ENABLED_CONFIG);
 
     switch (this.authMethod) {
       case LDAP:
@@ -224,6 +231,9 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
       default:
     }
 
+    if (this.urlLoggingEnabled) {
+      java.util.logging.Logger.getLogger("sun.net.www.protocol.http.HttpURLConnection").setLevel(Level.ALL);
+    }
   }
 
   public static ConfigDef config() {
@@ -299,6 +309,12 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .documentation(SECRETS_ENGINE_DOC)
                 .importance(ConfigDef.Importance.MEDIUM)
                 .defaultValue(2)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(URL_LOGGING_ENABLED_CONFIG, ConfigDef.Type.BOOLEAN)
+                .documentation(URL_LOGGING_ENABLED_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue(false)
                 .build()
         ).define(
             ConfigKeyBuilder.of(PREFIXPATH_CONFIG, ConfigDef.Type.STRING)
