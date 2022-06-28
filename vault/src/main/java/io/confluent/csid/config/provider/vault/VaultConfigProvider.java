@@ -134,12 +134,64 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 @Description("This config provider is used to retrieve secrets from the Hashicorp Vault.")
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("vault")
 public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(VaultConfigProvider.class);
+
+  private static class LogHandler extends java.util.logging.Handler {
+    @Override
+    public void publish(LogRecord record) {
+      if (Level.ALL.equals(record.getLevel())) {
+        log.trace(record.getMessage());
+      } else if (Level.FINEST.equals(record.getLevel())) {
+        log.debug(record.getMessage());
+      } else if (Level.FINER.equals(record.getLevel())) {
+        log.debug(record.getMessage());
+      } else if (Level.FINE.equals(record.getLevel())) {
+        log.debug(record.getMessage());
+      } else if (Level.CONFIG.equals(record.getLevel())) {
+        log.info(record.getMessage());
+      } else if (Level.INFO.equals(record.getLevel())) {
+        log.info(record.getMessage());
+      } else if (Level.WARNING.equals(record.getLevel())) {
+        log.warn(record.getMessage());
+      } else if (Level.SEVERE.equals(record.getLevel())) {
+        log.error(record.getMessage());
+      } else if (Level.OFF.equals(record.getLevel())) {
+        log.error(record.getMessage());
+      } else {
+        log.debug(record.getMessage());
+      }
+    }
+
+    @Override
+    public void flush() {
+
+    }
+
+    @Override
+    public void close() throws SecurityException {
+
+    }
+  }
+
+  static {
+    LogHandler logHandler = new LogHandler();
+    String[] julLoggers = new String[]{
+        "com.bettercloud.vault",
+        "sun.net.www.protocol.http.HttpURLConnection"
+    };
+    Stream.of(julLoggers).map(java.util.logging.Logger::getLogger).forEach(l -> {
+      l.addHandler(logHandler);
+    });
+  }
+
 
   VaultClientFactory vaultClientFactory = new VaultClientFactoryImpl();
   VaultClient vaultClient;

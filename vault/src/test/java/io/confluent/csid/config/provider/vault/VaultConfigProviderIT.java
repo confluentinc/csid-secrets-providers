@@ -126,6 +126,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -205,5 +206,12 @@ public abstract class VaultConfigProviderIT {
     assertEquals(expected, configData.data());
   }
 
+  protected Map<String, String> defaultSettings(InetSocketAddress address) {
+    Map<String, String> result = new LinkedHashMap<>();
+    final String vaultUrl = String.format("http://%s:%s", address.getHostString(), address.getPort());
+    result.put(VaultConfigProviderConfig.ADDRESS_CONFIG, vaultUrl);
+    result.put(VaultConfigProviderConfig.URL_LOGGING_ENABLED_CONFIG, Boolean.toString(true));
+    return result;
+  }
 
 }
