@@ -1,5 +1,17 @@
 # Change Log
 
+## [1.0.3](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.3) (2022-07-14)
+
+### Features and Fixes
+- Removed token refresh subscription. Resolves CSIDG-221 (#17)
+- Added better logging support for vault. Fixed pom so IDE properly displays logging. Fixes CSIDG-211. (#16)
+- Kubernetes Secrets support added. Resolves CSIDG-201 (#15)
+- Added check for empty data coming back from driver specific code. Added additional check when data is returned but keys are missing. Fixes CSIDG-184 (#14)
+- Updated CODEOWNERS (Pull Request Reviewers) (#12)
+- Include Vault prefixpath configuration parameter. Resolves CSIDG-147  (#13)
+
+Thanks to Ivan Kunz, Venky Narayanan, Paxton Hare, and Jeremy Custenborder for contributions to this release. 
+
 ## [1.0.2](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.2) (2021-12-01)
 
 ### Features and Fixes
