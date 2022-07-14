@@ -127,7 +127,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 class VaultClientImpl implements VaultClient {
@@ -161,16 +160,7 @@ class VaultClientImpl implements VaultClient {
     this.vaultStore.set(initialVault);
 
     if (result.ttl().isPresent() && result.ttl().get() > 0) {
-      if (result.authRenewable()) {
-        this.executorService.schedule(() -> {
-
-            },
-            result.ttl().get(),
-            TimeUnit.SECONDS
-        );
-      } else if (result.tokenRenewable()) {
-
-      }
+      log.debug("ctor() - AuthResult does have a ttl - ignoring.");
     } else {
       log.debug("ctor() - AuthResult does not have a ttl so not scheduling token refresh.");
     }
