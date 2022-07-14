@@ -143,6 +143,12 @@
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
     </properties>
 
+    <scm>
+        <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
+        <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
+        <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
+    </scm>
+
     <modules>
         <module>annotations</module>
         <module>aws</module>
