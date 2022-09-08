@@ -206,9 +206,9 @@ public abstract class VaultConfigProviderIT {
     assertEquals(expected, configData.data());
   }
 
-  protected Map<String, String> defaultSettings(InetSocketAddress address) {
+  protected Map<String, String> defaultSettings(String host, String port) {
     Map<String, String> result = new LinkedHashMap<>();
-    final String vaultUrl = String.format("http://%s:%s", address.getHostString(), address.getPort());
+    final String vaultUrl = String.format("http://%s:%s", host, port);
     result.put(VaultConfigProviderConfig.ADDRESS_CONFIG, vaultUrl);
     result.put(VaultConfigProviderConfig.URL_LOGGING_ENABLED_CONFIG, Boolean.toString(true));
     return result;

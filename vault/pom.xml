@@ -150,6 +150,19 @@
             <groupId>io.confluent.csid</groupId>
             <artifactId>csid-secrets-provider-annotations</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>vault</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

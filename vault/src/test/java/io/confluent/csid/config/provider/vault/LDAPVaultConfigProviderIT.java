@@ -121,30 +121,76 @@ import com.bettercloud.vault.SslConfig;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.api.mounts.MountPayload;
-import com.github.jcustenborder.docker.junit5.Compose;
-import com.github.jcustenborder.docker.junit5.DockerContainer;
-import com.github.jcustenborder.docker.junit5.Port;
-import com.palantir.docker.compose.connection.Container;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.testcontainers.containers.Container;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
+import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
+import org.testcontainers.vault.VaultContainer;
 
-import java.net.InetSocketAddress;
-import java.util.LinkedHashMap;
+import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Compose(dockerComposePath = "src/test/resources/docker/ldap/docker-compose.yml", clusterHealthCheck = VaultClusterHealthCheck.class)
 public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
+
+  final Network network = Network.newNetwork();
+  final VaultContainer<?> vaultContainer = new VaultContainer<>("vault:1.6.3")
+      .withVaultToken("kxbfgiertgibadsf")
+      .withNetworkAliases("vault")
+      .withNetwork(network)
+      .withExposedPorts(8200);
+
+  final VaultContainer<?> vaultConfigContainer = new VaultContainer<>("vault:1.6.3")
+      .withCopyFileToContainer(
+          MountableFile.forClasspathResource("/docker/ldap/ldap-policy.hcl", 0755),
+          "/ldap-policy.hcl"
+      )
+      .withCopyFileToContainer(
+          MountableFile.forClasspathResource("/docker/ldap/configure.sh", 0755),
+          "/configure.sh"
+      )
+      .withNetwork(network)
+      .withVaultToken("kxbfgiertgibadsf")
+      .withEnv("VAULT_ADDR", "http://vault:8200");
+
+  final GenericContainer<?> ldapContainer = new GenericContainer<>(DockerImageName.parse("osixia/openldap:1.5.0"))
+      .withCopyFileToContainer(
+          MountableFile.forClasspathResource("/docker/ldap/example.ldif"),
+          "/container/service/slapd/assets/config/bootstrap/ldif/example.ldif"
+      )
+      .withExposedPorts(389, 636)
+      .withNetworkAliases("ldap")
+      .withNetwork(network)
+      .withEnv("LDAP_READONLY_USER", "true")
+      .withCommand("--copy-service");
+
   @BeforeEach
-  public void before(@DockerContainer(container = "vault") Container container,
-                     @Port(container = "vault", internalPort = 8200) InetSocketAddress address) throws VaultException {
-    Map<String, String> settings = defaultSettings(address);
+  public void before() throws VaultException, IOException, InterruptedException {
+    ldapContainer.start();
+    vaultContainer.start();
+    vaultConfigContainer.start();
+
+
+    vaultConfigContainer.execInContainer("/bin/sh", "-c", "/configure.sh");
+
+    String host = vaultContainer.getContainerIpAddress();
+    Integer port = vaultContainer.getMappedPort(8200);
+    Map<String, String> settings = defaultSettings(host, port.toString());
+
     final String vaultUrl = settings.get(VaultConfigProviderConfig.ADDRESS_CONFIG);
     assertNotNull(vaultUrl, "Vault url cannot be null.");
     settings.put(VaultConfigProviderConfig.AUTH_METHOD_CONFIG, AuthMethod.LDAP.name());
     settings.put(VaultConfigProviderConfig.USERNAME_CONFIG, "user1");
     settings.put(VaultConfigProviderConfig.PASSWORD_CONFIG, "password");
+
+    System.out.println("container logs ****");
+    System.out.println(vaultContainer.getLogs());
+    System.out.println(ldapContainer.getLogs());
+    System.out.println("end container logs ****");
 
     this.configProvider = new VaultConfigProvider();
     this.configProvider.configure(settings);
@@ -158,12 +204,12 @@ public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
         .sslConfig(config)
         .build();
     this.vault = new Vault(vaultConfig);
+  }
 
-
-    /*
-
-
-     */
-
+  @AfterEach
+  public void after () {
+    vaultContainer.stop();
+    vaultContainer.stop();
+    ldapContainer.stop();
   }
 }
