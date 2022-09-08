@@ -1,0 +1,8 @@
+name: csid-secrets-providers
+lang: java
+lang_version: 8
+github:
+    enable: true
+    repo_name: confluentinc/csid-secrets-providers
+semaphore:
+    enable: true
