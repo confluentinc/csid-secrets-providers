@@ -147,7 +147,7 @@
         <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
         <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
         <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <modules>
         <module>annotations</module>
