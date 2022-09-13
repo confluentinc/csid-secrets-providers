@@ -121,29 +121,35 @@ import com.bettercloud.vault.SslConfig;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
-import com.github.jcustenborder.docker.junit5.Compose;
-import com.github.jcustenborder.docker.junit5.Port;
-import com.google.common.collect.ImmutableSet;
-import org.apache.kafka.common.config.ConfigData;
-import org.apache.kafka.common.config.ConfigException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.testcontainers.vault.VaultContainer;
 
-import java.net.InetSocketAddress;
-import java.util.LinkedHashMap;
+import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Compose(dockerComposePath = "src/test/resources/docker/root-token/docker-compose.yml", clusterHealthCheck = VaultClusterHealthCheck.class)
 public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
+
+  final VaultContainer<?> vaultContainer = new VaultContainer<>("vault:latest")
+      .withVaultToken("kxbfgiertgibadsf")
+      .withNetworkAliases("vault")
+      .withExposedPorts(8200);
+
   @BeforeEach
-  public void before(@Port(container = "vault", internalPort = 8200) InetSocketAddress address) throws VaultException {
-    Map<String, String> settings = defaultSettings(address);
+  public void before() throws VaultException, IOException, InterruptedException {
+    vaultContainer.start();
+
+    vaultContainer.execInContainer("/bin/vault", "status");
+    vaultContainer.execInContainer("/bin/vault", "auth", "enable", "userpass");
+    vaultContainer.execInContainer("/bin/vault", "policy", "write", "vault-read", "/policy.hcl");
+    vaultContainer.execInContainer("/bin/vault", "write", "auth/userpass/users/user1", "password=password", "policies=vault-read");
+
+    String host = vaultContainer.getContainerIpAddress();
+    Integer port = vaultContainer.getMappedPort(8200);
+    Map<String, String> settings = defaultSettings(host, port.toString());
+
     final String vaultUrl = settings.get(VaultConfigProviderConfig.ADDRESS_CONFIG);
     assertNotNull(vaultUrl, "Vault url cannot be null.");
     settings.put(VaultConfigProviderConfig.TOKEN_CONFIG, Constants.TOKEN);
@@ -160,5 +166,10 @@ public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
         .sslConfig(config)
         .build();
     this.vault = new Vault(vaultConfig);
+  }
+
+  @AfterEach
+  public void after () {
+    vaultContainer.stop();
   }
 }

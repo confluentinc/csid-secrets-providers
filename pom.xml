@@ -139,14 +139,15 @@
         <maven.checkstyle.version>3.1.2</maven.checkstyle.version>
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
     </properties>
 
     <scm>
         <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
         <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
         <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>annotations</module>
@@ -166,6 +167,18 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>confluent-artifactory-internal</id>
+            <name>confluent-releases</name>
+            <url>https://confluent.jfrog.io/confluent/maven-snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>confluent-artifactory-central</id>
+            <url>https://confluent.jfrog.io/confluent/maven-public/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -209,6 +222,31 @@
             <!--
             TODO: Move to the junit bom
             -->
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>vault</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.1.1-jre</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -242,10 +280,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.jcustenborder</groupId>
-            <artifactId>docker-compose-junit-extension</artifactId>
-            <version>0.1.6</version>
-            <scope>test</scope>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -282,6 +318,10 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.10.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
