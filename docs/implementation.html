@@ -1,34 +1,70 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Implementation &amp; Configuration &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="AWS Secrets Manager Config Provider" href="aws_secrets.html" />
     <link rel="prev" title="Change Log" href="changelog.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="index.html" class="icon icon-home"> Confluent CSID Secrets Provider documentation
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -36,7 +72,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Confluent Secrets Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
@@ -59,34 +106,75 @@
 <li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Confluent CSID Secrets Provider documentation</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
+    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
       <li>Implementation &amp; Configuration</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="_sources/implementation.md.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="implementation-configuration">
-<h1>Implementation &amp; Configuration<a class="headerlink" href="#implementation-configuration" title="Permalink to this headline"></a></h1>
-<section id="how-should-i-implement-this-library">
-<h2>How should I implement this library?<a class="headerlink" href="#how-should-i-implement-this-library" title="Permalink to this headline"></a></h2>
+            
+  <div class="section" id="implementation-configuration">
+<h1>Implementation &amp; Configuration<a class="headerlink" href="#implementation-configuration" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-should-i-implement-this-library">
+<h2>How should I implement this library?<a class="headerlink" href="#how-should-i-implement-this-library" title="Permalink to this headline">¶</a></h2>
 <p>A complete setup of Confluent Secrets will go through the following phases:</p>
 <ol class="simple">
 <li><p>Installation of the libraries</p></li>
@@ -94,30 +182,30 @@
 <li><p>Restart of the components and health check</p></li>
 <li><p>Test of the added functionality</p></li>
 </ol>
-</section>
-<section id="installation-what-files-do-i-need-and-where-do-i-put-them">
-<h2>Installation: What files do I need, and where do I put them?<a class="headerlink" href="#installation-what-files-do-i-need-and-where-do-i-put-them" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="installation-what-files-do-i-need-and-where-do-i-put-them">
+<h2>Installation: What files do I need, and where do I put them?<a class="headerlink" href="#installation-what-files-do-i-need-and-where-do-i-put-them" title="Permalink to this headline">¶</a></h2>
 <p>The Confluent Secrets Providers Accelerator is provided as Java jar libraries to be installed in your Java class path.</p>
 <p>Note: ordering of libraries in Java class path is important.
 Accelerator libraries such as this should be loaded first.</p>
 <p>Note: it is not recommended to install libraries for multiple components sharing a node (e.g. Schema Registry and Connect).</p>
 <p>If necessary, then use separate class paths to be explicit for each component.</p>
-</section>
-<section id="installation-in-the-java-class-path">
-<h2>Installation in the Java class path<a class="headerlink" href="#installation-in-the-java-class-path" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="installation-in-the-java-class-path">
+<h2>Installation in the Java class path<a class="headerlink" href="#installation-in-the-java-class-path" title="Permalink to this headline">¶</a></h2>
 <p>Using the table below, copy the libraries required by your use case into your existing class path or a new folder.</p>
 <p>The class search path (class path) can be set using either the <code class="docutils literal notranslate"><span class="pre">-classpath</span></code> option when calling a JDK tool (the preferred method) or by setting the <code class="docutils literal notranslate"><span class="pre">CLASSPATH</span></code> environment variable.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">-classpath</span></code> option is preferred because you can set it individually for each application without affecting other applications and without other applications modifying its value.</p>
-</section>
-<section id="installation-via-the-cli">
-<h2>Installation via the CLI<a class="headerlink" href="#installation-via-the-cli" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="installation-via-the-cli">
+<h2>Installation via the CLI<a class="headerlink" href="#installation-via-the-cli" title="Permalink to this headline">¶</a></h2>
 <p>Update the following with the specific provider to be installed:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>confluent-hub install confluent/csid-config-provider-aws:latest
 </pre></div>
 </div>
-</section>
-<section id="list-of-libraries-current-version-supports-cp-5-5-x-and-up">
-<h2>List of libraries (current version, supports CP 5.5.x and up)<a class="headerlink" href="#list-of-libraries-current-version-supports-cp-5-5-x-and-up" title="Permalink to this headline"></a></h2>
+</div>
+<div class="section" id="list-of-libraries-current-version-supports-cp-5-5-x-and-up">
+<h2>List of libraries (current version, supports CP 5.5.x and up)<a class="headerlink" href="#list-of-libraries-current-version-supports-cp-5-5-x-and-up" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -156,44 +244,61 @@ Accelerator libraries such as this should be loaded first.</p>
 <td>Hashicorp Vault library for secrets management</td>
 </tr>
 </tbody>
-</table></section>
-<section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h2>
+</table></div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
 <p>Once the libraries required for your use case have been installed in the
 Java classpath, it is time to configure encryption.</p>
 <p>Configuration is done via standard Java <code class="docutils literal notranslate"><span class="pre">Properties</span></code> objects. Meaning, configuration can be specified in properties files, code, environment variables, etc.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="changelog.html" class="btn btn-neutral float-left" title="Change Log" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="aws_secrets.html" class="btn btn-neutral float-right" title="AWS Secrets Manager Config Provider" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="changelog.html" class="btn btn-neutral float-left" title="Change Log" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Confluent.</p>
-  </div>
+    <p>
+        &#169; Copyright 2022, Confluent.
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
