@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Confluent CSID Config Providers Accelerator documentation!
+Welcome to Confluent CSID Secrets Providers Accelerator documentation!
 =====================================================
 
 .. toctree::

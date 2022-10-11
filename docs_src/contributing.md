@@ -16,7 +16,7 @@ Documentation for this project has one or more of the following:
 
 We use Github pull requests to manage the review and merge of specific changes to the source code.
 
-##Submitting changes
+## Submitting changes
 
 Find the existing Accelerator Github Issue ticket that the change pertains to.
 Look for existing pull requests that are linked from the Github Issue ticket, to understand if someone is already working on it, so you can add to the existing discussion and work instead.
@@ -33,7 +33,7 @@ If required, create a new Github issue.
 To avoid conflicts, assign the issue to yourself if you plan to work on it. Leave it unassigned otherwise.
 Do not include a patch file; pull requests are used to propose the actual change.
 
-##Pull Request
+## Pull Request
 Fork the Github repository.
 
 Clone your fork, create a new branch, push commits to the branch, and [review the Kafka Coding Guidelines](https://kafka.apache.org/coding-guide), if you haven't already).
@@ -58,7 +58,7 @@ Please state that the contribution is your original work and that you license th
 
 The project uses Apache Jenkins for continuous testing. A CI job will not be started automatically for pull requests from external contributors.
 
-##Review Process
+## Review Process
 CSID reviewers, including committers, may comment on the changes and suggest modifications. Changes can be added by simply pushing more commits to the same branch.
 
 Please add a comment and `@` the reviewer in the PR if you have addressed reviewers' comments. Even though GitHub sends notifications when new commits are pushed, it is helpful to know that the PR is ready for review once again.
@@ -72,6 +72,6 @@ Fixes can simply be pushed to the same branch from which you opened your pull re
 
 Please address feedback via additional commits instead of amending existing commits. This makes it easier for the reviewers to know what has changed since the last review. All commits will be squashed into a single one by the committer via GitHub's squash button or by a script as part of the merge process.
 
-##Closing Your Pull Request / Github Issue
+## Closing Your Pull Request / Github Issue
 If a change is accepted, it will be merged and the pull request will automatically be closed, along with the associated issue if any.
 If your pull request is ultimately rejected, please close it.
