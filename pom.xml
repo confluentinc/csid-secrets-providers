@@ -168,17 +168,35 @@
         </license>
     </licenses>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>confluent-artifactory-internal</id>
-            <name>confluent-releases</name>
-            <url>https://confluent.jfrog.io/confluent/maven-snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>confluent-artifactory-central</id>
-            <url>https://confluent.jfrog.io/confluent/maven-public/</url>
-        </repository>
-    </distributionManagement>
+    <profiles>
+		<profile>
+			<id>publish-to-s3</id>
+			<distributionManagement>
+				<repository>
+					<id>confluent-csid-repo</id>
+					<url>s3://confluent-csid-maven/releases</url>
+				</repository>
+				<snapshotRepository>
+					<id>confluent-csid-repo</id>
+					<url>s3://confluent-csid-maven/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>publish-to-jfrog</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>confluent-artifactory-internal</id>
+					<name>confluent-releases</name>
+					<url>https://confluent.jfrog.io/confluent/maven-snapshots</url>
+				</snapshotRepository>
+				<repository>
+					<id>confluent-artifactory-central</id>
+					<url>https://confluent.jfrog.io/confluent/maven-public/</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
     <dependencyManagement>
         <dependencies>
@@ -284,7 +302,15 @@
             <artifactId>guava</artifactId>
         </dependency>
     </dependencies>
+
     <build>
+        <extensions>
+			<extension>
+				<groupId>org.springframework.build</groupId>
+				<artifactId>aws-maven</artifactId>
+				<version>5.0.0.RELEASE</version>
+			</extension>
+		</extensions>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -343,6 +369,11 @@
                         <exclude>src/assembly/**</exclude>
                         <exclude>docs/</exclude>
                         <exclude>docs_src/</exclude>
+                        <exclude>.mvn/</exclude>
+                        <exclude>mvnw</exclude>
+                        <exclude>mvnw.cmd</exclude>
+                        <exclude>.github/</exclude>
+                        <exclude>Jenkinsfile</exclude>
                     </excludes>
                 </configuration>
                 <executions>
