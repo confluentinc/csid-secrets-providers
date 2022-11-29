@@ -370,7 +370,8 @@
                         <exclude>docs/</exclude>
                         <exclude>docs_src/</exclude>
                         <exclude>.mvn/</exclude>
-                        <exclude>mvn.cmd</exclude>
+                        <exclude>mvnw</exclude>
+                        <exclude>mvnw.cmd</exclude>
                         <exclude>.github/</exclude>
                         <exclude>Jenkinsfile</exclude>
                     </excludes>
