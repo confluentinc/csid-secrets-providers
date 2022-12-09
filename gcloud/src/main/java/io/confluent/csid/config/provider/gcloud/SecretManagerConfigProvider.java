@@ -185,7 +185,7 @@ public class SecretManagerConfigProvider extends AbstractJacksonConfigProvider<S
     log.info("getSecret() - request = '{}'", request);
     Path path = Paths.get(
         "projects",
-        this.config.projectId.toString(),
+        this.config.projectId,
         "secrets",
         request.path(),
         "versions",

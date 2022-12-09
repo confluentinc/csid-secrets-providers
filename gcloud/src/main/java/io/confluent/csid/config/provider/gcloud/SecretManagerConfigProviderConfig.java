@@ -150,13 +150,13 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   static final String PROJECT_ID_DOC = "The project that owns the credentials.";
 
   public final CredentialLocation credentialLocation;
-  public final Long projectId;
+  public final String projectId;
 
   public SecretManagerConfigProviderConfig(Map<String, ?> settings) {
     super(config(), settings);
 
     this.credentialLocation = ConfigUtils.getEnum(CredentialLocation.class, this, CREDENTIAL_LOCATION_CONFIG);
-    this.projectId = getLong(PROJECT_ID_CONFIG);
+    this.projectId = getString(PROJECT_ID_CONFIG);
   }
 
   public static ConfigDef config() {
@@ -181,7 +181,7 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
                 .defaultValue("")
                 .build()
         ).define(
-            ConfigKeyBuilder.of(PROJECT_ID_CONFIG, ConfigDef.Type.LONG)
+            ConfigKeyBuilder.of(PROJECT_ID_CONFIG, ConfigDef.Type.STRING)
                 .documentation(PROJECT_ID_DOC)
                 .importance(ConfigDef.Importance.HIGH)
                 .build()
@@ -213,7 +213,7 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
 
       switch (credentialLocation) {
         case File:
-          String credentialsFile = getRequiredString(CREDENTIAL_LOCATION_CONFIG);
+          String credentialsFile = getRequiredString(CREDENTIAL_FILE_CONFIG);
           log.info("Loading credentials file '{}'", credentialsFile);
           try (InputStream inputStream = new FileInputStream(credentialsFile)) {
             result = GoogleCredentials.fromStream(inputStream);

@@ -133,7 +133,7 @@ class SecretManagerFactoryImpl implements SecretManagerFactory {
       return SecretManagerServiceClient.create(settings);
     } catch (IOException ex) {
       ConfigException exception = new ConfigException("Exception during configuration");
-      exception.initCause(exception);
+      exception.initCause(ex);
       throw exception;
     }
   }
