@@ -333,6 +333,8 @@
                                 <componentTypes>
                                     <type>Converter</type>
                                 </componentTypes>
+                                <jarPluginVersion>3.3.0</jarPluginVersion>
+                                <assemblyPluginVersion>3.4.2</assemblyPluginVersion>
                                 <fileSets>
                                     <fileSet>
                                         <outputDirectory>doc</outputDirectory>
