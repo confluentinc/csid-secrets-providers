@@ -152,14 +152,14 @@ import java.util.Map;
                         "  \"username\" : \"db101\",\n" +
                         "  \"password\" : \"superSecretPassword\"\n" +
                         "}"
-                )
+                  )
             }
-        ),
+          ),
         @DocumentationSection(title = "Secret Retrieval", text = "The ConfigProvider will use the name of the secret and the project id to " +
             "build the Resource ID for the secret. For example assuming you configured the ConfigProvider with `config.providers.secretsManager.param.project.id=1234` " +
             "and requested the secret with `${secretsManager:test-secret}`, the ConfigProvider will build a Resource ID of `projects/1234/secrets/test-secret/versions/latest`. " +
             "Some behaviors can be overridden by query string parameters. More than one query string parameter can be used. For example `${secretsManager:test-secret?ttl=30000&version=1}`"
-        )
+          )
     }
 )
 @ConfigProviderKey("secretManager")

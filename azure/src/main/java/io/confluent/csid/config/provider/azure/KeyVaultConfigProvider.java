@@ -146,9 +146,9 @@ import java.util.Map;
                         "  \"username\" : \"db101\",\n" +
                         "  \"password\" : \"superSecretPassword\"\n" +
                         "}"
-                )
+                  )
             }
-        ),
+          ),
         @DocumentationSection(title = "Secret Retrieval", text = "The ConfigProvider will use the name of the secret to build the request to the Key Vault service. " +
             "This behavior can be overridden by setting `config.providers.keyVault.param.prefix=staging-` and requested the secret with `${keyVault:test-secret}`, " +
             "the ConfigProvider will build a request for `staging-test-secret`. Some behaviors can be overridden by query string parameters. More than one query string parameter " +

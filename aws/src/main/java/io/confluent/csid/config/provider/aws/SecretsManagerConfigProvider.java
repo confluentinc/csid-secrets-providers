@@ -150,9 +150,9 @@ import java.util.Map;
                         "  \"username\" : \"appdbsecret\",\n" +
                         "  \"password\" : \"u$3@b3tt3rp@$$w0rd\"\n" +
                         "}"
-                )
+                    )
             }
-        )
+          )
     }
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
