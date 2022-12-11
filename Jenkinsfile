@@ -2,26 +2,25 @@
 
 def config = jobConfig {
     slackChannel = '#csid-build'
-    nodeLabel = 'docker-debian-11-jdk17'
+    nodeLabel = 'docker-debian-jdk17'
     runMergeCheck = false
     downStreamValidate = false
     extraBuildArgs = ''
     extraDeployArgs = ''
-    mavenBuildGoals = 'clean verify install dependency:analyze site validate'
+    mavenBuildGoals = 'clean verify package dependency:analyze validate'
     mavenFlags = '-U -Dmaven.wagon.http.retryHandler.count=10 --batch-mode'
 }
 
 def javaOptions = ""
-
+def isConnector = false
 def job = {
-  def maven_command = sh(script: """if test -f "${env.WORKSPACE}/mvnw"; then echo "${env.WORKSPACE}/mvnw"; else echo "mvn"; fi""", returnStdout: true).trim()
+    def maven_command = sh(script: """if test -f "${env.WORKSPACE}/mvnw"; then echo "${env.WORKSPACE}/mvnw"; else echo "mvn"; fi""", returnStdout: true).trim()
     def returnAfterBuild = false
 
     stage('Build') {
         archiveArtifacts artifacts: 'pom.xml'
         withVaultEnv([["artifactory/tools_jenkins", "user", "TOOLS_ARTIFACTORY_USER"],
-            ["artifactory/tools_jenkins", "password", "TOOLS_ARTIFACTORY_PASSWORD"]
-          ]) {
+            ["artifactory/tools_jenkins", "password", "TOOLS_ARTIFACTORY_PASSWORD"]]) {
             withVaultEnv(config.secret_env_list) {
                 withDockerServer([uri: dockerHost()]) {
                     def mavenSettingsFile = "${env.WORKSPACE_TMP}/maven-global-settings.xml"
@@ -38,17 +37,13 @@ def job = {
 
                                 # cc-root ECR access
                                 $(aws ecr get-login --no-include-email --region us-west-2)
-                                
-                                # Jfrog access
-                                echo $TOOLS_ARTIFACTORY_PASSWORD | docker login confluent-docker.jfrog.io -u $TOOLS_ARTIFACTORY_USER --password-stdin
-                                echo $TOOLS_ARTIFACTORY_PASSWORD | docker login confluent-docker-internal.jfrog.io -u $TOOLS_ARTIFACTORY_USER --password-stdin
                             '''
                             devprodECRAccess()
 
                             if(config.loadNPMCreds) {
                                 loadNPMCredentials()
                             }
-                            
+
                             withVaultFile(config.secret_file_list) {
                                 def mavenBuild = {
                                     sh """
@@ -125,7 +120,7 @@ def job = {
         return
     }
 
-    if(config.publish && config.isDevJob) {
+    if(config.publish && config.isDevJob && !config.skipUploadDependency) {
         stage('upload dependency') {
             uploadDependency(config.secret_file_list)
         }
@@ -139,33 +134,57 @@ def job = {
     }
 
     if (config.publish && (config.isDevJob || config.isPreviewJob)) {
-        stage('Deploy') {
-           withVaultEnv([
-              ["csid/s3-aws-creds", "AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"],
-              ["csid/s3-aws-creds", "AWS_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"]
+        stage('Deploy to Cflt Repo') {
+            withDockerServer([uri: dockerHost()]) {
+                def mavenSettingsFile = "${env.WORKSPACE_TMP}/maven-global-settings.xml"
+                withMavenSettings("maven/jenkins_maven_global_settings", "settings", "MAVEN_GLOBAL_SETTINGS", mavenSettingsFile) {
+                    withMaven(globalMavenSettingsFilePath: mavenSettingsFile,
+                        // skip publishing results again to avoid double-counting
+                        options: [openTasksPublisher(disabled: true), junitPublisher(disabled: true), findbugsPublisher(disabled: true)]) {
+                        if (config.isPreviewJob) {
+                            env.deployOptions = env.deployPreviewOptions
+                        }
+
+                        if (config.nanoVersion && !config.isReleaseJob && !config.isPrJob) {
+                            ciTool("ci-push-tag ${env.WORKSPACE} ${repo_name}")
+                        }
+
+                        sh """
+                            ${javaOptions}
+                            ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-jfrog deploy -DskipTests
+                        """
+                    }
+                }
+            }
+
+        }
+
+        stage('Deploy to CSID S3') {
+            withVaultEnv([
+                ["csid/s3-aws-creds", "AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"],
+                ["csid/s3-aws-creds", "AWS_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"]
             ]) {
-              withDockerServer([uri: dockerHost()]) {
-                  def mavenSettingsFile = "${env.WORKSPACE_TMP}/maven-global-settings.xml"
-                  withMavenSettings("maven/jenkins_maven_global_settings", "settings", "MAVEN_GLOBAL_SETTINGS", mavenSettingsFile) {
-                      withMaven(globalMavenSettingsFilePath: mavenSettingsFile,
-                          // skip publishing results again to avoid double-counting
-                          options: [openTasksPublisher(disabled: true), junitPublisher(disabled: true), findbugsPublisher(disabled: true)]) {
-                          if (config.isPreviewJob) {
-                              env.deployOptions = env.deployPreviewOptions
-                          }
+                withDockerServer([uri: dockerHost()]) {
+                    def mavenSettingsFile = "${env.WORKSPACE_TMP}/maven-global-settings.xml"
+                    withMavenSettings("maven/jenkins_maven_global_settings", "settings", "MAVEN_GLOBAL_SETTINGS", mavenSettingsFile) {
+                        withMaven(globalMavenSettingsFilePath: mavenSettingsFile,
+                            // skip publishing results again to avoid double-counting
+                            options: [openTasksPublisher(disabled: true), junitPublisher(disabled: true), findbugsPublisher(disabled: true)]) {
+                            if (config.isPreviewJob) {
+                                env.deployOptions = env.deployPreviewOptions
+                            }
 
-                          if (config.nanoVersion && !config.isReleaseJob && !config.isPrJob) {
-                              ciTool("ci-push-tag ${env.WORKSPACE} ${repo_name}")
-                          }
+                            if (config.nanoVersion && !config.isReleaseJob && !config.isPrJob) {
+                                ciTool("ci-push-tag ${env.WORKSPACE} ${repo_name}")
+                            }
 
-                          sh """
+                            sh """
                               ${javaOptions}
                               ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-s3 deploy -DskipTests
-                              ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-jfrog deploy -DskipTests
-                          """
-                      }
-                  }
-              }
+                            """
+                        }
+                    }
+                }
             }
         }
 
@@ -180,5 +199,13 @@ def job = {
             }
         }
     }
+
+    if (isConnector && config.connectCveScan){
+        // generate docker images for connector cve scanning
+        stage('CveScan'){
+            cveScan()
+        }
+    }
 }
-runJob config, job
+
+runJob config, job, { commonPost(config) }
