@@ -7,7 +7,7 @@ def config = jobConfig {
     downStreamValidate = false
     extraBuildArgs = ''
     extraDeployArgs = ''
-    mavenBuildGoals = 'clean verify package dependency:analyze validate'
+    mavenBuildGoals = 'clean verify install dependency:analyze validate'
     mavenFlags = '-U -Dmaven.wagon.http.retryHandler.count=10 --batch-mode'
 }
 
