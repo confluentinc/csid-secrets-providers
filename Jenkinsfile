@@ -151,18 +151,17 @@ def job = {
 
                         sh """
                             ${javaOptions}
-                            ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-jfrog deploy -DskipTests
+                            ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -P${config.mavenProfiles} -D${env.deployOptions} deploy -DskipTests
                         """
                     }
                 }
             }
-
         }
 
         stage('Deploy to CSID S3') {
             withVaultEnv([
-                ["csid/s3-aws-creds", "AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"],
-                ["csid/s3-aws-creds", "AWS_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"]
+                ["csid/s3-aws-creds", "AWS_ACCESS_KEY_ID", "CSID_AWS_ACCESS_KEY_ID"],
+                ["csid/s3-aws-creds", "AWS_SECRET_ACCESS_KEY", "CSID_AWS_SECRET_ACCESS_KEY"]
             ]) {
                 withDockerServer([uri: dockerHost()]) {
                     def mavenSettingsFile = "${env.WORKSPACE_TMP}/maven-global-settings.xml"
@@ -180,7 +179,7 @@ def job = {
 
                             sh """
                               ${javaOptions}
-                              ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-s3 deploy -DskipTests
+                              ${maven_command} ${config.extraDeployArgs} ${config.mavenFlags} -Ppublish-to-s3 deploy -DskipTests -Daws.accessKeyId=${CSID_AWS_ACCESS_KEY_ID} -Daws.secretKey=${CSID_AWS_SECRET_ACCESS_KEY}
                             """
                         }
                     }
