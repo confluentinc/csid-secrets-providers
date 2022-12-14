@@ -135,6 +135,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the Google Cloud Secret Manager service.")
@@ -197,7 +198,13 @@ public class SecretManagerConfigProvider extends AbstractJacksonConfigProvider<S
         .setName(path.toString())
         .build();
     AccessSecretVersionResponse response = this.secretManager.accessSecretVersion(accessSecretVersionRequest);
-    return readJsonValue(response.getPayload().getData().toByteArray());
+    if (config.isJsonSecret()) {
+      return readJsonValue(response.getPayload().getData().toByteArray());
+    } else {
+      Map<String, String> secret = new HashMap<>();
+      secret.put(request.path(), response.getPayload().getData().toStringUtf8());
+      return secret;
+    }
   }
 
   @Override

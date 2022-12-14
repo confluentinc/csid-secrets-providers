@@ -149,6 +149,9 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String PROJECT_ID_CONFIG = "project.id";
   static final String PROJECT_ID_DOC = "The project that owns the credentials.";
 
+  public static final String USE_JSON_CONFIG = "use.json";
+  static final String USE_JSON_DOC = "Whether the secret is a json object. If true, the secret will be parsed as a json object and the keys will be used as the config keys.";
+
   public final CredentialLocation credentialLocation;
   public final String projectId;
 
@@ -184,6 +187,12 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
             ConfigKeyBuilder.of(PROJECT_ID_CONFIG, ConfigDef.Type.STRING)
                 .documentation(PROJECT_ID_DOC)
                 .importance(ConfigDef.Importance.HIGH)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(USE_JSON_CONFIG, ConfigDef.Type.BOOLEAN)
+                .documentation(USE_JSON_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue(true)
                 .build()
         );
   }
@@ -235,6 +244,10 @@ class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
 
       return result;
     };
+  }
+
+  public boolean isJsonSecret() {
+    return getBoolean(USE_JSON_CONFIG);
   }
 
 }
