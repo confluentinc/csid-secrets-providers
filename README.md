@@ -13,6 +13,7 @@ In some cases, this can be used to store symmetric keys and asymmetric (public/p
 * [AWS Secrets Manager](aws)
 * [Google Secret Manager](gcloud)
 * [Microsoft Azure Key Vault](azure)
+* [Kubernetes Secrets](k8s)
 
 # Implementation
 
