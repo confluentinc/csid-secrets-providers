@@ -124,7 +124,7 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.6-SNAPSHOT</version>
+        <version>1.0.6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Amazon Secrets Manager</description>
