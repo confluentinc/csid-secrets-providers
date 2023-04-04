@@ -3,9 +3,13 @@
  */
 package io.confluent.csid.config.provider.file;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import org.apache.kafka.common.protocol.types.Field.Str;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +34,9 @@ class FileProviderTest {
 
   @Test
   public void testGetSecret() throws Exception {
-    System.out.println(provider.get(file.getPath()).data().toString());
+    Map<String,String> expected = ImmutableMap.of(file.getName(), "blah");
+    Map<String, String> actual = provider.get(file.getPath()).data();
+    assertEquals(expected, actual);
   }
 
 }
