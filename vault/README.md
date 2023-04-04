@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-vault:latest
 ```
 
-This plugin provides integration with Hashicorp Vault (https://www.hashicorp.com/products/vault/secrets-management).
+This plugin provides integration with Hashicorp Vault.
 
 ## VaultConfigProvider
 
@@ -172,6 +172,36 @@ The username to authenticate with.
 * Importance: HIGH
 
 ```properties
+vault.url.logging.enabled
+```
+Flag to copy java.util.logging messages for "sun.net.www.protocol.http.HttpURLConnection" to the providers logger. Warning this will log all of the traffic for ANY Vault client that is in the current JVM. This could also receive any log message for other code that uses java.net.UrlConnection.
+
+* Type: BOOLEAN
+* Default: false
+* Valid Values: 
+* Importance: LOW
+
+```properties
+vault.prefixpath
+```
+Path prefix for the secrets.
+
+* Type: STRING
+* Default: 
+* Valid Values: 
+* Importance: MEDIUM
+
+```properties
+vault.secrets.version
+```
+The secrets engine version (1 or 2) to use.
+
+* Type: INT
+* Default: 2
+* Valid Values: 
+* Importance: MEDIUM
+
+```properties
 vault.ssl.verify.enabled
 ```
 Flag to determine if the configProvider should verify the SSL Certificate of the Vault server. Outside of development this should never be enabled.
@@ -180,26 +210,6 @@ Flag to determine if the configProvider should verify the SSL Certificate of the
 * Default: true
 * Valid Values: 
 * Importance: HIGH
-
-```properties
-vault.secrets.version
-```
-Sets the version which the secrets store is configured with.
-
-* Type: INTEGER
-* Default: 2
-* Valid Values: 
-* Importance: MEDIUM
-
-```properties
-vault.prefixpath
-```
-Sets the prefixPath. `data` path segment will be appended after the prefixpath.
-
-* Type: STRING
-* Default:
-* Valid Values:
-* Importance: MEDIUM
 
 ### Examples
 
@@ -212,8 +222,9 @@ config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
 config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.auth.method=LDAP
+config.providers.vault.param.vault.login.by=LDAP
 ```
+
 #### Token
 
 The following example uses a token to authenticate to vault.
@@ -223,52 +234,7 @@ config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
 config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.auth.method=Token
+config.providers.vault.param.vault.login.by=Token
 ```
 
-#### Token, using kv store Version 1
 
-The following example uses a token to authenticate to vault.
-
-```properties
-config.providers=vault
-config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
-config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.auth.method=Token
-config.providers.vault.param.secrets.version=1
-```
-
-#### AppRole No prefixpath
-
-The following example uses a AppRole to authenticate to vault.
-
-```properties
-config.providers=vault
-config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.auth.method=AppRole
-config.providers.vault.param.vault.role=fake-role-id
-config.providers.vault.param.vault.secret=fake-secret-id
-config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.namespace=some-namespace
-config.providers.vault.param.vault.secrets.version=2
-```
-
-#### AppRole with prefixpath
-
-The following example uses a AppRole to authenticate to vault.
-When secrets engine name has many path segments, use `prefixpath` to identify the segment after which `data` segment will be appended.
-In the below example, the secret engine name is `main/subapp1`.
-Placeholder `${vault:main/subapp1/secrets:my_secret_value}` retrieves
-
-```properties
-config.providers=vault
-config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.auth.method=AppRole
-config.providers.vault.param.vault.role=fake-role-id
-config.providers.vault.param.vault.secret=fake-secret-id
-config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.namespace=some-namespace
-config.providers.vault.param.vault.prefixpath=main/subapp1
-config.providers.vault.param.vault.secrets.version=2
-```

@@ -1,0 +1,5 @@
+---
+title: Basic Example
+description: The following example uses the FileProvider to load a configuration file from the local file system.
+providerConfig: { }
+providerExample: "/opt/secret/credentials:credentials"

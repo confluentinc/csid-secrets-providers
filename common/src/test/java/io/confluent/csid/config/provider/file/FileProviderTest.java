@@ -1,0 +1,36 @@
+/**
+ * Copyright Confluent 2021
+ */
+package io.confluent.csid.config.provider.file;
+
+import com.google.common.collect.ImmutableMap;
+import java.io.File;
+import java.io.IOException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class FileProviderTest {
+
+  FileProvider provider;
+
+  File file;
+
+  @BeforeEach
+  public void beforeEach() {
+    provider = new FileProvider();
+    provider.configure(ImmutableMap.of());
+    file = new File("src/test/resources/test.txt");
+  }
+
+  @AfterEach
+  public void afterEach() throws IOException {
+    this.provider.close();
+  }
+
+  @Test
+  public void testGetSecret() throws Exception {
+    System.out.println(provider.get(file.getPath()).data().toString());
+  }
+
+}
