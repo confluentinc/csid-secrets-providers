@@ -1,6 +1,6 @@
 # Confluent Secrets Provider
 
-version 1.0.3, updated July 14, 2022
+version 1.0.7, updated April 4, 2023
 
 ## Introduction
 
@@ -14,6 +14,7 @@ In some cases, this can be used to store symmetric keys and asymmetric (public/p
 * [Google Secret Manager](gcloud)
 * [Microsoft Azure Key Vault](azure)
 * [Kubernetes Secrets](k8s)
+* [File System](common)
 
 # Implementation
 

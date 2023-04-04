@@ -78,4 +78,12 @@ The number of seconds to wait between polling intervals.
 
 ### Examples
 
+```properties
+config.providers=file
+config.providers.file.class=io.confluent.kafka.config.providers.FileConfigProvider
+```
+
+```
+${file:/opt/secret/credentials:credentials}
+```
 
