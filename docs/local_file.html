@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Config Provider &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AWS Secrets Manager Config Provider" href="aws_secrets.html" />
+    <link rel="prev" title="Implementation &amp; Configuration" href="implementation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Confluent CSID Secrets Provider documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Confluent Secrets Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation &amp; Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">File Config Provider</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fileprovider">FileProvider</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general">General</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="aws_secrets.html">AWS Secrets Manager Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="azure_key_vault.html">Microsoft Azure Key Vault Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_secret_manager.html">Google Secret Manager Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k8s_secret_manager.html">K8s Secrets Manager Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hashicorp_vault.html">Hashicorp Vault Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project-attribution.html">3rd-Party Software for git&#64;github.com:confluentinc/csid-config-providers.git</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Confluent CSID Secrets Provider documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File Config Provider</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/local_file.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-config-provider">
+<h1>File Config Provider<a class="headerlink" href="#file-config-provider" title="Permalink to this heading"></a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>confluent-hub<span class="w"> </span>install<span class="w"> </span>confluent/kafka-config-provider-common:latest
+</pre></div>
+</div>
+<p>This plugin provides integration with files.</p>
+<section id="fileprovider">
+<h2>FileProvider<a class="headerlink" href="#fileprovider" title="Permalink to this heading"></a></h2>
+<p>This config provider is used to retrieve secrets from a file.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h3>
+<section id="general">
+<h4>General<a class="headerlink" href="#general" title="Permalink to this heading"></a></h4>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">retry.count</span>
+</pre></div>
+</div>
+<p>The number of attempts to retrieve a secret from the upstream secret store.</p>
+<ul class="simple">
+<li><p>Type: INT</p></li>
+<li><p>Default: 3</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: LOW</p></li>
+</ul>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">retry.interval.seconds</span>
+</pre></div>
+</div>
+<p>The amount of time in seconds to wait between each attempt to retrieve a secret form the upstream secret store.</p>
+<ul class="simple">
+<li><p>Type: LONG</p></li>
+<li><p>Default: 10</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: LOW</p></li>
+</ul>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">thread.count</span>
+</pre></div>
+</div>
+<p>The number of threads to use when retrieving secrets and executing subscription callbacks.</p>
+<ul class="simple">
+<li><p>Type: INT</p></li>
+<li><p>Default: 3</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: LOW</p></li>
+</ul>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">timeout.seconds</span>
+</pre></div>
+</div>
+<p>The amount of time in seconds to wait before timing out a call to retrieve a secret from the upstream secret store. The total timeout of <code class="docutils literal notranslate"><span class="pre">get(path)</span></code> and <code class="docutils literal notranslate"><span class="pre">get(path,</span> <span class="pre">keys)</span></code> will be <code class="docutils literal notranslate"><span class="pre">retry.count</span> <span class="pre">*</span> <span class="pre">timeout.seconds</span></code>. For example if <code class="docutils literal notranslate"><span class="pre">timeout.seconds</span> <span class="pre">=</span> <span class="pre">30</span></code> and <code class="docutils literal notranslate"><span class="pre">retry.count</span> <span class="pre">=</span> <span class="pre">3</span></code> then <code class="docutils literal notranslate"><span class="pre">get(path)</span></code> and <code class="docutils literal notranslate"><span class="pre">get(path,</span> <span class="pre">keys)</span></code> will block for 90 seconds.</p>
+<ul class="simple">
+<li><p>Type: LONG</p></li>
+<li><p>Default: 30</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: LOW</p></li>
+</ul>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">polling.enabled</span>
+</pre></div>
+</div>
+<p>Determines if the config provider supports polling the upstream secret stores for changes. If disabled the methods <code class="docutils literal notranslate"><span class="pre">subscribe</span></code>, <code class="docutils literal notranslate"><span class="pre">unsubscribe</span></code>, and <code class="docutils literal notranslate"><span class="pre">unsubscribeAll</span></code> will throw a UnsupportedOperationException.</p>
+<ul class="simple">
+<li><p>Type: BOOLEAN</p></li>
+<li><p>Default: true</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: MEDIUM</p></li>
+</ul>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">polling.interval.seconds</span>
+</pre></div>
+</div>
+<p>The number of seconds to wait between polling intervals.</p>
+<ul class="simple">
+<li><p>Type: LONG</p></li>
+<li><p>Default: 300</p></li>
+<li><p>Valid Values:</p></li>
+<li><p>Importance: MEDIUM</p></li>
+</ul>
+</section>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h3>
+<div class="highlight-properties notranslate"><div class="highlight"><pre><span></span><span class="na">config.providers</span><span class="o">=</span><span class="s">file</span>
+<span class="na">config.providers.file.class</span><span class="o">=</span><span class="s">io.confluent.kafka.config.providers.FileConfigProvider</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>${file:/opt/secret/credentials:credentials}
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="implementation.html" class="btn btn-neutral float-left" title="Implementation &amp; Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="aws_secrets.html" class="btn btn-neutral float-right" title="AWS Secrets Manager Config Provider" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Confluent.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
