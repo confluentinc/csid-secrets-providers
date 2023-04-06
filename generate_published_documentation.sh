@@ -118,8 +118,9 @@
 
 # Set up
 mkdir -p docs
-pip3 install sphinx-rtd-theme
-pip3 install sphinx-markdown-tables
+pip3 install -U sphinx-rtd-theme
+pip3 install -U sphinx-markdown-tables
+pip3 install -U recommonmark
 folder_location=$(pwd)
 
 

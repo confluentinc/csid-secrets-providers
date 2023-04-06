@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-gcloud:latest
 ```
 
-This plugin provides integration with the Google Secret Manager service (https://cloud.google.com/secret-manager).
+This plugin provides integration with the Google Secret Manager service.
 
 ## SecretManagerConfigProvider
 
@@ -121,16 +121,25 @@ The number of seconds to wait between polling intervals.
 * Importance: MEDIUM
 
 ```properties
+use.json
+```
+Whether the secret is a json object. If true, the secret will be parsed as a json object and the keys will be used as the config keys.
+
+* Type: BOOLEAN
+* Default: true
+* Valid Values: 
+* Importance: MEDIUM
+
+```properties
 project.id
 ```
 The project that owns the credentials.
 
-* Type: LONG
-* Default: java.lang.Object@4fbda97b
+* Type: STRING
+* Default: java.lang.Object@9f46d94
 * Valid Values: 
 * Importance: HIGH
 
 ### Examples
 
-TODO - Add examples
 

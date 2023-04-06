@@ -4,15 +4,18 @@
    contain the root `toctree` directive.
 
 Welcome to Confluent CSID Config Providers Accelerator documentation!
-=====================================================
+=====================================================================
 
 .. toctree::
+
    introduction
    changelog
    implementation
+   local_file
    aws_secrets
    azure_key_vault
    google_secret_manager
+   k8s_secret_manager
    hashicorp_vault
    releasing
    contributing

@@ -112,8 +112,8 @@ def job = {
             echo "FindBugsPublisher failed: $findbugserror"
             currentBuild.result = 'Unstable'
         }
-
-        step([$class: 'DependencyCheckPublisher'])
+        // temporarily avoid for #inc-rcca-11407-jenkins-builds-failing-for-kafka-connect-oracle-cdc-connector
+        //step([$class: 'DependencyCheckPublisher'])
     }
 
     if (returnAfterBuild) {

@@ -4,7 +4,7 @@
 confluent-hub install confluent/kafka-config-provider-aws:latest
 ```
 
-This plugin provides integration with the AWS Secrets Manager service (https://aws.amazon.com/secrets-manager/).
+This plugin provides integration with the AWS Secrets Manager service.
 
 ## SecretsManagerConfigProvider
 
@@ -147,6 +147,7 @@ config.providers=secretsManager
 config.providers.secretsManager.class=io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
 config.providers.secretsManager.param.aws.region=us-west-2
 ```
+
 #### Access Key and Secret
 
 The following example uses an AWS Access key and Secret to connect to the us-west-2 region.
@@ -158,4 +159,5 @@ config.providers.secretsManager.param.aws.region=us-west-2
 config.providers.secretsManager.param.aws.access.key=qadfoadsfaweasdafsd
 config.providers.secretsManager.param.aws.secret.key=asdifbasidvcasdadsfasd
 ```
+
 

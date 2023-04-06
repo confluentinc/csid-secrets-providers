@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Implementation &amp; Configuration &mdash; Confluent CSID Secrets Provider documentation  documentation</title>
@@ -11,14 +11,15 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="AWS Secrets Manager Config Provider" href="aws_secrets.html" />
+    <link rel="next" title="File Config Provider" href="local_file.html" />
     <link rel="prev" title="Change Log" href="changelog.html" /> 
 </head>
 
@@ -27,11 +28,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> Confluent CSID Secrets Provider documentation
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Confluent CSID Secrets Provider documentation
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -49,9 +54,11 @@
 <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="local_file.html">File Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aws_secrets.html">AWS Secrets Manager Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="azure_key_vault.html">Microsoft Azure Key Vault Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="google_secret_manager.html">Google Secret Manager Config Provider</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k8s_secret_manager.html">K8s Secrets Manager Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hashicorp_vault.html">Hashicorp Vault Config Provider</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releasing.html#evaluation-use-disclaimers">Evaluation Use Disclaimers</a></li>
@@ -72,8 +79,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Implementation &amp; Configuration</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Implementation &amp; Configuration</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/implementation.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -84,9 +91,9 @@
            <div itemprop="articleBody">
              
   <section id="implementation-configuration">
-<h1>Implementation &amp; Configuration<a class="headerlink" href="#implementation-configuration" title="Permalink to this headline"></a></h1>
+<h1>Implementation &amp; Configuration<a class="headerlink" href="#implementation-configuration" title="Permalink to this heading"></a></h1>
 <section id="how-should-i-implement-this-library">
-<h2>How should I implement this library?<a class="headerlink" href="#how-should-i-implement-this-library" title="Permalink to this headline"></a></h2>
+<h2>How should I implement this library?<a class="headerlink" href="#how-should-i-implement-this-library" title="Permalink to this heading"></a></h2>
 <p>A complete setup of Confluent Secrets will go through the following phases:</p>
 <ol class="simple">
 <li><p>Installation of the libraries</p></li>
@@ -96,7 +103,7 @@
 </ol>
 </section>
 <section id="installation-what-files-do-i-need-and-where-do-i-put-them">
-<h2>Installation: What files do I need, and where do I put them?<a class="headerlink" href="#installation-what-files-do-i-need-and-where-do-i-put-them" title="Permalink to this headline"></a></h2>
+<h2>Installation: What files do I need, and where do I put them?<a class="headerlink" href="#installation-what-files-do-i-need-and-where-do-i-put-them" title="Permalink to this heading"></a></h2>
 <p>The Confluent Secrets Providers Accelerator is provided as Java jar libraries to be installed in your Java class path.</p>
 <p>Note: ordering of libraries in Java class path is important.
 Accelerator libraries such as this should be loaded first.</p>
@@ -104,20 +111,20 @@ Accelerator libraries such as this should be loaded first.</p>
 <p>If necessary, then use separate class paths to be explicit for each component.</p>
 </section>
 <section id="installation-in-the-java-class-path">
-<h2>Installation in the Java class path<a class="headerlink" href="#installation-in-the-java-class-path" title="Permalink to this headline"></a></h2>
+<h2>Installation in the Java class path<a class="headerlink" href="#installation-in-the-java-class-path" title="Permalink to this heading"></a></h2>
 <p>Using the table below, copy the libraries required by your use case into your existing class path or a new folder.</p>
 <p>The class search path (class path) can be set using either the <code class="docutils literal notranslate"><span class="pre">-classpath</span></code> option when calling a JDK tool (the preferred method) or by setting the <code class="docutils literal notranslate"><span class="pre">CLASSPATH</span></code> environment variable.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">-classpath</span></code> option is preferred because you can set it individually for each application without affecting other applications and without other applications modifying its value.</p>
 </section>
 <section id="installation-via-the-cli">
-<h2>Installation via the CLI<a class="headerlink" href="#installation-via-the-cli" title="Permalink to this headline"></a></h2>
+<h2>Installation via the CLI<a class="headerlink" href="#installation-via-the-cli" title="Permalink to this heading"></a></h2>
 <p>Update the following with the specific provider to be installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>confluent-hub install confluent/csid-config-provider-aws:latest
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>confluent-hub<span class="w"> </span>install<span class="w"> </span>confluent/csid-config-provider-aws:latest
 </pre></div>
 </div>
 </section>
 <section id="list-of-libraries-current-version-supports-cp-5-5-x-and-up">
-<h2>List of libraries (current version, supports CP 5.5.x and up)<a class="headerlink" href="#list-of-libraries-current-version-supports-cp-5-5-x-and-up" title="Permalink to this headline"></a></h2>
+<h2>List of libraries (current version, supports CP 5.5.x and up)<a class="headerlink" href="#list-of-libraries-current-version-supports-cp-5-5-x-and-up" title="Permalink to this heading"></a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -158,7 +165,7 @@ Accelerator libraries such as this should be loaded first.</p>
 </tbody>
 </table></section>
 <section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline"></a></h2>
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading"></a></h2>
 <p>Once the libraries required for your use case have been installed in the
 Java classpath, it is time to configure encryption.</p>
 <p>Configuration is done via standard Java <code class="docutils literal notranslate"><span class="pre">Properties</span></code> objects. Meaning, configuration can be specified in properties files, code, environment variables, etc.</p>
@@ -170,13 +177,13 @@ Java classpath, it is time to configure encryption.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="changelog.html" class="btn btn-neutral float-left" title="Change Log" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="aws_secrets.html" class="btn btn-neutral float-right" title="AWS Secrets Manager Config Provider" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="local_file.html" class="btn btn-neutral float-right" title="File Config Provider" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Confluent.</p>
+    <p>&#169; Copyright 2023, Confluent.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

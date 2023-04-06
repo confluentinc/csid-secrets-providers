@@ -1,15 +1,11 @@
----
+# 3rd-Party Software Attribution
 
-# 3rd-Party Software for [git@github.com:confluentinc/csid-config-providers.git]()
-
-
-
-The following 3rd-party software packages may be used by or distributed with **git@github.com:confluentinc/csid-config-providers.git**.  Any information relevant to third-party vendors listed below are collected using common, reasonable means.
+The following 3rd-party software packages may be used by or distributed. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
 
-Date generated | Revision ID
-:------------: | :----------:
-11/03/21 | 37f4dc5b3c1d81da99dd18ebc01b86b18059f9f4
+| Date generated |               Revision ID                |
+|:--------------:|:----------------------------------------:|
+|    11/03/21    | 37f4dc5b3c1d81da99dd18ebc01b86b18059f9f4 |
 
 ---
 

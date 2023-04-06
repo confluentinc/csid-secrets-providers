@@ -35,3 +35,6 @@ target
 docs_src/_build
 docs/_sources
 docs/_static/fonts
+venv
+
+pom.xml.versionsBackup

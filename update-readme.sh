@@ -117,6 +117,7 @@
 #
 
 mvn clean test
+cp common/target/README.md common/README.md
 cp aws/target/README.md aws/README.md
 cp azure/target/README.md azure/README.md
 cp gcloud/target/README.md gcloud/README.md
