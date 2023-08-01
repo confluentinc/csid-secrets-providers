@@ -34,7 +34,7 @@ The ConfigProvider will use the name of the secret to build the request to the K
 | version   | Used to override the version of the secret.    | latest                                                             | `${keyVault:test-secret?version=1}`      |
 +-----------+------------------------------------------------+--------------------------------------------------------------------+------------------------------------------+
 
-If the secret in Azure has been created using json format for both username and password foe example, then you can retrieve it using "${keyVault:test-secret:username}" and "${keyVault:test-secret:password}"
+If the secret in Azure has been created using json format for both username and password for example, then you can retrieve it using "${keyVault:test-secret:username}" and "${keyVault:test-secret:password}"
 
 ### Configuration
 
