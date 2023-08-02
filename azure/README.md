@@ -4,6 +4,8 @@
 confluent-hub install confluent/kafka-config-provider-azure:latest
 ```
 
+Note: if this command does not work and the package is not online available to download, then you need to download the zip file for azure and include it manually in the plugins path, for example for Azure Key Vault 1.0.5 you would get confluent-csid-secrets-provider-azure-1.0.5.zip from https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.5.
+
 This plugin provides integration with the Microsoft Azure Key Vault service.
 
 ## KeyVaultConfigProvider
@@ -32,7 +34,7 @@ The ConfigProvider will use the name of the secret to build the request to the K
 | version   | Used to override the version of the secret.    | latest                                                             | `${keyVault:test-secret?version=1}`      |
 +-----------+------------------------------------------------+--------------------------------------------------------------------+------------------------------------------+
 
-
+If the secret in Azure has been created using json format for both username and password for example, then you can retrieve it using "${keyVault:test-secret:username}" and "${keyVault:test-secret:password}"
 
 ### Configuration
 
@@ -288,11 +290,49 @@ The following example uses the UsernamePasswordCredential to load the credential
 ```properties
 config.providers=keyVault
 config.providers.keyVault.class=io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
-config.providers.keyVault.param.vault.url=https\://example.vault.azure.net/
+config.providers.keyVault.param.vault.url=https://example.vault.azure.net/
 config.providers.keyVault.param.credential.type=UsernamePassword
 config.providers.keyVault.param.username=foo
 config.providers.keyVault.param.password=bar
 config.providers.keyVault.param.tenant.id=27e831e4-5cff-4143-b612-64de151b2f3e
+config.providers.keyVault.param.client.id=qwerqwte-qwteqwtqwet
+```
+
+#### Username and Password - Example using Ansible hosts.yaml
+
+The following example uses the UsernamePasswordCredential to load the credentials. Make sure to make a few changes described below to work with cp-ansible
+
+```properties
+all:
+  vars:
+    .....
+    kafka_connect_custom_properties:
+      config.providers: keyVault
+      config.providers.keyVault.class: io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+      config.providers.keyVault.param.vault.url: 'https://example.vault.azure.net'
+      config.providers.keyVault.param.credential.type: UsernamePassword
+      config.providers.keyVault.param.username: foo
+      config.providers.keyVault.param.password: bar
+      config.providers.keyVault.param.tenant.id: 27e831e4-5cff-4143-b612-64de151b2f3e
+      config.providers.keyVault.param.client.id: qwerqwte-qwteqwtqwet
+```
+
+#### Client Secret - Example using Ansible hosts.yaml
+
+The following example uses the ClientSecretCredential to load the credentials. Make sure to make a few changes described below to work with cp-ansible
+
+```properties
+all:
+  vars:
+    .....
+    kafka_connect_custom_properties:
+      config.providers: keyVault
+      config.providers.keyVault.class: io.confluent.csid.config.provider.azure.KeyVaultConfigProvider
+      config.providers.keyVault.param.vault.url: 'https://example.vault.azure.net'
+      config.providers.keyVault.param.credential.type: ClientSecret
+      config.providers.keyVault.param.client.secret: asdonfasodfasd
+      config.providers.keyVault.param.tenant.id: 27e831e4-5cff-4143-b612-64de151b2f3e
+      config.providers.keyVault.param.client.id: qwerqwte-qwteqwtqwet
 ```
 
 
