@@ -21,4 +21,4 @@ Third-party systems that integrations have been developed for, and included here
 - [Microsoft Azure Key Vault](https://azure.microsoft.com/en-gb/products/key-vault)
 - [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret)
 
-Copyright 2022 Confluent Inc.
+Copyright 2023 Confluent Inc.

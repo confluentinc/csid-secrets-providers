@@ -24,15 +24,15 @@ export default defineConfig({
             				link: '/'
             			}]
             		}, {
-            			label: 'Explanation',
-            			autogenerate: {
-            				directory: 'explanation'
-            			}
-            		}, {
             			label: 'Guides',
             			autogenerate: {
             				directory: 'guides'
             			}
+            		}, {
+            		    label: 'legal',
+            		    autogenerate: {
+            		        directory: 'legal'
+            		    }
             		}, {
             			label: 'Reference',
             			autogenerate: {

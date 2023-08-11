@@ -33,7 +33,7 @@ The value for the secret must be formatted as a JSON object. This allows multipl
 ```java
 aws.access.key
 ```
-AWS access key ID to connect with. If this value is not set the `DefaultAWSCredentialsProviderChain` (https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html) will be used to attempt loading the credentials from several default locations.
+AWS access key ID to connect with. If this value is not set the [`DefaultAWSCredentialsProviderChain`](https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html) will be used to attempt loading the credentials from several default locations.
 
 * Type: STRING
 * Default:
