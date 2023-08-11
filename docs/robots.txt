@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+Sitemap: https://confluentinc.github.io/csid-secrets-provider/sitemap-index.xml

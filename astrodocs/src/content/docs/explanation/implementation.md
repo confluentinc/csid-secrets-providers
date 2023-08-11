@@ -1,22 +1,8 @@
-# Confluent Secrets Provider
-
-version 1.0.7, updated April 4, 2023
-
-## Introduction
-
-With a typical Confluent Kafka Platform installation, secrets are stored within that cluster only.
-
-This CSID Accelerator enables use of external third-party systems for securely storing and retrieving key/value pairs, commonly used for passwords, for example.
-In some cases, this can be used to store symmetric keys and asymmetric (public/private) keys.
-
-* [Hashicorp Vault](vault)
-* [AWS Secrets Manager](aws)
-* [Google Secret Manager](gcloud)
-* [Microsoft Azure Key Vault](azure)
-* [Kubernetes Secrets](k8s)
-* [File System](common)
-
-# Implementation
+---
+title: Implementation
+tableOfContents:
+    maxHeadingLevel: 3
+---
 
 ## How should I implement this library?
 
@@ -67,34 +53,11 @@ confluent-hub install confluent/csid-config-provider-aws:latest
 | csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management
 | csid-config-provider-vault-{version}.jar | Hashicorp Vault library for secrets management
 
-## Releasing
 
-Change the version
-```bash
-mvn versions:set -DnewVersion=1.0.3-SNAPSHOT
-```
+## Configuration
 
-Build the packages
-```bash
-./build.sh
-```
+Once the libraries required for your use case have been installed in the
+Java classpath, it is time to configure encryption.
 
-Regenerate Documentation
-```bash
-./update-readme.sh
-```
+Configuration is done via standard Java `Properties` objects. Meaning, configuration can be specified in properties files, code, environment variables, etc.
 
-Update licenses
-```bash
-./update-license.sh
-```
-
-## Evaluation Use Disclaimers
-
-This software was developed as a Confluent CSID Accelerator.
-For Accelerators, a Confluent Professional Services (PS) engagement investment and agreement may be required to cover the initial implementation, guidance through testing, and to provide additional time to support release/production readiness activities.
-This agreement also includes our issuance of a license, and your acceptance of terms and conditions, to install and for usage of the Accelerator software.
-Without a license, this software is not intended to be used outside of the examples or have the examples modified.
-Confluent retains all intellectual property rights, in and to the Accelerator Software and any changes and other modifications thereto.
-
-Copyright 2023 Confluent Inc.
