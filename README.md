@@ -89,6 +89,39 @@ Update licenses
 ./update-license.sh
 ```
 
+## Publishing new documentation
+
+To publish new documentation, first ensure you have the latest version of the `csid-secret-providers` repo.
+
+Then run the following command:
+
+```bash
+# navigate to the astrodocs folder
+cd astrodocs
+npm i # only needed the first time
+npm run gh-pages
+```
+
+## Accessing the documentation
+
+To access the CSM documentation navigate to [csid-secret-providers Github Pages](https://confluentinc.github.io/csid-secret-providers/)
+or locally run the following commands
+
+```bash
+# navigate to the astrodocs folder
+cd astrodocs
+npm i # only needed the first time
+npm run build
+npm run preview
+```
+
+## Adding new documentation
+
+When adding new documentation save the document as `<DOC_NAME>.md` in the `astrodocs/src/content/docs` directory.
+
+Visit the [README](astrodocs/README.md) for more information.
+
+
 ## Evaluation Use Disclaimers
 
 This software was developed as a Confluent CSID Accelerator.
