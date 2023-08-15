@@ -142,7 +142,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //@Compose(dockerComposePath = "docker-compose.yml", clusterHealthCheck = VaultClusterHealthCheck.class)
 public abstract class VaultConfigProviderIT {
 
-  public static final String HASHICORP_VAULT_DOCKER_IMAGE = "hashicorp/vault:1.13";
+  public static final String HASHICORP_VAULT_DOCKER_IMAGE = "hashicorp/vault:latest";
   public static final String LDAP_DOCKER_IMAGE = "osixia/openldap:1.5.0";
 
   protected VaultConfigProvider configProvider;
