@@ -132,7 +132,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
 
-  final VaultContainer<?> vaultContainer = new VaultContainer<>("vault:latest")
+  final VaultContainer<?> vaultContainer = new VaultContainer<>(HASHICORP_VAULT_DOCKER_IMAGE)
       .withVaultToken("kxbfgiertgibadsf")
       .withNetworkAliases("vault")
       .withExposedPorts(8200);
