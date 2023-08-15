@@ -56,16 +56,16 @@ confluent-hub install confluent/csid-config-provider-aws:latest
 
 ## List of libraries (current version, supports CP 5.5.x and up)
 
-| Required Libraries | Description
-| ---- | ----
-| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases
+| Required Libraries                        | Description                                                   |
+|-------------------------------------------|---------------------------------------------------------------|
+| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases |
 
-| Optional Libraries | Description
-| ---- | ----
-| csid-config-provider-aws-{version}.jar | AWS Secrets library for secrets management
-| csid-config-provider-azure-{version}.jar | Azure KeyVault library for secrets management
-| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management
-| csid-config-provider-vault-{version}.jar | Hashicorp Vault library for secrets management
+| Optional Libraries                        | Description                                    |
+|-------------------------------------------|------------------------------------------------|
+| csid-config-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
+| csid-config-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
+| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
+| csid-config-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
 
 ## Releasing
 
@@ -104,7 +104,7 @@ npm run gh-pages
 
 ## Accessing the documentation
 
-To access the CSM documentation navigate to [csid-secret-providers Github Pages](https://confluentinc.github.io/csid-secret-providers/)
+To access the documentation navigate to [csid-secret-providers GitHub Pages](https://confluentinc.github.io/csid-secret-providers/)
 or locally run the following commands
 
 ```bash
