@@ -1,0 +1,23 @@
+name: cc-mk-include
+lang: unknown
+lang_version: unknown
+sonarqube:
+  enable: true
+  scanner_config:
+    sonar.coverage.exclusions: "**/test/**/*,**/tests/**/*,**/mock/**/*,**/mocks/**/*,**/*mock*,**/*test*,**/*.py,**/*.go"
+  coverage_exclusions:
+  - "**/*.java"
+git:
+  enable: true
+  repo_name: confluentinc/cc-mk-include
+semaphore:
+  enable: true
+  pipeline_enable: false
+  triggers:
+  - tags
+  - branches
+  - pull_requests
+  - forked_pull_requests
+  branches:
+  - master
+  - /^v\d+\.\d+\.x$/

@@ -1,0 +1,34 @@
+version: '3'
+services:
+  spire-server:
+    container_name: spire-server
+    ports:
+      - '31524:8081'
+    image: ghcr.io/spiffe/spire-server:1.6.0
+    hostname: spire-server
+    healthcheck:
+      test: ["CMD", "/opt/spire/bin/spire-server", "entry", "show"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - ./:/opt/spire/conf/server
+      - dbdata:/opt/spire/data/server
+    command: ["-config", "/opt/spire/conf/server/server.conf"]
+  spire-agent:
+    container_name: spire-agent
+    ports:
+      - '31523:8081'
+    pid: "host"
+    image: us-docker.pkg.dev/devprod-nonprod-052022/docker/dev/confluentinc/cc-local-testing-spire-agent:v0.5.0
+    depends_on:
+      spire-server:
+        condition: service_healthy
+    hostname: spire-agent
+    volumes:
+      - ./:/opt/spire/conf/agent
+      - /var/run/:/var/run/
+    command: ["-config", "/opt/spire/conf/agent/agent.conf", "-joinToken", "${JOIN_TOKEN}"]
+volumes:
+  dbdata:
