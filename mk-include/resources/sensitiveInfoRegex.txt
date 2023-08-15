@@ -1,0 +1,5 @@
+ey[A-Za-z0-9_-]+\\.ey[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+
+api[_.]secret.?[=:].?([a-zA-Z0-9+/]{64})
+password.?[=:].?([a-zA-Z0-9+/]+)
+token.?[=:].?ey[A-Za-z0-9_-]+
+Authorization.?[=:].?Bearer.?ey[A-Za-z0-9_-]+

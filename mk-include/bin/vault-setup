@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# must be run directly after `checkout` on CI - in general, while in the
+# source directory of the checkout of the current project
+export PATH=$PATH:$PWD/ci-bin:$PWD/mk-include/bin
+# Default to Vault v1 address if not specified
+: "${VAULT_ADDR:=https://vault.cireops.gcp.internal.confluent.cloud}"
+export VAULT_ADDR
+# Prefer to use OIDC over AppRole if running on a Semaphore host
+if [ -n "${SEMAPHORE_OIDC_TOKEN}" ] && [ -z "${VAULT_SKIP_OIDC}" ]; then
+	# If the job originated from Cloud or Self-Hosted use the correct mount path
+	if [[ "${SEMAPHORE_ORGANIZATION_URL}" == *".semaphoreci.com" ]]; then
+		: "${VAULT_OIDC_PATH:=semaphore_cloud}"
+	else
+		: "${VAULT_OIDC_PATH:=semaphore_self_hosted}"
+	fi
+	: "${VAULT_OIDC_ROLE:=default}"
+	echo "Logging into Vault via OIDC using '${VAULT_OIDC_PATH}' with role=${VAULT_OIDC_ROLE}"
+	token="$(vault write -field=token \
+		"auth/${VAULT_OIDC_PATH}/login" \
+		role="${VAULT_OIDC_ROLE}" \
+		jwt="${SEMAPHORE_OIDC_TOKEN}")" || exit
+else
+	: "${VAULT_AUTH_PATH:=app/devel}"
+	echo "Logging into Vault via AppRole using '${VAULT_AUTH_PATH}' with VAULT_ROLE_ID=$VAULT_ROLE_ID"
+	token="$(vault write -field=token \
+		"auth/${VAULT_AUTH_PATH}/login" \
+		role_id="${VAULT_ROLE_ID}" \
+		secret_id="${VAULT_SECRET_ID}")" || exit
+fi
+# Write the token to disk instead of VAULT_TOKEN
+vault login -no-print token="${token}" && echo "Successfully Logged Into Vault"
+unset token
+
+function renew_vault_token {
+    while true
+    do
+      sleep 1800
+      echo -e "Refreshing vault token..."
+      vault token renew -increment=2h > /dev/null
+    done
+}
+
+# Put the renew vault token function in the background and let it continuously run as needed
+renew_vault_token &
