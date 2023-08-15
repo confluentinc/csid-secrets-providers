@@ -360,6 +360,7 @@
                         <exclude>mvnw.cmd</exclude>
                         <exclude>.github/</exclude>
                         <exclude>Jenkinsfile</exclude>
+                        <exclude>mk-include/**</exclude>
                         <exclude>venv/</exclude>
                     </excludes>
                 </configuration>
