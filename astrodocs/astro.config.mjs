@@ -47,6 +47,6 @@ export default defineConfig({
             			}]
             		})
             	],
-            	site: 'https://confluentinc.github.io/csid-secrets-provider/',
-            	base: '/csid-secrets-provider'
+            	site: 'https://confluentinc.github.io/csid-secrets-providers/',
+            	base: '/csid-secrets-providers'
             })
