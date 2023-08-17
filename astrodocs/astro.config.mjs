@@ -26,17 +26,17 @@ export default defineConfig({
             		}, {
             			label: 'Guides',
             			autogenerate: {
-            				directory: 'Guides'
+            				directory: 'guides'
             			}
             		}, {
             		    label: 'Legal',
             		    autogenerate: {
-            		        directory: 'Legal'
+            		        directory: 'legal'
             		    }
             		}, {
             			label: 'Reference',
             			autogenerate: {
-            				directory: 'Reference'
+            				directory: 'reference'
             			}
             		}]
             	}),
