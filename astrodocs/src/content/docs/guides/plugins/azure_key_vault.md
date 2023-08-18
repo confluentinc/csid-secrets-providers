@@ -1,7 +1,7 @@
 ---
 title: Microsoft Azure Key Vault Config Provider
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 4
 ---
 
 ```bash
@@ -29,9 +29,9 @@ The value for the secret must be formatted as a JSON object. This allows multipl
 The ConfigProvider will use the name of the secret to build the request to the Key Vault service. This behavior can be overridden by setting `config.providers.keyVault.param.prefix=staging-` and requested the secret with `${keyVault:test-secret}`, the ConfigProvider will build a request for `staging-test-secret`. Some behaviors can be overridden by query string parameters. More than one query string parameter can be used. For example `${keyVault:test-secret?ttl=30000&version=1}` would return the secret named `test-secret` version `1` with a TTL of 30 seconds. After the TTL has expired the ConfigProvider will request an updated credential. If you're using this with Kafka Connect, your tasks will be reconfigured if one of the values have changed.
 
 
-Parameter | Description       | Default         | Example                                  
---- | --- | --- | ---
-ttl       | Used to override the TTL for the secret.       | Value specified by `config.providers.keyVault.param.secret.ttl.ms` | `${keyVault:test-secret?ttl=60000}`      |
+| Parameter | Description                              | Default                                                            | Example                             |
+|-----------|------------------------------------------|--------------------------------------------------------------------|-------------------------------------|
+| ttl       | Used to override the TTL for the secret. | Value specified by `config.providers.keyVault.param.secret.ttl.ms` | `${keyVault:test-secret?ttl=60000}` |
 
 version   | Used to override the version of the secret.    | latest                                                             | `${keyVault:test-secret?version=1}`      |
 

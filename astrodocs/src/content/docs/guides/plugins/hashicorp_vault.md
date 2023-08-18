@@ -1,7 +1,7 @@
 ---
 title: Hashicorp Vault Config Provider
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 4
 ---
 
 ```bash

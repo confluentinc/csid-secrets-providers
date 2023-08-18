@@ -1,7 +1,7 @@
 ---
 title: K8s Secrets Manager Config Provider
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 4
 ---
 
 ```bash

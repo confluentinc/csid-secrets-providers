@@ -1,7 +1,7 @@
 ---
 title: Contributing
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 2
 ---
 
 ## How to contribute

@@ -9,7 +9,7 @@ export default defineConfig({
     },
 	integrations: [
 		starlight({
-			title: 'Secret Providers',
+			title: 'Secrets Providers',
 			editLink: {
 			    baseUrl: 'https://github.com/confluentinc/csid-secrets-provider/edit/main/astrodocs/'
 			},
@@ -26,7 +26,8 @@ export default defineConfig({
             		}, {
             			label: 'Guides',
             			autogenerate: {
-            				directory: 'guides'
+            				directory: 'guides',
+            				collapsed: true
             			}
             		}, {
             		    label: 'Legal',

@@ -1,7 +1,7 @@
 ---
 title: Project Attributions
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 4
 ---
 
 The following 3rd-party software packages may be used by or distributed. Any information relevant to third-party vendors listed below are collected using common, reasonable means.

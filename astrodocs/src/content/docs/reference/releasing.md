@@ -1,7 +1,7 @@
 ---
 title: Releasing
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 2
 ---
 
 Change the version

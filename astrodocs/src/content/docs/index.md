@@ -1,7 +1,7 @@
 ---
 title: Confluent Secrets Provider
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 2
 ---
 
 Last update: April 4th 2023 (v1.0.7)

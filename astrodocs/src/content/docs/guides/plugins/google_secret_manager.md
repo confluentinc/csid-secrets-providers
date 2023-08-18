@@ -1,7 +1,7 @@
 ---
 title: Google Secret Manager Config Provider
 tableOfContents:
-    maxHeadingLevel: 3
+    maxHeadingLevel: 4
 ---
 
 ```bash

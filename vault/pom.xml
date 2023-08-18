@@ -128,6 +128,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Hashicorp Vault</description>
+    <properties>
+        <vault-java-driver.version>5.1.0</vault-java-driver.version>
+        <testcontainers-vault.version>1.18.3</testcontainers-vault.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>io.confluent.csid</groupId>
@@ -136,7 +140,7 @@
         <dependency>
             <groupId>com.bettercloud</groupId>
             <artifactId>vault-java-driver</artifactId>
-            <version>5.1.0</version>
+            <version>${vault-java-driver.version}</version>
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
@@ -162,6 +166,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>vault</artifactId>
+            <version>${testcontainers-vault.version}</version>
         </dependency>
     </dependencies>
     <build>

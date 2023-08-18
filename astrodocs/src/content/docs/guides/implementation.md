@@ -42,17 +42,16 @@ confluent-hub install confluent/csid-config-provider-aws:latest
 
 ## List of libraries (current version, supports CP 5.5.x and up)
 
-| Required Libraries | Description
-| ---- | ----
-| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases
+| Required Libraries                        | Description                                                   |
+|-------------------------------------------|---------------------------------------------------------------|
+| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases |
 
-| Optional Libraries | Description
-| ---- | ----
-| csid-config-provider-aws-{version}.jar | AWS Secrets library for secrets management
-| csid-config-provider-azure-{version}.jar | Azure KeyVault library for secrets management
-| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management
-| csid-config-provider-vault-{version}.jar | Hashicorp Vault library for secrets management
-
+| Optional Libraries                        | Description                                    |
+|-------------------------------------------|------------------------------------------------|
+| csid-config-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
+| csid-config-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
+| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
+| csid-config-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
 
 ## Configuration
 
