@@ -1,4 +1,4 @@
-# Secrets Provider
+# Secrets Providers
 
 ## 🚀 Project Structure
 

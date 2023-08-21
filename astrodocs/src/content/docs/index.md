@@ -1,5 +1,5 @@
 ---
-title: Confluent Secrets Provider
+title: Confluent Secrets Providers
 tableOfContents:
     maxHeadingLevel: 2
 ---

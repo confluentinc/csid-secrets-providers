@@ -471,8 +471,13 @@
 
 
 
-<table><thead><tr><th>Parameter</th><th>Description</th><th>Default</th><th>Example</th></tr></thead><tbody><tr><td>ttl</td><td>Used to override the TTL for the secret.</td><td>Value specified by <code>config.providers.keyVault.param.secret.ttl.ms</code></td><td><code>${keyVault:test-secret?ttl=60000}</code></td></tr></tbody></table>
-<p>version   | Used to override the version of the secret.    | latest                                                             | <code>${keyVault:test-secret?version=1}</code>      |</p>
+
+
+
+
+
+
+<table><thead><tr><th>Parameter</th><th>Description</th><th>Default</th><th>Example</th></tr></thead><tbody><tr><td>ttl</td><td>Used to override the TTL for the secret.</td><td>Value specified by <code>config.providers.keyVault.param.secret.ttl.ms</code></td><td><code>${keyVault:test-secret?ttl=60000}</code></td></tr><tr><td>version</td><td>Used to override the version of the secret.</td><td>latest</td><td><code>${keyVault:test-secret?version=1}</code></td></tr></tbody></table>
 <h3 id="configuration">Configuration</h3>
 <h4 id="client-certificate">Client Certificate</h4>
 <pre is:raw="" class="astro-code css-variables" style="background-color: var(--astro-code-color-background); overflow-x: auto;" tabindex="0"><code><span class="line"><span style="color: var(--astro-code-token-constant)">client</span><span style="color: var(--astro-code-token-punctuation)">.</span><span style="color: var(--astro-code-token-constant)">certificate</span><span style="color: var(--astro-code-token-punctuation)">.</span><span style="color: var(--astro-code-token-constant)">path</span></span></code></pre>
@@ -670,7 +675,7 @@
 									</div>
 									<footer class="astro-3YYAFB3N">
 	<div class="meta flex astro-3YYAFB3N">
-		<a href="https://github.com/confluentinc/csid-secrets-provider/edit/main/astrodocs/src/content/docs/guides/plugins/azure_key_vault.md" class="flex astro-EEZ2TWJ6">
+		<a href="https://github.com/confluentinc/csid-secrets-providers/edit/main/astrodocs/src/content/docs/guides/plugins/azure_key_vault.md" class="flex astro-EEZ2TWJ6">
 			<svg aria-hidden="true" class="astro-EEZ2TWJ6 astro-C6VSOQAS" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.2em;"><path d="M22 7.24a1 1 0 0 0-.29-.71l-4.24-4.24a1 1 0 0 0-1.1-.22 1 1 0 0 0-.32.22l-2.83 2.83L2.29 16.05a1 1 0 0 0-.29.71V21a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .76-.29l10.87-10.93L21.71 8c.1-.1.17-.2.22-.33a1 1 0 0 0 0-.24v-.14l.07-.05ZM6.83 20H4v-2.83l9.93-9.93 2.83 2.83L6.83 20ZM18.17 8.66l-2.83-2.83 1.42-1.41 2.82 2.82-1.41 1.42Z"/></svg>
 			Edit page
 		</a>

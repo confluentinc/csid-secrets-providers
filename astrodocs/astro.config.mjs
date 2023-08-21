@@ -11,7 +11,7 @@ export default defineConfig({
 		starlight({
 			title: 'Secrets Providers',
 			editLink: {
-			    baseUrl: 'https://github.com/confluentinc/csid-secrets-provider/edit/main/astrodocs/'
+			    baseUrl: 'https://github.com/confluentinc/csid-secrets-providers/edit/main/astrodocs/'
 			},
 			logo: {
 			    light: '/src/assets/confluent.svg',
