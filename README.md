@@ -56,16 +56,16 @@ confluent-hub install confluent/csid-config-provider-aws:latest
 
 ## List of libraries (current version, supports CP 5.5.x and up)
 
-| Required Libraries | Description
-| ---- | ----
-| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases
+| Required Libraries                        | Description                                                   |
+|-------------------------------------------|---------------------------------------------------------------|
+| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases |
 
-| Optional Libraries | Description
-| ---- | ----
-| csid-config-provider-aws-{version}.jar | AWS Secrets library for secrets management
-| csid-config-provider-azure-{version}.jar | Azure KeyVault library for secrets management
-| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management
-| csid-config-provider-vault-{version}.jar | Hashicorp Vault library for secrets management
+| Optional Libraries                        | Description                                    |
+|-------------------------------------------|------------------------------------------------|
+| csid-config-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
+| csid-config-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
+| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
+| csid-config-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
 
 ## Releasing
 
@@ -89,6 +89,39 @@ Update licenses
 ./update-license.sh
 ```
 
+## Publishing new documentation
+
+To publish new documentation, first ensure you have the latest version of the `csid-secret-providers` repo.
+
+Then run the following command:
+
+```bash
+# navigate to the astrodocs folder
+cd astrodocs
+npm i # only needed the first time
+npm run gh-pages
+```
+
+## Accessing the documentation
+
+To access the documentation navigate to [csid-secret-providers GitHub Pages](https://confluentinc.github.io/csid-secret-providers/)
+or locally run the following commands
+
+```bash
+# navigate to the astrodocs folder
+cd astrodocs
+npm i # only needed the first time
+npm run build
+npm run preview
+```
+
+## Adding new documentation
+
+When adding new documentation save the document as `<DOC_NAME>.md` in the `astrodocs/src/content/docs` directory.
+
+Visit the [README](astrodocs/README.md) for more information.
+
+
 ## Evaluation Use Disclaimers
 
 This software was developed as a Confluent CSID Accelerator.
@@ -97,4 +130,4 @@ This agreement also includes our issuance of a license, and your acceptance of t
 Without a license, this software is not intended to be used outside of the examples or have the examples modified.
 Confluent retains all intellectual property rights, in and to the Accelerator Software and any changes and other modifications thereto.
 
-Copyright 2021 Confluent Inc.
+Copyright 2023 Confluent Inc.

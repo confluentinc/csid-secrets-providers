@@ -1,0 +1,19 @@
+{
+  "name": "astrodocs",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "gh-pages": "astro build && rm -rf ../docs/* && mv ./dist/* ../docs/ && mv ./dist/.nojekyll ../docs/",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.7.0",
+    "astro": "^2.10.4",
+    "sharp": "^0.32.3",
+    "astro-robots-txt": "^0.5.0"
+  }
+}
