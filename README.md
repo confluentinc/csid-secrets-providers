@@ -91,7 +91,7 @@ Update licenses
 
 ## Publishing new documentation
 
-To publish new documentation, first ensure you have the latest version of the `csid-secret-providers` repo.
+To publish new documentation, first ensure you have the latest version of the `csid-secrets-providers` repo.
 
 Then run the following command:
 
@@ -104,7 +104,7 @@ npm run gh-pages
 
 ## Accessing the documentation
 
-To access the documentation navigate to [csid-secret-providers GitHub Pages](https://confluentinc.github.io/csid-secret-providers/)
+To access the documentation navigate to [csid-secrets-providers GitHub Pages](https://confluentinc.github.io/csid-secrets-providers/)
 or locally run the following commands
 
 ```bash
