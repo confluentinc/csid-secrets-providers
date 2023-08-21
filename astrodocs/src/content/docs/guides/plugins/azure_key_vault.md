@@ -32,8 +32,7 @@ The ConfigProvider will use the name of the secret to build the request to the K
 | Parameter | Description                              | Default                                                            | Example                             |
 |-----------|------------------------------------------|--------------------------------------------------------------------|-------------------------------------|
 | ttl       | Used to override the TTL for the secret. | Value specified by `config.providers.keyVault.param.secret.ttl.ms` | `${keyVault:test-secret?ttl=60000}` |
-
-version   | Used to override the version of the secret.    | latest                                                             | `${keyVault:test-secret?version=1}`      |
+|version   | Used to override the version of the secret.    | latest                                                             | `${keyVault:test-secret?version=1}`      |
 
 
 
