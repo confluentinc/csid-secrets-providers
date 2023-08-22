@@ -182,6 +182,7 @@
                             <goal>kafka-connect</goal>
                         </goals>
                         <configuration>
+                            <documentationUrl>${documentationUrl}/google_secret_manager</documentationUrl>
                             <sourceUrl>${project.parent.scm.url}/tree/main/gcloud</sourceUrl>
                         </configuration>
                     </execution>

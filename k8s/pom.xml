@@ -155,6 +155,7 @@
                             <goal>kafka-connect</goal>
                         </goals>
                         <configuration>
+                            <documentationUrl>${documentationUrl}/k8s_secret_manager</documentationUrl>
                             <sourceUrl>${project.parent.scm.url}/tree/main/k8s</sourceUrl>
                         </configuration>
                     </execution>

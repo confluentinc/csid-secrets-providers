@@ -186,6 +186,7 @@
                             <goal>kafka-connect</goal>
                         </goals>
                         <configuration>
+                            <documentationUrl>${documentationUrl}/azure_key_vault</documentationUrl>
                             <sourceUrl>${project.parent.scm.url}/tree/main/azure</sourceUrl>
                         </configuration>
                     </execution>

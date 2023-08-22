@@ -182,6 +182,7 @@
                             <goal>kafka-connect</goal>
                         </goals>
                         <configuration>
+                            <documentationUrl>${documentationUrl}/hashicorp_vault</documentationUrl>
                             <sourceUrl>${project.parent.scm.url}/tree/main/vault</sourceUrl>
                         </configuration>
                     </execution>
