@@ -145,7 +145,7 @@
     <scm>
         <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
         <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
-        <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
+        <url>https://github.com/confluentinc/csid-secrets-providers</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -312,9 +312,10 @@
                             </goals>
                             <configuration>
                                 <ownerName>Confluent</ownerName>
-                                <ownerUsername>confluent</ownerUsername>
+                                <ownerUsername>confluentinc</ownerUsername>
                                 <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                                <supportUrl>${project.issueManagement.url}</supportUrl>
+                                <dockerNamespace>confluentinc</dockerNamespace>
+                                <dockerName>cp-kafka-connect</dockerName>
                                 <supportSummary>Support provided through community involvement.</supportSummary>
                                 <componentTypes>
                                     <type>Converter</type>

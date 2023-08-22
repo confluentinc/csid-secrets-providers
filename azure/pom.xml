@@ -178,6 +178,18 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <sourceUrl>${project.parent.scm.url}/tree/main/azure</sourceUrl>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- jar plugin is called from kafka-connect-maven-plugin. Disable here -->
