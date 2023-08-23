@@ -128,12 +128,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Google Cloud Secret Manager</description>
+    <properties>
+        <google.cloud.version>26.14.0</google.cloud.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>libraries-bom</artifactId>
-                <version>26.14.0</version>
+                <version>${google.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

@@ -128,12 +128,15 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Azure Key Vault</description>
+    <properties>
+        <azure-sdk.version>1.2.16</azure-sdk.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.azure</groupId>
                 <artifactId>azure-sdk-bom</artifactId>
-                <version>1.2.16</version>
+                <version>${azure-sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
