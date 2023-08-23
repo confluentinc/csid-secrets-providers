@@ -136,7 +136,7 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <surefire.version>3.0.0-M7</surefire.version>
         <failsafe.version>3.0.0-M7</failsafe.version>
-        <maven.checkstyle.version>3.2.0</maven.checkstyle.version>
+        <maven.checkstyle.version>3.3.0</maven.checkstyle.version>
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
         <testcontainers.version>1.17.6</testcontainers.version>
