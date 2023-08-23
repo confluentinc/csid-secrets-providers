@@ -147,6 +147,19 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <documentationUrl>${documentationUrl}/k8s_secret_manager</documentationUrl>
+                            <sourceUrl>${project.parent.scm.url}/tree/main/k8s</sourceUrl>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- jar plugin is called from kafka-connect-maven-plugin. Disable here -->

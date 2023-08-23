@@ -140,12 +140,13 @@
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
         <testcontainers.version>1.17.6</testcontainers.version>
+        <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
     </properties>
 
     <scm>
         <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
         <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
-        <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
+        <url>https://github.com/confluentinc/csid-secrets-providers</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -312,9 +313,10 @@
                             </goals>
                             <configuration>
                                 <ownerName>Confluent</ownerName>
-                                <ownerUsername>confluent</ownerUsername>
+                                <ownerUsername>confluentinc</ownerUsername>
                                 <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                                <supportUrl>${project.issueManagement.url}</supportUrl>
+                                <dockerNamespace>confluentinc</dockerNamespace>
+                                <dockerName>cp-kafka-connect</dockerName>
                                 <supportSummary>Support provided through community involvement.</supportSummary>
                                 <componentTypes>
                                     <type>Converter</type>
