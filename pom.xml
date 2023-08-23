@@ -129,17 +129,28 @@
 
     <properties>
         <license.path>${project.basedir}/LICENSE</license.path>
-        <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-        <mockito.version>4.8.0</mockito.version>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <surefire.version>3.0.0-M7</surefire.version>
-        <failsafe.version>3.0.0-M7</failsafe.version>
-        <maven.checkstyle.version>3.2.0</maven.checkstyle.version>
-        <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
-        <testcontainers.version>1.17.6</testcontainers.version>
+        <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
+        <guava.version>32.1.2-jre</guava.version>
+        <immutables.version>2.9.3</immutables.version>
+        <jackson.version>2.15.2</jackson.version>
+        <junit.version>5.10.0</junit.version>
+        <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
+        <kafka-clients.version>3.5.1</kafka-clients.version>
+        <license-maven-plugin.version>3.0</license-maven-plugin.version>
+        <logback.version>1.4.5</logback.version>
+        <maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.site.plugin.version>3.12.1</maven.site.plugin.version>
+        <failsafe.version>3.1.2</failsafe.version>
+        <surefire.version>3.1.2</surefire.version>
+        <mockito.version>4.8.0</mockito.version>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <slf4j.version>2.0.7</slf4j.version>
+        <springframework-aws-maven.version>5.0.0.RELEASE</springframework-aws-maven.version>
+        <testcontainers.version>1.19.0</testcontainers.version>
         <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
     </properties>
 
@@ -207,49 +218,37 @@
             <dependency>
                 <groupId>org.immutables</groupId>
                 <artifactId>value</artifactId>
-                <version>2.8.2</version>
+                <version>${immutables.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.14.1</version>
+                <version>${jackson.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.9.1</version>
+                <version>${junit.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <!--
             TODO: Move to the junit bom
             -->
-
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>vault</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>32.0.0-jre</version>
+                <version>${guava.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -258,13 +257,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.5</version>
+            <version>${slf4j.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>3.3.1</version>
+            <version>${kafka-clients.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -281,7 +280,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.5</version>
+            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -295,7 +294,7 @@
 			<extension>
 				<groupId>org.springframework.build</groupId>
 				<artifactId>aws-maven</artifactId>
-				<version>5.0.0.RELEASE</version>
+				<version>${springframework-aws-maven.version}</version>
 			</extension>
 		</extensions>
         <pluginManagement>
@@ -335,7 +334,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>${maven.site.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -343,7 +342,7 @@
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
+                <version>${license-maven-plugin.version}</version>
                 <configuration>
                     <header>${license.path}</header>
                     <properties>
@@ -378,11 +377,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
