@@ -130,7 +130,6 @@
     <description>Secrets Provider for Hashicorp Vault</description>
     <properties>
         <vault-java-driver.version>5.1.0</vault-java-driver.version>
-        <testcontainers-vault.version>1.18.3</testcontainers-vault.version>
     </properties>
     <dependencies>
         <dependency>
@@ -158,15 +157,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>vault</artifactId>
-            <version>${testcontainers-vault.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
