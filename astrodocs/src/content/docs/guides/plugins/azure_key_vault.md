@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-azure:latest
+confluent-hub install confluentinc/kafka-config-provider-azure:latest
 ```
 
 This plugin provides integration with the [Microsoft Azure Key Vault service](https://azure.microsoft.com/en-us/services/key-vault)

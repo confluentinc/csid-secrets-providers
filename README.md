@@ -51,7 +51,7 @@ The `-classpath` option is preferred because you can set it individually for eac
 Update the following with the specific provider to be installed:
 
 ```bash
-confluent-hub install confluent/csid-config-provider-aws:latest
+confluent-hub install confluentinc/csid-config-provider-aws:latest
 ```
 
 ## List of libraries (current version, supports CP 5.5.x and up)
@@ -65,13 +65,26 @@ confluent-hub install confluent/csid-config-provider-aws:latest
 | csid-config-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
 | csid-config-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
 | csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
+| csid-config-provider-k8s-{version}.jar    | Kubernetes library for secrets management      |
 | csid-config-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
 
 ## Releasing
 
-Change the version
-```bash
-mvn versions:set -DnewVersion=1.0.3-SNAPSHOT
+https://maven.apache.org/maven-release/maven-release-plugin/plugin-info.html for more info
+
+```shell
+# prepare a release by updating release versions. Don't proceed the extra commits
+./mvnw clean release:prepare -DskipTests -Darguments=-DskipTests -DpushChanges=false -Dresume=false
+
+# push the tag release
+git push origin --tags
+
+# Confirm that the build has started running in semaphore before pushing the remaining commits
+# push the remaining commits
+git push origin
+
+# cleanup the backupfiles created by the release
+./mvnw release:clean -DskipTests
 ```
 
 Build the packages

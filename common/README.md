@@ -1,7 +1,7 @@
 # File Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-common:latest
+confluent-hub install confluentinc/kafka-config-provider-common:latest
 ```
 
 This plugin provides integration with files.
