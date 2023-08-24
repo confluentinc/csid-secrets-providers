@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-k8s:latest
+confluent-hub install confluentinc/kafka-config-provider-k8s:latest
 ```
 
 This plugin provides integration with [Kubernetes secrets](https://kubernetes.io/docs/concepts/configuration/secret/).

@@ -37,7 +37,7 @@ The `-classpath` option is preferred because you can set it individually for eac
 Update the following with the specific provider to be installed:
 
 ```bash
-confluent-hub install confluent/csid-config-provider-aws:latest
+confluent-hub install confluentinc/csid-config-provider-aws:latest
 ```
 
 ## List of libraries (current version, supports CP 5.5.x and up)

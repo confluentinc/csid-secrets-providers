@@ -1,7 +1,7 @@
 # K8s Secrets Manager Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-k8s:latest
+confluent-hub install confluentinc/kafka-config-provider-k8s:latest
 ```
 
 This plugin provides integration with Kubernetes secrets.

@@ -1,7 +1,7 @@
 # Google Secret Manager Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-gcloud:latest
+confluent-hub install confluentinc/kafka-config-provider-gcloud:latest
 ```
 
 This plugin provides integration with the Google Secret Manager service.

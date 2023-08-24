@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-aws:latest
+confluent-hub install confluentinc/kafka-config-provider-aws:latest
 ```
 
 This plugin provides integration with the [AWS Secrets Manager service](https://aws.amazon.com/secrets-manager).

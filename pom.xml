@@ -124,7 +124,7 @@
 
     <groupId>io.confluent.csid</groupId>
     <artifactId>csid-secrets-providers</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -140,6 +140,7 @@
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <logback.version>1.4.5</logback.version>
         <maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+        <maven.release.version>3.0.1</maven.release.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -336,6 +337,11 @@
                     <artifactId>maven-site-plugin</artifactId>
                     <version>${maven.site.plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven.release.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -440,6 +446,10 @@
                         <version>${kafka-connect-style.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
