@@ -10,7 +10,7 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
