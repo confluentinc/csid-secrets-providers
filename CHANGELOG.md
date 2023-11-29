@@ -1,5 +1,38 @@
 # Change Log
 
+## [1.0.9](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.9)
+
+### Features and Fixes
+
+- Bump com.azure:azure-sdk-bom from 1.2.16 to 1.2.18 (#132)
+- Bump com.amazonaws:aws-java-sdk-bom from 1.12.461 to 1.12.595 (#144)
+- Bump com.google.cloud:libraries-bom from 26.14.0 to 26.27.0 (#135)
+- Add aws-java-sdk-sts dependency for IAM role for service account auth support in Kubernetes (#143)
+- Bump zod from 3.21.4 to 3.22.4 (#122)
+- Bump postcss from 8.4.27 to 8.4.31 (#110)
+
+## [1.0.8](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.8)
+
+### Features and Fixes
+
+- CCET 337 reformat astrodocs (#34)
+- Update README.md (#35)
+- Fixing up manifest.json files to resolve URLs (#36)
+- Create dependabot.yml (#37)
+- Updated dependency libraries for minor and incremental versions (#68)
+- Adding maven release plugin also correcting documentation (#69)
+- Updating docs on github pages (#91)
+
+## [1.0.7](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.7)
+
+### Features and Fixes
+
+- Adding FileProvider (#27)
+- Updating BOMs for AWS, Azure, GCP libs (#28) 
+- Update README.md to add needed examples for ansible and where to get the release file (#31)
+- CCET 337 convert sphinx documentation to astrodocs (#33)
+- Bump guava from 31.1-jre to 32.0.0-jre (#30)
+
 ## [1.0.6](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.6)
 
 ### Features and Fixes
