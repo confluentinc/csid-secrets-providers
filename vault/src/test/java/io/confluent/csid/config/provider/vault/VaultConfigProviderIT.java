@@ -117,16 +117,15 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultException;
 import com.google.common.collect.ImmutableSet;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultException;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -136,13 +135,12 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 //@Compose(dockerComposePath = "docker-compose.yml", clusterHealthCheck = VaultClusterHealthCheck.class)
 public abstract class VaultConfigProviderIT {
 
-  public static final String HASHICORP_VAULT_DOCKER_IMAGE = "hashicorp/vault:1.13";
+  public static final String HASHICORP_VAULT_DOCKER_IMAGE = "hashicorp/vault:1.15";
   public static final String LDAP_DOCKER_IMAGE = "osixia/openldap:1.5.0";
 
   protected VaultConfigProvider configProvider;
