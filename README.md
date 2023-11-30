@@ -1,6 +1,6 @@
 # Confluent Secrets Provider
 
-version 1.0.7, updated April 4, 2023
+version 1.0.9, updated November 30, 2023
 
 ## Introduction
 
