@@ -4,6 +4,7 @@
 
 ### Features and Fixes
 
+- Bump ch.qos.logback:logback-classic from 1.4.5 to 1.4.12 (#148)
 - Bump com.azure:azure-sdk-bom from 1.2.16 to 1.2.18 (#132)
 - Bump com.amazonaws:aws-java-sdk-bom from 1.12.461 to 1.12.595 (#144)
 - Bump com.google.cloud:libraries-bom from 26.14.0 to 26.27.0 (#135)
