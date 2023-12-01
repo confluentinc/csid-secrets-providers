@@ -117,11 +117,11 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.response.LogicalResponse;
 import io.confluent.csid.config.provider.common.SecretRequest;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultConfig;
+import io.github.jopenlibs.vault.VaultException;
+import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,7 +145,7 @@ class VaultClientImpl implements VaultClient {
     log.info("ctor() - creating initial vault client");
 
     AuthHandler authHandler = AuthHandlers.get(config.authMethod);
-    Vault initialVault = new Vault(vaultConfig);
+    Vault initialVault = Vault.create(vaultConfig);
     AuthHandler.AuthResult result;
     try {
       result = authHandler.execute(config, initialVault);

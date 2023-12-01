@@ -117,10 +117,10 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.SslConfig;
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
+import io.github.jopenlibs.vault.SslConfig;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultConfig;
+import io.github.jopenlibs.vault.VaultException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.containers.GenericContainer;
@@ -202,7 +202,7 @@ public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
         .token(Constants.TOKEN)
         .sslConfig(config)
         .build();
-    this.vault = new Vault(vaultConfig);
+    this.vault = Vault.create(vaultConfig);
   }
 
   @AfterEach
