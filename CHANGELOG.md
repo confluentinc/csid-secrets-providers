@@ -1,5 +1,14 @@
 # Change Log
 
+## [1.0.10](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.10)
+
+### Features and Fixes
+
+- Bump undici from 5.23.0 to 5.26.3 in /astrodocs (#126)
+- Bump @babel/traverse from 7.22.10 to 7.23.2 in /astrodocs (#127)
+- Bump sharp from 0.32.4 to 0.32.6 in /astrodocs (#137)
+- Updating vault library & kafka client (#155)
+
 ## [1.0.9](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.9)
 
 ### Features and Fixes
