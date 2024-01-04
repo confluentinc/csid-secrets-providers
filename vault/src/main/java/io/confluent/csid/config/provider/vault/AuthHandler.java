@@ -274,8 +274,8 @@ abstract class AuthHandler {
         log.trace("execute() - calling loginByAppRole('{}', '*****')", config.role);
         response = vault.auth().loginByAppRole(config.role, config.secret);
       } else {
-        log.trace("execute() - calling loginByUserPass('{}', ****, '{}')", config.username, config.mount);
-        response = vault.auth().loginByUserPass(config.username, config.password, config.mount);
+        log.trace("execute() - calling loginByAppRole('{}', '{}', ****)", config.mount, config.role);
+        response = vault.auth().loginByAppRole(config.mount, config.role, config.secret);
       }
       return result(response);
     }
