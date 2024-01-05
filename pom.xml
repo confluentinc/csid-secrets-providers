@@ -139,7 +139,7 @@
         <kafka-clients.version>3.6.0</kafka-clients.version>
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <logback.version>1.4.12</logback.version>
-        <maven.checkstyle.version>3.3.0</maven.checkstyle.version>
+        <maven.checkstyle.version>3.3.1</maven.checkstyle.version>
         <maven.release.version>3.0.1</maven.release.version>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
