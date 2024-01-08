@@ -129,7 +129,7 @@
     </parent>
     <description>Secrets Provider for Azure Key Vault</description>
     <properties>
-        <azure-sdk.version>1.2.18</azure-sdk.version>
+        <azure-sdk.version>1.2.19</azure-sdk.version>
     </properties>
     <dependencyManagement>
         <dependencies>
