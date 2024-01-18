@@ -124,6 +124,11 @@ import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 class SecretsManagerFactoryImpl implements SecretsManagerFactory {
   @Override
   public AWSSecretsManager create(SecretsManagerConfigProviderConfig config) {
+    AWSSecretsManagerClientBuilder builder = configure(config);
+    return builder.build();
+  }
+
+  protected AWSSecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
     AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
 
     if (null != config.region && !config.region.isEmpty()) {
@@ -132,7 +137,9 @@ class SecretsManagerFactoryImpl implements SecretsManagerFactory {
     if (null != config.credentials) {
       builder = builder.withCredentials(new AWSStaticCredentialsProvider(config.credentials));
     }
-
-    return builder.build();
+    if (null != config.prefix) {
+      builder = builder.withRequestHandlers(new AppendSecretPrefixRequestHandler2(config.prefix));
+    }
+    return builder;
   }
 }

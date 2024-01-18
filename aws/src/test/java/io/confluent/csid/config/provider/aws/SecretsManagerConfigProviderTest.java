@@ -166,6 +166,14 @@ public class SecretsManagerConfigProviderTest {
   }
 
   @Test
+  public void someTest() {
+    Map<String, ?> settings = ImmutableMap.of("secret.prefix", "some/prefix/", "aws.access.key", "<ACCESS_KEY>", "aws.secret.key.id", "<SECRET_KEY_ID>");
+    SecretsManagerConfigProvider provider = new SecretsManagerConfigProvider();
+    provider.configure(settings);
+    provider.get("secret-id");
+  }
+
+  @Test
   public void notFound() {
     Throwable expected = new ResourceNotFoundException("Resource 'not/found' was not found.");
     when(secretsManager.getSecretValue(any())).thenThrow(expected);
