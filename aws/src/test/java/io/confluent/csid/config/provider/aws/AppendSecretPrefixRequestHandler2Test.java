@@ -117,29 +117,36 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
+import org.junit.jupiter.api.Test;
 
-class SecretsManagerFactoryImpl implements SecretsManagerFactory {
-  @Override
-  public AWSSecretsManager create(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = configure(config);
-    return builder.build();
-  }
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-  protected AWSSecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
+class AppendSecretPrefixRequestHandler2Test {
+    @Test
+    public void addsPrefix() {
+        String prefix = "test/prefix/";
+        String secretId = "primaryId";
+        AppendSecretPrefixRequestHandler2 handler = new AppendSecretPrefixRequestHandler2(prefix);
+        GetSecretValueRequest request = new GetSecretValueRequest();
+        request = request.withSecretId(secretId);
 
-    if (null != config.region && !config.region.isEmpty()) {
-      builder = builder.withRegion(config.region);
+        AmazonWebServiceRequest expected = request.withSecretId(prefix + secretId);
+        AmazonWebServiceRequest updated = handler.beforeExecution(request);
+
+        assertEquals(expected, updated);
     }
-    if (null != config.credentials) {
-      builder = builder.withCredentials(new AWSStaticCredentialsProvider(config.credentials));
+
+    @Test
+    public void retainsOtherAttributes() {
+        String secretId = "primaryId";
+        AppendSecretPrefixRequestHandler2 handler = new AppendSecretPrefixRequestHandler2("");
+        GetSecretValueRequest request = new GetSecretValueRequest();
+        request = request.withSecretId(secretId).withVersionStage("production").withVersionId("v1.2.3");
+
+        AmazonWebServiceRequest updated = handler.beforeExecution(request);
+
+        assertEquals(request, updated);
     }
-    if (null != config.prefix) {
-      builder = builder.withRequestHandlers(new AppendSecretPrefixRequestHandler2(config.prefix));
-    }
-    return builder;
-  }
 }

@@ -117,29 +117,56 @@
  */
 package io.confluent.csid.config.provider.aws;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.handlers.RequestHandler2;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.google.common.collect.ImmutableMap;
+import org.junit.jupiter.api.Test;
 
-class SecretsManagerFactoryImpl implements SecretsManagerFactory {
-  @Override
-  public AWSSecretsManager create(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = configure(config);
-    return builder.build();
-  }
+import java.util.List;
+import java.util.Map;
 
-  protected AWSSecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-    if (null != config.region && !config.region.isEmpty()) {
-      builder = builder.withRegion(config.region);
+class SecretsManagerFactoryImplTest  {
+    private AWSSecretsManagerClientBuilder builderWithConfig(Map<String, ?> settings) {
+        SecretsManagerConfigProviderConfig config = new SecretsManagerConfigProviderConfig(settings);
+        SecretsManagerFactoryImpl factory = new SecretsManagerFactoryImpl();
+        return factory.configure(config);
     }
-    if (null != config.credentials) {
-      builder = builder.withCredentials(new AWSStaticCredentialsProvider(config.credentials));
+
+    @Test
+    public void addsRegion() {
+        String region = "eu-west-1";
+        Map<String, ?> settings = ImmutableMap.of("aws.region", region);
+
+        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
+
+        assertEquals(region, builder.getRegion());
     }
-    if (null != config.prefix) {
-      builder = builder.withRequestHandlers(new AppendSecretPrefixRequestHandler2(config.prefix));
+
+    @Test
+    public void addsCredentials() {
+        String expectedAccessKey = "test_access_key";
+        String expectedSecretKey = "some_test_key";
+        Map<String, ?> settings = ImmutableMap.of("aws.access.key", expectedAccessKey, "aws.secret.key.id", expectedSecretKey);
+
+        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
+
+        AWSCredentialsProvider credentialsProvider = builder.getCredentials();
+        assertInstanceOf(AWSStaticCredentialsProvider.class, credentialsProvider);
     }
-    return builder;
-  }
+
+    @Test
+    public void addsPrefixHandler() {
+        Map<String, ?> settings = ImmutableMap.of("secret.prefix", "test/prefix/");
+
+        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
+
+        List<RequestHandler2> requestHandlers = builder.getRequestHandlers();
+        assertEquals(1, requestHandlers.size());
+        assertInstanceOf(AppendSecretPrefixRequestHandler2.class, requestHandlers.get(0));
+    }
 }

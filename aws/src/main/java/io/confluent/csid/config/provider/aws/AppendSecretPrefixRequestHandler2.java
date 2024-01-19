@@ -117,29 +117,21 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.AmazonWebServiceRequest;
+import com.amazonaws.handlers.RequestHandler2;
+import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 
-class SecretsManagerFactoryImpl implements SecretsManagerFactory {
-  @Override
-  public AWSSecretsManager create(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = configure(config);
-    return builder.build();
+class AppendSecretPrefixRequestHandler2 extends RequestHandler2 {
+  private final String prefix;
+
+  public AppendSecretPrefixRequestHandler2(String prefix) {
+    this.prefix = prefix;
   }
 
-  protected AWSSecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
-
-    if (null != config.region && !config.region.isEmpty()) {
-      builder = builder.withRegion(config.region);
-    }
-    if (null != config.credentials) {
-      builder = builder.withCredentials(new AWSStaticCredentialsProvider(config.credentials));
-    }
-    if (null != config.prefix) {
-      builder = builder.withRequestHandlers(new AppendSecretPrefixRequestHandler2(config.prefix));
-    }
-    return builder;
+  @Override
+  public AmazonWebServiceRequest beforeExecution(AmazonWebServiceRequest request) {
+    GetSecretValueRequest local = ((GetSecretValueRequest) request);
+    local.setSecretId(prefix + local.getSecretId());
+    return local;
   }
 }
