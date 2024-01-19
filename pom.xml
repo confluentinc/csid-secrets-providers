@@ -137,7 +137,6 @@
         <junit.version>5.10.0</junit.version>
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <kafka-clients.version>3.6.0</kafka-clients.version>
-        <license-maven-plugin.version>3.0</license-maven-plugin.version>
         <logback.version>1.4.14</logback.version>
         <maven.checkstyle.version>3.3.0</maven.checkstyle.version>
         <maven.release.version>3.0.1</maven.release.version>
@@ -346,41 +345,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>${license-maven-plugin.version}</version>
-                <configuration>
-                    <header>${license.path}</header>
-                    <properties>
-                        <owner>Confluent, Inc</owner>
-                    </properties>
-                    <excludes>
-                        <exclude>**/README</exclude>
-                        <exclude>LICENSE</exclude>
-                        <exclude>src/test/resources/**</exclude>
-                        <exclude>src/main/resources/**</exclude>
-                        <exclude>src/assembly/**</exclude>
-                        <exclude>docs/</exclude>
-                        <exclude>astrodocs/</exclude>
-                        <exclude>.mvn/</exclude>
-                        <exclude>mvnw</exclude>
-                        <exclude>mvnw.cmd</exclude>
-                        <exclude>.github/</exclude>
-                        <exclude>Jenkinsfile</exclude>
-                        <exclude>venv/</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>check-source</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
