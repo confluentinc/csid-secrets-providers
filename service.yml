@@ -1,0 +1,9 @@
+name: csid-secrets-providers
+lang: java
+lang_version: 17
+git:
+  enable: true
+semaphore:
+  enable: true
+  pipeline_enable: false
+  maven_build_goals: "clean verify install dependency:analyze validate"
