@@ -37,29 +37,8 @@ blocks:
       jobs:
         - name: Build without Tests
           commands:
-            - ./mvnw clean install -DskipTests
+            - ./mvnw clean verify install dependency:analyze validate
             - cache store
-  - name: Test
-    dependencies:
-      - Build
-    task:
-      prologue:
-        commands:
-          - checkout
-          - cache restore
-      jobs:
-        - name: Unit Tests
-          commands:
-            - ./mvnw verify -Punit
-        - name: Integration Tests
-          commands:
-            - ./mvnw verify -Pintegration
-
-      epilogue:
-        always:
-          commands:
-            - if find **/target/*-reports/ -name "*.xml" -print -quit 2>/dev/null; then test-results publish **/target/*-reports/*.xml; fi
-
 after_pipeline:
   task:
     jobs:
