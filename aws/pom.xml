@@ -129,7 +129,7 @@
     </parent>
     <description>Secrets Provider for Amazon Secrets Manager</description>
     <properties>
-        <aws-java-sdk.version>1.12.629</aws-java-sdk.version>
+        <aws-java-sdk.version>1.12.656</aws-java-sdk.version>
     </properties>
     <dependencyManagement>
         <dependencies>
