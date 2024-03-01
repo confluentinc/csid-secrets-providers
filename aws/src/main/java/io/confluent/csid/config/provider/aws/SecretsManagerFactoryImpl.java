@@ -117,28 +117,44 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilder;
+
+import java.net.URI;
 
 class SecretsManagerFactoryImpl implements SecretsManagerFactory {
+  private DefaultCredentialsProvider defaultCredentialsProvider;
+
   @Override
-  public AWSSecretsManager create(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = configure(config);
+  public SecretsManagerClient create(SecretsManagerConfigProviderConfig config) {
+    SecretsManagerClientBuilder builder = configure(config);
     return builder.build();
   }
 
-  protected AWSSecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
-    AWSSecretsManagerClientBuilder builder = AWSSecretsManagerClientBuilder.standard();
+  @Override
+  public void closeDefaultCredentials() {
+    if (null != defaultCredentialsProvider) {
+      defaultCredentialsProvider.close();
+    }
+  }
+
+  protected SecretsManagerClientBuilder configure(SecretsManagerConfigProviderConfig config) {
+    SecretsManagerClientBuilder builder = SecretsManagerClient.builder();
 
     if (null != config.region && !config.region.isEmpty()) {
-      builder = builder.withRegion(config.region);
+      builder = builder.region(Region.of(config.region));
+    }
+    if (null != config.endpointOverride && !config.endpointOverride.isEmpty()) {
+      builder = builder.endpointOverride(URI.create(config.endpointOverride));
     }
     if (null != config.credentials) {
-      builder = builder.withCredentials(new AWSStaticCredentialsProvider(config.credentials));
-    }
-    if (null != config.prefix) {
-      builder = builder.withRequestHandlers(new AppendSecretPrefixRequestHandler2(config.prefix));
+      builder = builder.credentialsProvider(StaticCredentialsProvider.create(config.credentials));
+    } else {
+      defaultCredentialsProvider = DefaultCredentialsProvider.create();
+      builder = builder.credentialsProvider(defaultCredentialsProvider);
     }
     return builder;
   }

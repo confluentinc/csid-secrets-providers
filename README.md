@@ -1,6 +1,6 @@
 # Confluent Secrets Provider
 
-version 1.0.12, updated January 19, 2024
+version 1.0.13, updated March 1, 2024
 
 ## Introduction
 
@@ -143,4 +143,4 @@ This agreement also includes our issuance of a license, and your acceptance of t
 Without a license, this software is not intended to be used outside of the examples or have the examples modified.
 Confluent retains all intellectual property rights, in and to the Accelerator Software and any changes and other modifications thereto.
 
-Copyright 2023 Confluent Inc.
+Copyright 2024 Confluent Inc.
