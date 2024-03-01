@@ -117,9 +117,6 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import io.confluent.csid.config.provider.annotations.CodeBlock;
 import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
@@ -132,6 +129,9 @@ import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 import java.io.IOException;
 import java.util.Map;
@@ -160,7 +160,7 @@ import java.util.Map;
 public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
-  AWSSecretsManager secretsManager;
+  SecretsManagerClient secretsManager;
 
   @Override
   protected SecretsManagerConfigProviderConfig config(Map<String, ?> settings) {
@@ -175,19 +175,20 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
 
   @Override
   protected Map<String, String> getSecret(SecretRequest secretRequest) throws Exception {
-    GetSecretValueRequest request = new GetSecretValueRequest()
-        .withSecretId(secretRequest.path());
-    secretRequest.version().ifPresent(request::withVersionId);
+    GetSecretValueRequest.Builder builder = GetSecretValueRequest.builder();
+    secretRequest.version().ifPresent(builder::versionId);
+    builder.secretId(null == config.prefix ? secretRequest.path() : config.prefix + secretRequest.path());
+    GetSecretValueRequest request = builder.build();
     log.trace("getSecret() - request = {}", request);
-    GetSecretValueResult result = this.secretsManager.getSecretValue(request);
+    GetSecretValueResponse result = this.secretsManager.getSecretValue(request);
 
-    if (null != result.getSecretString()) {
-      return readJsonValue(result.getSecretString());
-    } else if (null != result.getSecretBinary()) {
-      return readJsonValue(result.getSecretBinary());
+    if (null != result.secretString()) {
+      return readJsonValue(result.secretString());
+    } else if (null != result.secretBinary()) {
+      return readJsonValue(result.secretBinary().asByteArray());
     } else {
       throw new ConfigException(
-          "Result from AWSSecretsManager did not return value for getSecretString() or getSecretBinary(). Cannot proceed."
+          "Result from SecretsManagerClient did not return value for secretString() or secretBinary(). Cannot proceed."
       );
     }
   }
@@ -195,7 +196,8 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
   @Override
   public void close() throws IOException {
     if (null != this.secretsManager) {
-      this.secretsManager.shutdown();
+      this.secretsManager.close();
+      this.secretsManagerFactory.closeDefaultCredentials();
     }
     super.close();
   }

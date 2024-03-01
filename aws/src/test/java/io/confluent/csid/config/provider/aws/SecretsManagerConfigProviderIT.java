@@ -117,36 +117,149 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import org.apache.kafka.common.config.ConfigData;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.Network;
+import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.CreateSecretRequest;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.AWS_ACCESS_KEY_ID_CONFIG;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.AWS_SECRET_KEY_CONFIG;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.ENDPOINT_OVERRIDE;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.PREFIX_CONFIG;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.REGION_CONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class AppendSecretPrefixRequestHandler2Test {
-    @Test
-    public void addsPrefix() {
-        String prefix = "test/prefix/";
-        String secretId = "primaryId";
-        AppendSecretPrefixRequestHandler2 handler = new AppendSecretPrefixRequestHandler2(prefix);
-        GetSecretValueRequest request = new GetSecretValueRequest();
-        request = request.withSecretId(secretId);
+public class SecretsManagerConfigProviderIT {
 
-        AmazonWebServiceRequest expected = request.withSecretId(prefix + secretId);
-        AmazonWebServiceRequest updated = handler.beforeExecution(request);
+  private static final Network network = Network.newNetwork();
 
-        assertEquals(expected, updated);
+  @Container
+  public static LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack:3.2.0"))
+          .withNetwork(network)
+          .withNetworkAliases("localstack")
+          .withServices(LocalStackContainer.Service.SECRETSMANAGER);
+  private static SecretsManagerConfigProvider provider;
+
+  @BeforeAll
+  public static void setUp() {
+    localstack.start();
+    provider = new SecretsManagerConfigProvider();
+    provider.configure(ImmutableMap.of(ENDPOINT_OVERRIDE, localstack.getEndpoint().toString(),
+            REGION_CONFIG, localstack.getRegion(),
+            AWS_ACCESS_KEY_ID_CONFIG, localstack.getAccessKey(),
+            AWS_SECRET_KEY_CONFIG, localstack.getSecretKey()));
+  }
+
+  @AfterAll
+  public static void afterAll() throws IOException {
+    provider.close();
+  }
+
+  @Test
+  public void get() {
+    try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+              AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+      secretsManagerClient.createSecret(CreateSecretRequest.builder()
+              .name("foo/bar/baz")
+              .secretString("{\n" +
+                      "  \"username\": \"asdf\",\n" +
+                      "  \"password\": \"asdf\"\n" +
+                      "}")
+              .build());
     }
 
-    @Test
-    public void retainsOtherAttributes() {
-        String secretId = "primaryId";
-        AppendSecretPrefixRequestHandler2 handler = new AppendSecretPrefixRequestHandler2("");
-        GetSecretValueRequest request = new GetSecretValueRequest();
-        request = request.withSecretId(secretId).withVersionStage("production").withVersionId("v1.2.3");
+    final String secretName = "foo/bar/baz";
+    Map<String, String> expected = ImmutableMap.of(
+        "username", "asdf",
+        "password", "asdf"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+  }
 
-        AmazonWebServiceRequest updated = handler.beforeExecution(request);
-
-        assertEquals(request, updated);
+  @Test
+  public void getBinary() {
+    try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+              AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+      secretsManagerClient.createSecret(CreateSecretRequest.builder()
+              .name("foo/bar/binary")
+              .secretBinary(SdkBytes.fromString("{\n" +
+                      "  \"username\": \"asdf\",\n" +
+                      "  \"password\": \"asdf\"\n" +
+                      "}", Charset.defaultCharset()))
+              .build());
     }
+
+    final String secretName = "foo/bar/binary";
+    Map<String, String> expected = ImmutableMap.of(
+            "username", "asdf",
+            "password", "asdf"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+  }
+
+  @Test
+  public void getWithPrefix() {
+    try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+              AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+      secretsManagerClient.createSecret(CreateSecretRequest.builder()
+              .name("test/prefix/foo/bar/baz")
+              .secretString("{\n" +
+                      "  \"username\": \"asdf\",\n" +
+                      "  \"password\": \"asdf\"\n" +
+                      "}")
+              .build());
+    }
+
+    final String prefix = "test/prefix/";
+    provider.configure(ImmutableMap.of(ENDPOINT_OVERRIDE, localstack.getEndpoint().toString(),
+            REGION_CONFIG, localstack.getRegion(),
+            AWS_ACCESS_KEY_ID_CONFIG, localstack.getAccessKey(),
+            AWS_SECRET_KEY_CONFIG, localstack.getSecretKey(),
+            PREFIX_CONFIG, prefix));
+
+    final String secretName = "foo/bar/baz";
+    Map<String, String> expected = ImmutableMap.of(
+            "username", "asdf",
+            "password", "asdf"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+  }
 }
