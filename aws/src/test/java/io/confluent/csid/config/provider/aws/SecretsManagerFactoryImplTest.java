@@ -117,21 +117,30 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.handlers.RequestHandler2;
-import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilder;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-
+@ExtendWith(SystemStubsExtension.class)
 class SecretsManagerFactoryImplTest  {
-    private AWSSecretsManagerClientBuilder builderWithConfig(Map<String, ?> settings) {
+    @SystemStub
+    public final EnvironmentVariables environmentVariables = new EnvironmentVariables(ImmutableMap.of("AWS_ACCESS_KEY_ID", "test_access_key", "AWS_SECRET_ACCESS_KEY", "some_test_key"));
+
+    private SecretsManagerClientBuilder builderWithConfig(Map<String, ?> settings) {
         SecretsManagerConfigProviderConfig config = new SecretsManagerConfigProviderConfig(settings);
         SecretsManagerFactoryImpl factory = new SecretsManagerFactoryImpl();
         return factory.configure(config);
@@ -142,31 +151,29 @@ class SecretsManagerFactoryImplTest  {
         String region = "eu-west-1";
         Map<String, ?> settings = ImmutableMap.of("aws.region", region);
 
-        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
-
-        assertEquals(region, builder.getRegion());
+        SecretsManagerClientBuilder builder = builderWithConfig(settings);
+        try (SecretsManagerClient secretsManagerClient = builder.build()) {
+            assertEquals(region, secretsManagerClient.serviceClientConfiguration().region().id());
+        }
     }
 
     @Test
-    public void addsCredentials() {
+    public void addsCredentialsUsingStatisCredentials() {
         String expectedAccessKey = "test_access_key";
         String expectedSecretKey = "some_test_key";
-        Map<String, ?> settings = ImmutableMap.of("aws.access.key", expectedAccessKey, "aws.secret.key.id", expectedSecretKey);
+        Map<String, ?> settings = ImmutableMap.of("aws.access.key", expectedAccessKey, "aws.secret.key", expectedSecretKey);
 
-        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
-
-        AWSCredentialsProvider credentialsProvider = builder.getCredentials();
-        assertInstanceOf(AWSStaticCredentialsProvider.class, credentialsProvider);
+        SecretsManagerClientBuilder builder = builderWithConfig(settings);
+        try (SecretsManagerClient secretsManagerClient = builder.build()) {
+            assertInstanceOf(StaticCredentialsProvider.class, secretsManagerClient.serviceClientConfiguration().credentialsProvider());
+        }
     }
 
     @Test
-    public void addsPrefixHandler() {
-        Map<String, ?> settings = ImmutableMap.of("secret.prefix", "test/prefix/");
-
-        AWSSecretsManagerClientBuilder builder = builderWithConfig(settings);
-
-        List<RequestHandler2> requestHandlers = builder.getRequestHandlers();
-        assertEquals(1, requestHandlers.size());
-        assertInstanceOf(AppendSecretPrefixRequestHandler2.class, requestHandlers.get(0));
+    public void addsCredentialsUsingDefaultChain() {
+        SecretsManagerClientBuilder builder = builderWithConfig(new HashMap<>());
+        try (SecretsManagerClient secretsManagerClient = builder.build()) {
+            assertInstanceOf(AwsCredentialsProvider.class, secretsManagerClient.serviceClientConfiguration().credentialsProvider());
+        }
     }
 }

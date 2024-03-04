@@ -117,11 +117,12 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
 import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
 import org.apache.kafka.common.config.ConfigDef;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 import java.time.Duration;
 import java.util.Map;
@@ -141,15 +142,19 @@ class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
 
   public static final String AWS_ACCESS_KEY_ID_CONFIG = "aws.access.key";
   public static final String AWS_ACCESS_KEY_ID_DOC = "AWS access key ID to connect with. If this value is not " +
-      "set the `DefaultAWSCredentialsProviderChain <https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html>`_ " +
+      "set the `DefaultCredentialsProvider <https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/auth/credentials/DefaultCredentialsProvider.html>`_ " +
       "will be used to attempt loading the credentials from several default locations.";
   public static final String AWS_SECRET_KEY_CONFIG = "aws.secret.key";
   public static final String AWS_SECRET_KEY_DOC = "AWS secret access key to connect with.";
+  public static final String ENDPOINT_OVERRIDE = "endpoint.override";
+  public static final String ENDPOINT_OVERRIDE_DOC = "The value to override the service address used by Secrets Manager Client.  See `Developer " +
+      "Guide <https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/using.html>` for more details.";
 
   public final String region;
   public final long minimumSecretTTL;
-  public final AWSCredentials credentials;
+  public final AwsCredentials credentials;
   public final String prefix;
+  public final String endpointOverride;
 
   public SecretsManagerConfigProviderConfig(Map<String, ?> settings) {
     super(config(), settings);
@@ -160,11 +165,12 @@ class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
     String awsSecretKey = getPassword(AWS_SECRET_KEY_CONFIG).value();
 
     if (null != awsAccessKeyId && !awsAccessKeyId.isEmpty()) {
-      credentials = new BasicAWSCredentials(awsAccessKeyId, awsSecretKey);
+      credentials = AwsBasicCredentials.create(awsAccessKeyId, awsSecretKey);
     } else {
-      credentials = null;
+      credentials = DefaultCredentialsProvider.create().resolveCredentials();
     }
-    prefix = getString(PREFIX_CONFIG);
+    this.prefix = getString(PREFIX_CONFIG);
+    this.endpointOverride = getString(ENDPOINT_OVERRIDE);
   }
 
   public static ConfigDef config() {
@@ -201,7 +207,12 @@ class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
                 .defaultValue(Duration.ofMinutes(5L).toMillis())
                 .validator(ConfigDef.Range.atLeast(1000L))
                 .build()
+        ).define(
+                ConfigKeyBuilder.of(ENDPOINT_OVERRIDE, ConfigDef.Type.STRING)
+                .documentation(ENDPOINT_OVERRIDE_DOC)
+                .importance(ConfigDef.Importance.LOW)
+                .defaultValue("")
+                .build()
         );
   }
-
 }

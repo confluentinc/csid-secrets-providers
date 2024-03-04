@@ -117,11 +117,6 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import com.amazonaws.services.secretsmanager.AWSSecretsManager;
-import com.amazonaws.services.secretsmanager.model.DecryptionFailureException;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
-import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
-import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.kafka.common.config.ConfigData;
@@ -129,25 +124,37 @@ import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.extension.ExtendWith;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.DecryptionFailureException;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.ResourceNotFoundException;
+import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
+import uk.org.webcompere.systemstubs.jupiter.SystemStub;
+import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
 import java.io.IOException;
 import java.util.Map;
 
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.PREFIX_CONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+@ExtendWith(SystemStubsExtension.class)
 public class SecretsManagerConfigProviderTest {
-  AWSSecretsManager secretsManager;
+  @SystemStub
+  public final EnvironmentVariables environmentVariables = new EnvironmentVariables(ImmutableMap.of("AWS_ACCESS_KEY_ID", "test_access_key", "AWS_SECRET_ACCESS_KEY", "some_test_key"));
+
+  SecretsManagerClient secretsManager;
   SecretsManagerConfigProvider provider;
 
   @BeforeEach
   public void beforeEach() {
-    this.secretsManager = mock(AWSSecretsManager.class);
+    this.secretsManager = mock(SecretsManagerClient.class);
     this.provider = new SecretsManagerConfigProvider();
     this.provider.secretsManagerFactory = mock(SecretsManagerFactory.class);
     when(this.provider.secretsManagerFactory.create(any())).thenAnswer(invocationOnMock -> {
@@ -167,40 +174,36 @@ public class SecretsManagerConfigProviderTest {
 
   @Test
   public void notFound() {
-    Throwable expected = new ResourceNotFoundException("Resource 'not/found' was not found.");
-    when(secretsManager.getSecretValue(any())).thenThrow(expected);
-    ConfigException configException = assertThrows(ConfigException.class, () -> {
-      this.provider.get("not/found");
-    });
+    Throwable expected = ResourceNotFoundException.create("Resource 'not/found' was not found.", null);
+    when(secretsManager.getSecretValue(any(GetSecretValueRequest.class))).thenThrow(expected);
+    ConfigException configException = assertThrows(ConfigException.class, () -> this.provider.get("not/found"));
     assertEquals(expected, configException.getCause());
   }
 
   @Test
   public void decryptionFailure() {
-    Throwable expected = new DecryptionFailureException("Could not decrypt resource 'not/found'.");
-    when(secretsManager.getSecretValue(any())).thenThrow(expected);
-    ConfigException configException = assertThrows(ConfigException.class, () -> {
-      this.provider.get("not/found");
-    });
+    Throwable expected = DecryptionFailureException.create("Could not decrypt resource 'not/found'.", null);
+    when(secretsManager.getSecretValue(any(GetSecretValueRequest.class))).thenThrow(expected);
+    ConfigException configException = assertThrows(ConfigException.class, () -> this.provider.get("not/found"));
     assertEquals(expected, configException.getCause());
   }
 
   @Test
   public void get() {
     final String secretName = "foo/bar/baz";
-    GetSecretValueResult result = new GetSecretValueResult()
-        .withName(secretName)
-        .withSecretString("{\n" +
+    GetSecretValueResponse result = GetSecretValueResponse.builder()
+        .name(secretName)
+        .secretString("{\n" +
             "  \"username\": \"asdf\",\n" +
             "  \"password\": \"asdf\"\n" +
-            "}");
+            "}").build();
     Map<String, String> expected = ImmutableMap.of(
         "username", "asdf",
         "password", "asdf"
     );
-    when(secretsManager.getSecretValue(any())).thenAnswer(invocationOnMock -> {
+    when(secretsManager.getSecretValue(any(GetSecretValueRequest.class))).thenAnswer(invocationOnMock -> {
       GetSecretValueRequest request =  invocationOnMock.getArgument(0);
-      assertEquals(secretName, request.getSecretId());
+      assertEquals(secretName, request.secretId());
       return result;
     });
     ConfigData configData = this.provider.get(secretName, ImmutableSet.of());
@@ -208,5 +211,29 @@ public class SecretsManagerConfigProviderTest {
     assertEquals(expected, configData.data());
   }
 
+  @Test
+  public void getWithPrefix() {
+    final String prefix = "test/prefix/";
+    this.provider.configure(ImmutableMap.of(PREFIX_CONFIG, prefix));
 
+    final String secretName = "foo/bar/baz";
+    GetSecretValueResponse result = GetSecretValueResponse.builder()
+            .name(prefix + secretName)
+            .secretString("{\n" +
+                    "  \"username\": \"asdf\",\n" +
+                    "  \"password\": \"asdf\"\n" +
+                    "}").build();
+    Map<String, String> expected = ImmutableMap.of(
+            "username", "asdf",
+            "password", "asdf"
+    );
+    when(secretsManager.getSecretValue(any(GetSecretValueRequest.class))).thenAnswer(invocationOnMock -> {
+      GetSecretValueRequest request =  invocationOnMock.getArgument(0);
+      assertEquals(prefix + secretName, request.secretId());
+      return result;
+    });
+    ConfigData configData = this.provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+  }
 }
