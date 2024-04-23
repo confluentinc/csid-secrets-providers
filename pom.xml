@@ -124,7 +124,7 @@
 
     <groupId>io.confluent.csid</groupId>
     <artifactId>csid-secrets-providers</artifactId>
-    <version>1.0.14-SNAPSHOT</version>
+    <version>1.0.14</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -158,7 +158,7 @@
         <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
         <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
         <url>https://github.com/confluentinc/csid-secrets-providers</url>
-        <tag>HEAD</tag>
+        <tag>1.0.14-SNAPSHOT</tag>
     </scm>
 
     <modules>
