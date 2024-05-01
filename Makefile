@@ -78,7 +78,6 @@ include ./mk-include/cc-semaphore.mk
 include ./mk-include/cc-semver.mk
 include ./mk-include/cc-go.mk
 include ./mk-include/cc-docker.mk
-include ./mk-include/cc-cpd.mk
 include ./mk-include/cc-helm.mk
 include ./mk-include/cc-helmfile.mk
 include ./mk-include/halyard.mk
