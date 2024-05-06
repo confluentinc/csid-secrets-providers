@@ -129,7 +129,7 @@
     </parent>
     <description>Secrets Provider for Google Cloud Secret Manager</description>
     <properties>
-        <google.cloud.version>26.27.0</google.cloud.version>
+        <google.cloud.version>26.38.0</google.cloud.version>
     </properties>
     <dependencyManagement>
         <dependencies>
