@@ -117,6 +117,7 @@
  */
 package io.confluent.csid.config.provider.aws;
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -150,10 +151,10 @@ class SecretsManagerFactoryImpl implements SecretsManagerFactory {
     if (null != config.endpointOverride && !config.endpointOverride.isEmpty()) {
       builder = builder.endpointOverride(URI.create(config.endpointOverride));
     }
-    if (null != config.credentials) {
+    if (config.credentials instanceof AwsBasicCredentials) {
       builder = builder.credentialsProvider(StaticCredentialsProvider.create(config.credentials));
     } else {
-      defaultCredentialsProvider = DefaultCredentialsProvider.create();
+      defaultCredentialsProvider = DefaultCredentialsProvider.builder().asyncCredentialUpdateEnabled(true).build();
       builder = builder.credentialsProvider(defaultCredentialsProvider);
     }
     return builder;
