@@ -32,7 +32,7 @@ import java.util.concurrent.TimeoutException;
 import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
 
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
-public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever {
+public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever, AutoCloseable {
   private static final Logger log = LoggerFactory.getLogger(AbstractConfigProvider.class);
   protected CONFIG config;
   protected ScheduledExecutorService executorService;
