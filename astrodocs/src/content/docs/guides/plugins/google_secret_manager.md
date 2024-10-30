@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluentinc/kafka-config-provider-gcloud:latest
+confluent-hub install confluentinc/csid-secrets-provider-gcloud:latest
 ```
 
 This plugin provides integration with the [Google Secret Manager service](https://cloud.google.com/secret-manager).
