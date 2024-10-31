@@ -2,7 +2,7 @@
  * Copyright Confluent 2021
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-common")
+@PluginName("csid-secrets-provider-common")
 @Introduction("This plugin provides integration with files.")
 @Title("File Config Provider")
 package io.confluent.csid.config.provider.file;
