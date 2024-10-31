@@ -51,22 +51,22 @@ The `-classpath` option is preferred because you can set it individually for eac
 Update the following with the specific provider to be installed:
 
 ```bash
-confluent-hub install confluentinc/csid-config-provider-aws:latest
+confluent-hub install confluentinc/csid-secrets-provider-aws:latest
 ```
 
 ## List of libraries (current version, supports CP 5.5.x and up)
 
 | Required Libraries                        | Description                                                   |
 |-------------------------------------------|---------------------------------------------------------------|
-| csid-config-provider-common-{version}.jar | Main library for secrets provider, required for all use cases |
+| csid-secrets-provider-common-{version}.jar | Main library for secrets provider, required for all use cases |
 
 | Optional Libraries                        | Description                                    |
 |-------------------------------------------|------------------------------------------------|
-| csid-config-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
-| csid-config-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
-| csid-config-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
-| csid-config-provider-k8s-{version}.jar    | Kubernetes library for secrets management      |
-| csid-config-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
+| csid-secrets-provider-aws-{version}.jar    | AWS Secrets library for secrets management     |
+| csid-secrets-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
+| csid-secrets-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
+| csid-secrets-provider-k8s-{version}.jar    | Kubernetes library for secrets management      |
+| csid-secrets-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
 
 ## Releasing
 
