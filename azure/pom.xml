@@ -129,7 +129,7 @@
     </parent>
     <description>Secrets Provider for Azure Key Vault</description>
     <properties>
-        <azure-sdk.version>1.2.19</azure-sdk.version>
+        <azure-sdk.version>1.2.24</azure-sdk.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -201,7 +201,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
