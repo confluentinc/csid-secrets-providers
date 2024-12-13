@@ -131,9 +131,9 @@
         <license.path>${project.basedir}/LICENSE</license.path>
         <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
         <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-        <guava.version>33.0.0-jre</guava.version>
+        <guava.version>33.2.1-jre</guava.version>
         <immutables.version>2.10.1</immutables.version>
-        <jackson.version>2.16.1</jackson.version>
+        <jackson.version>2.17.2</jackson.version>
         <junit.version>5.10.2</junit.version>
         <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
         <kafka-clients.version>3.7.0</kafka-clients.version>
@@ -148,9 +148,9 @@
         <surefire.version>3.2.5</surefire.version>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <slf4j.version>2.0.10</slf4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <springframework-aws-maven.version>5.0.0.RELEASE</springframework-aws-maven.version>
-        <testcontainers.version>1.19.6</testcontainers.version>
+        <testcontainers.version>1.19.8</testcontainers.version>
         <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
     </properties>
 
