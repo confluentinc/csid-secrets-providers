@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Implementation</title><link rel="canonical" href="https://confluentinc.github.io/csid-secrets-providers/guides/implementation/"/><link rel="sitemap" href="/csid-secrets-providers/sitemap-index.xml"/><link rel="shortcut icon" href="/csid-secrets-providers/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v2.10.4"/><meta name="generator" content="Starlight v0.7.0"/><meta property="og:title" content="Implementation"/><meta property="og:type" content="article"/><meta property="og:url" content="https://confluentinc.github.io/csid-secrets-providers/guides/implementation/"/><meta property="og:locale" content="en"/><meta property="og:description"/><meta property="og:site_name" content="Secrets Providers"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Implementation"/><meta name="twitter:description"/>
 		
-	<link rel="stylesheet" href="/csid-secrets-providers/_astro/404.3225f13c.css" /><script type="module" src="/csid-secrets-providers/_astro/hoisted.71b787f1.js"></script></head>
+	<link rel="stylesheet" href="/csid-secrets-providers/_astro/404.3225f13c.css" /><script type="module" src="/csid-secrets-providers/_astro/hoisted.f706fe79.js"></script></head>
 	<body class="astro-NYFQ2LET">
 		
 <script>
@@ -370,7 +370,7 @@ Accelerator libraries such as this should be loaded first.</p>
 <p>The <code>-classpath</code> option is preferred because you can set it individually for each application without affecting other applications and without other applications modifying its value.</p>
 <h2 id="installation-via-the-cli">Installation via the CLI</h2>
 <p>Update the following with the specific provider to be installed:</p>
-<pre is:raw="" class="astro-code css-variables" style="background-color: var(--astro-code-color-background); overflow-x: auto;" tabindex="0"><code><span class="line"><span style="color: var(--astro-code-token-function)">confluent-hub</span><span style="color: var(--astro-code-color-text)"> </span><span style="color: var(--astro-code-token-string)">install</span><span style="color: var(--astro-code-color-text)"> </span><span style="color: var(--astro-code-token-string)">confluentinc/csid-config-provider-aws:latest</span></span></code></pre>
+<pre is:raw="" class="astro-code css-variables" style="background-color: var(--astro-code-color-background); overflow-x: auto;" tabindex="0"><code><span class="line"><span style="color: var(--astro-code-token-function)">confluent-hub</span><span style="color: var(--astro-code-color-text)"> </span><span style="color: var(--astro-code-token-string)">install</span><span style="color: var(--astro-code-color-text)"> </span><span style="color: var(--astro-code-token-string)">confluentinc/csid-secrets-provider-aws:latest</span></span></code></pre>
 <h2 id="list-of-libraries-current-version-supports-cp-55x-and-up">List of libraries (current version, supports CP 5.5.x and up)</h2>
 
 
@@ -385,7 +385,7 @@ Accelerator libraries such as this should be loaded first.</p>
 
 
 
-<table><thead><tr><th>Required Libraries</th><th>Description</th></tr></thead><tbody><tr><td>csid-config-provider-common-{version}.jar</td><td>Main library for secrets provider, required for all use cases</td></tr></tbody></table>
+<table><thead><tr><th>Required Libraries</th><th>Description</th></tr></thead><tbody><tr><td>csid-secrets-provider-common-{version}.jar</td><td>Main library for secrets provider, required for all use cases</td></tr></tbody></table>
 
 
 
@@ -411,7 +411,7 @@ Accelerator libraries such as this should be loaded first.</p>
 
 
 
-<table><thead><tr><th>Optional Libraries</th><th>Description</th></tr></thead><tbody><tr><td>csid-config-provider-aws-{version}.jar</td><td>AWS Secrets library for secrets management</td></tr><tr><td>csid-config-provider-azure-{version}.jar</td><td>Azure KeyVault library for secrets management</td></tr><tr><td>csid-config-provider-gcloud-{version}.jar</td><td>Google Cloud library for secrets management</td></tr><tr><td>csid-config-provider-vault-{version}.jar</td><td>Hashicorp Vault library for secrets management</td></tr></tbody></table>
+<table><thead><tr><th>Optional Libraries</th><th>Description</th></tr></thead><tbody><tr><td>csid-secrets-provider-aws-{version}.jar</td><td>AWS Secrets library for secrets management</td></tr><tr><td>csid-secrets-provider-azure-{version}.jar</td><td>Azure KeyVault library for secrets management</td></tr><tr><td>csid-secrets-provider-gcloud-{version}.jar</td><td>Google Cloud library for secrets management</td></tr><tr><td>csid-secrets-provider-vault-{version}.jar</td><td>Hashicorp Vault library for secrets management</td></tr></tbody></table>
 <h2 id="configuration">Configuration</h2>
 <p>Once the libraries required for your use case have been installed in the
 Java classpath, it is time to configure encryption.</p>

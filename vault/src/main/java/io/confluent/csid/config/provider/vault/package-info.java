@@ -116,7 +116,7 @@
  *       or as a waiver of any other right.
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-vault")
+@PluginName("csid-secrets-provider-vault")
 @Introduction("This plugin provides integration with Hashicorp Vault.")
 @Title("Hashicorp Vault Config Provider")
 package io.confluent.csid.config.provider.vault;

@@ -65,7 +65,7 @@
 - Updating google Cloud provider by @paxtonhare in #21
 - Updating maven repos by @paxtonhare in #22
 
-## [1.0.3](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.3) (2022-07-14)
+## [1.0.3](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.3) (2022-07-14)
 
 ### Features and Fixes
 
@@ -81,7 +81,7 @@
 Thanks to Ivan Kunz, Venky Narayanan, Paxton Hare, and Jeremy Custenborder for contributions to this
 release.
 
-## [1.0.2](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.2) (2021-12-01)
+## [1.0.2](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.2) (2021-12-01)
 
 ### Features and Fixes
 
@@ -94,14 +94,14 @@ release.
 - added ability to configure kv secrets engine version (#3)
 - Updated pom logback version for CVE-2017-5929. (#4)
 
-## [1.0.1](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.1) (2021-09-24)
+## [1.0.1](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.1) (2021-09-24)
 
 ### Features and Fixes
 
 - Refactor introduced NPE for hanging config variables that were not removed. Ensured that all unit
   tests are checking that supplied configs from base class are not null. Fixes CSIDG-57. (#2)
 
-## [1.0.0](https://github.com/confluentinc/csid-config-providers/releases/tag/1.0.0) (2021-09-10)
+## [1.0.0](https://github.com/confluentinc/csid-secrets-providers/releases/tag/1.0.0) (2021-09-10)
 
 ### Features and Fixes
 
