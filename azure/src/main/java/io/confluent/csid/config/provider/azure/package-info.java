@@ -116,7 +116,7 @@
  *       or as a waiver of any other right.
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-azure")
+@PluginName("csid-secrets-provider-azure")
 @Introduction("This plugin provides integration with the Microsoft Azure Key Vault service.")
 @Title("Microsoft Azure Key Vault Config Provider")
 package io.confluent.csid.config.provider.azure;

@@ -116,7 +116,7 @@
  *       or as a waiver of any other right.
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-gcloud")
+@PluginName("csid-secrets-provider-gcloud")
 @Introduction("This plugin provides integration with the Google Secret Manager service.")
 @Title("Google Secret Manager Config Provider")
 package io.confluent.csid.config.provider.gcloud;
