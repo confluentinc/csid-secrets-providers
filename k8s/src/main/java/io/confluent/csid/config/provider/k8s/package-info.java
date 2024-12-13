@@ -116,7 +116,7 @@
  *       or as a waiver of any other right.
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-k8s")
+@PluginName("csid-secrets-provider-k8s")
 @Introduction("This plugin provides integration with Kubernetes secrets.")
 @Title("K8s Secrets Manager Config Provider")
 package io.confluent.csid.config.provider.k8s;

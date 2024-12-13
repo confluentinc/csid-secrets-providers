@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluentinc/kafka-config-provider-common:latest
+confluent-hub install confluentinc/csid-secrets-provider-common:latest
 ```
 
 This plugin provides integration with files.
