@@ -148,7 +148,7 @@
         <surefire.version>3.2.5</surefire.version>
         <mockito.version>4.11.0</mockito.version>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <slf4j.version>2.0.10</slf4j.version>
+        <slf4j.version>2.0.13</slf4j.version>
         <springframework-aws-maven.version>5.0.0.RELEASE</springframework-aws-maven.version>
         <testcontainers.version>1.19.8</testcontainers.version>
         <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
