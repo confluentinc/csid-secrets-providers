@@ -25,14 +25,7 @@ blocks:
         commands:
           - sem-version java 17
           - checkout
-          - make install-vault
-          - . mk-include/bin/vault-setup
-          - . vault-sem-get-secret semaphore-secrets-global
-          - . vault-sem-get-secret aws_credentials
-          - . vault-sem-get-secret dockerhub-semaphore-cred-ro
-          - . vault-sem-get-secret netrc
-          - . vault-sem-get-secret ssh_config
-          - . vault-sem-get-secret maven-settings
+          - . vault-setup
           - make docker-login-ci
       jobs:
         - name: Build without Tests

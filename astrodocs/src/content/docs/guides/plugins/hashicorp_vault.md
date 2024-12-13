@@ -5,7 +5,7 @@ tableOfContents:
 ---
 
 ```bash
-confluent-hub install confluentinc/kafka-config-provider-vault:latest
+confluent-hub install confluentinc/csid-secrets-provider-vault:latest
 ```
 
 This plugin provides integration with [Hashicorp Vault](https://www.hashicorp.com/products/vault/secrets-management).
