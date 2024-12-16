@@ -144,6 +144,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.site.plugin.version>3.12.1</maven.site.plugin.version>
+        <maven-s3-wagon.version>1.3.3</maven-s3-wagon.version>
         <failsafe.version>3.2.5</failsafe.version>
         <surefire.version>3.2.5</surefire.version>
         <mockito.version>4.11.0</mockito.version>
@@ -292,6 +293,11 @@
 
     <build>
         <extensions>
+            <extension>
+                <groupId>com.github.seahen</groupId>
+                <artifactId>maven-s3-wagon</artifactId>
+                <version>${maven-s3-wagon.version}</version>
+            </extension>
 			<extension>
 				<groupId>org.springframework.build</groupId>
 				<artifactId>aws-maven</artifactId>
