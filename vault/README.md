@@ -218,7 +218,7 @@ The following example uses a ldap username and password to authenticate to vault
 ```properties
 config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.auth.method=LDAP
 ```
@@ -230,7 +230,7 @@ The following example uses a token to authenticate to vault.
 ```properties
 config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.auth.method=Token
 ```
@@ -242,7 +242,7 @@ The following example uses a token to authenticate to vault.
 ```properties
 config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
 config.providers.vault.param.vault.auth.method=Token
 config.providers.vault.param.secrets.version=1
