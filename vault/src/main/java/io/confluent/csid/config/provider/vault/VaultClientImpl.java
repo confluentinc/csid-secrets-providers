@@ -148,7 +148,7 @@ class VaultClientImpl implements VaultClient {
     if (result.ttl().isPresent() && result.ttl().get() > 0) {
       log.debug("ctor() - AuthResult does have a ttl - scheduling token renewal.");
       executorService.scheduleAtFixedRate(() -> authenticateVault(config, vaultConfig),
-              0, result.ttl().get(), TimeUnit.SECONDS);
+              0, result.ttl().get() - ( result.ttl().get() / 10 ), TimeUnit.SECONDS);
     } else {
       log.debug("ctor() - AuthResult does not have a ttl so not scheduling token refresh.");
     }
