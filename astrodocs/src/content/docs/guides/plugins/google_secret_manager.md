@@ -136,5 +136,56 @@ The project that owns the credentials.
 
 ### Examples
 
-TODO - Add examples
+
+#### Credentials - File
+
+The following example uses the Credentials File to load the credentials.
+
+Location on the local filesystem to load the credentials.
+
+
+```properties
+config.providers=secretsManager
+
+config.providers.secretsManager.class=io.confluent.csid.config.provider.gcloud.SecretManagerConfigProvider
+config.providers.secretsManager.param.project.id=1234
+config.providers.secretsManager.param.credential.location=File
+config.providers.secretsManager.param.credential.file=/path/to/gcp_credentials.json
+config.providers.secretsManager.param.retry.count=3
+config.providers.secretsManager.param.retry.interval.seconds=10
+config.providers.secretsManager.param.timeout.seconds=30
+config.providers.secretsManager.param.polling.enabled=true
+config.providers.secretsManager.param.polling.interval.seconds=300
+```
+
+#### Credentials - Inline
+
+The following example uses the Credentials Inline to load the credentials as a String.
+
+This is useful for environments where file-based credentials are impractical, such as containerized deployments or automated setups.
+
+```properties
+config.providers=secretsManager
+
+config.providers.secretsManager.class=io.confluent.csid.config.provider.gcloud.SecretManagerConfigProvider
+config.providers.secretsManager.param.project.id=1234
+config.providers.secretsManager.param.credential.location=Inline
+config.providers.secretsManager.param.credential.inline={
+\"type\": \"service_account\",
+\"project_id\": \"my-project-id\",
+\"private_key_id\": \"123456789abcdef123456789abcdef123456789\",
+\"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhki...TRUNCATED_KEY_BASE64...\\n-----END PRIVATE KEY-----\\n\",
+\"client_email\": \"service-account-name@my-project-id.iam.gserviceaccount.com\",
+\"client_id\": \"12345678901234567890\",
+\"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",
+\"token_uri\": \"https://oauth2.googleapis.com/token\",
+\"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
+\"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/service-account-name%40my-project-id.iam.gserviceaccount.com\"
+}
+config.providers.secretsManager.param.retry.count=3
+config.providers.secretsManager.param.retry.interval.seconds=10
+config.providers.secretsManager.param.timeout.seconds=30
+config.providers.secretsManager.param.polling.enabled=true
+config.providers.secretsManager.param.polling.interval.seconds=300
+```
 
