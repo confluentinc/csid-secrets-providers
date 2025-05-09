@@ -172,6 +172,10 @@
             <groupId>io.confluent.csid</groupId>
             <artifactId>csid-secrets-provider-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-rls</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
