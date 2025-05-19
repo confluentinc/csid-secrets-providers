@@ -128,7 +128,7 @@
     <license.path>${project.basedir}/LICENSE</license.path>
     <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
     <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-    <guava.version>33.4.0-jre</guava.version>
+    <guava.version>33.4.8-jre</guava.version>
     <immutables.version>2.10.1</immutables.version>
     <jackson.version>2.18.2</jackson.version>
     <junit.version>5.11.4</junit.version>
