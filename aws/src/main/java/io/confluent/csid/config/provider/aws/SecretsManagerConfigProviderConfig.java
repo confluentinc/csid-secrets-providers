@@ -127,7 +127,7 @@ import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import java.time.Duration;
 import java.util.Map;
 
-class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
+public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String REGION_CONFIG = "aws.region";
   static final String REGION_DOC = "Sets the region to be used by the client. For example `us-west-2`";
 
