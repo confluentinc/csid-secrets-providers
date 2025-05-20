@@ -136,7 +136,7 @@ import java.util.logging.Level;
 import static io.confluent.csid.config.provider.common.config.ConfigUtils.getEnum;
 import static io.confluent.csid.config.provider.common.util.Utils.isNullOrEmpty;
 
-class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
+public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String ADDRESS_CONFIG = "vault.address";
   static final String ADDRESS_DOC = "Sets the address (URL) of the Vault server instance to which API calls should be sent. " +
       "If no address is explicitly set, the object will look to the `VAULT_ADDR` If you do not supply it explicitly AND no " +
