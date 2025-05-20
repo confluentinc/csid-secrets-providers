@@ -138,7 +138,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-class KeyVaultConfigProviderConfig extends AbstractConfigProviderConfig {
+public class KeyVaultConfigProviderConfig extends AbstractConfigProviderConfig {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProviderConfig.class);
   public static final String PREFIX_CONFIG = "secret.prefix";
   static final String PREFIX_DOC = "Sets a prefix that will be added to all paths. For example you can use `staging` or `production` " +
