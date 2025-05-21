@@ -40,5 +40,5 @@ after_pipeline:
           - test-results gen-pipeline-report
 
 promotions:
-  - name: Publish to JFrog
-    pipeline_file: publish_to_jfrog.yml
+  - name: Publish to Codeartifact
+    pipeline_file: publish_to_codeartifact.yml

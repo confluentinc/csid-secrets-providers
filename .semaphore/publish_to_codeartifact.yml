@@ -3,7 +3,7 @@
 #
 
 version: v1.0
-name: Publish to JFrog
+name: Publish to Codeartifact
 agent:
   machine:
     type: s1-prod-ubuntu20-04-amd64-1
@@ -28,4 +28,4 @@ blocks:
             - cache store
             # Download all JARs possible and compile as much as possible
             # Use -q to reduce output spam
-            - ./mvnw -q -DskipTests -Ppublish-to-jfrog deploy
+            - ./mvnw -q -DskipTests -Ppublish-to-codeartifact deploy

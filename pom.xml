@@ -190,7 +190,7 @@
       </distributionManagement>
     </profile>
     <profile>
-      <id>publish-to-jfrog</id>
+      <id>publish-to-codeartifact</id>
       <distributionManagement>
         <snapshotRepository>
           <id>confluent-codeartifact-internal</id>
