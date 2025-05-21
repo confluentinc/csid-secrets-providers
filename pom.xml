@@ -189,6 +189,23 @@
         </snapshotRepository>
       </distributionManagement>
     </profile>
+    <profile>
+      <id>publish-to-codeartifact</id>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>confluent-codeartifact-internal</id>
+          <name>confluent-snapshots</name>
+          <url>https://confluent-519856050701.d.codeartifact.us-west-2.amazonaws.com/maven/maven-releases
+          </url>
+        </snapshotRepository>
+        <repository>
+          <id>confluent-codeartifact-internal</id>
+          <name>confluent-releases</name>
+          <url>https://confluent-519856050701.d.codeartifact.us-west-2.amazonaws.com/maven/maven-releases
+          </url>
+        </repository>
+      </distributionManagement>
+    </profile>
   </profiles>
   <dependencyManagement>
     <dependencies>
