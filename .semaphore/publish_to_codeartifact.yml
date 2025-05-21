@@ -6,7 +6,7 @@ version: v1.0
 name: Publish to Codeartifact
 agent:
   machine:
-    type: s1-prod-ubuntu20-04-amd64-1
+    type: s1-prod-ubuntu24-04-amd64-1
 
 global_job_config:
   env_vars:
@@ -19,7 +19,7 @@ global_job_config:
       - make docker-login-ci
 
 blocks:
-  - name: Deploy to JFrog
+  - name: Deploy to Codeartifact
     task:
       jobs:
         - name: Publish Artifacts
