@@ -1,0 +1,31 @@
+#
+# Copyright (C) 2021-2025 Confluent, Inc.
+#
+
+version: v1.0
+name: Publish to JFrog
+agent:
+  machine:
+    type: s1-prod-ubuntu20-04-amd64-1
+
+global_job_config:
+  env_vars:
+    - name: MAVEN_OPTS
+      value: "-Dmaven.repo.local=.m2"
+  prologue:
+    commands:
+      - checkout
+      - . vault-setup
+      - make docker-login-ci
+
+blocks:
+  - name: Deploy to JFrog
+    task:
+      jobs:
+        - name: Publish Artifacts
+          commands:
+            - ./mvnw clean verify install dependency:analyze validate
+            - cache store
+            # Download all JARs possible and compile as much as possible
+            # Use -q to reduce output spam
+            - ./mvnw -q -DskipTests -Ppublish-to-jfrog deploy
