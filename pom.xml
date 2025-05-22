@@ -124,6 +124,12 @@
   <artifactId>csid-secrets-providers</artifactId>
   <version>1.0.42-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <description>Enables use of external third-party systems for storing/retrieving key/value pairs with Confluent clusters.</description>
+  <url>https://confluent.io</url>
+  <organization>
+    <name>Confluent, Inc.</name>
+    <url>https://confluent.io</url>
+  </organization>
   <properties>
     <license.path>${project.basedir}/LICENSE</license.path>
     <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
@@ -188,6 +194,48 @@
           <url>s3://confluent-csid-maven/snapshots</url>
         </snapshotRepository>
       </distributionManagement>
+    </profile>
+    <profile>
+      <id>publish-to-central</id>
+      <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+      <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>publish-to-codeartifact</id>
