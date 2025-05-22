@@ -11,7 +11,7 @@ semaphore:
   tasks:
     - name: Upload to Codeartifact
       branch: main
-      pipeline_file: ".semaphore/secrets-providers/publish_to_codeartifact.yml"
+      pipeline_file: ".semaphore/publish_to_codeartifact.yml"
     - name: Publish to Maven Central
       branch: main
       pipeline_file: ".semaphore/publish_to_mavencentral.yml"
