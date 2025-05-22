@@ -42,3 +42,5 @@ after_pipeline:
 promotions:
   - name: Publish to Codeartifact
     pipeline_file: publish_to_codeartifact.yml
+  - name : Publish to Maven Central
+    pipeline_file : publish_to_mavencentral.yml
