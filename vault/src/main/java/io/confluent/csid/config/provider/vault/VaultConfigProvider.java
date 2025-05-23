@@ -118,7 +118,6 @@
 package io.confluent.csid.config.provider.vault;
 
 import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.response.LogicalResponse;
 import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
@@ -217,7 +216,7 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   protected Map<String, String> getSecret(SecretRequest request) throws Exception {
     log.info("getSecret() - request = '{}'", request);
     try {
-      LogicalResponse response = this.vaultClient.read(request);
+      VaultResponse response = this.vaultClient.read(request);
       return response.getData();
     } catch (VaultException ex) {
       if (RETRIABLE.contains(ex.getHttpStatusCode())) {

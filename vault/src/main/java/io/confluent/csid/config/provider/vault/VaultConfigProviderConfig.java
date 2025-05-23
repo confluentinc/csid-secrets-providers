@@ -137,7 +137,7 @@ import java.util.logging.Level;
 import static io.confluent.csid.config.provider.common.config.ConfigUtils.getEnum;
 import static io.confluent.csid.config.provider.common.util.Utils.isNullOrEmpty;
 
-class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
+public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String ADDRESS_CONFIG = "vault.address";
   static final String ADDRESS_DOC = "Sets the address (URL) of the Vault server instance to which API calls should be sent. " +
       "If no address is explicitly set, the object will look to the `VAULT_ADDR` If you do not supply it explicitly AND no " +
@@ -179,6 +179,30 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   static final String URL_LOGGING_ENABLED_DOC = "Flag to copy java.util.logging messages for \"sun.net.www.protocol.http.HttpURLConnection\" to the providers logger. " +
       "Warning this will log all of the traffic for ANY Vault client that is in the current JVM. This could also receive any log message for other code that uses java.net.UrlConnection.";
 
+  public static final String HCP_CLIENT_ID = "vault.hcp.clientId";
+  static final String HCP_CLIENT_ID_DOC = "Client ID to connect to HCP Vault. This is used for authentication.";
+
+  public static final String HCP_CLIENT_SECRET = "vault.hcp.clientSecret";
+  static final String HCP_CLIENT_SECRET_DOC = "Client Secret to connect to HCP Vault. This is used for authentication.";
+
+  public static final String HCP_AUDIENCE = "vault.hcp.audience";
+  static final String HCP_AUDIENCE_DOC = "Audience used to perform OAuth login to HCP Vault";
+  static final String HCP_AUDIENCE_DEFAULT = "https://api.hashicorp.cloud";
+
+  public static final String HCP_TOKEN_URL = "vault.hcp.tokenUrl";
+  static final String HCP_TOKEN_DOC = "Token URL used to perform OAuth login to HCP Vault";
+  static final String HCP_TOKEN_DEFAULT = "https://auth.idp.hashicorp.com/oauth2/token";
+
+  public static final String HCP_ORGANIZATION_ID = "vault.hcp.organizationId";
+  static final String HCP_ORGANIZATION_ID_DOC = "HCP organization ID to connect to";
+
+  public static final String HCP_PROJECT_ID = "vault.hcp.projectId";
+  static final String HCP_PROJECT_ID_DOC = "HCP project ID to connect to";
+
+  public static final String HCP_APP_NAME = "vault.hcp.appName";
+  static final String HCP_APP_NAME_DOC = "App name for HCP Vault to connect to";
+
+  public final String address;
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
 
@@ -191,6 +215,14 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public final Integer version;
   public final String prefixPath;
   public final boolean urlLoggingEnabled;
+
+  public final String hcpClientId;
+  public final String hcpClientSecret;
+  public final String hcpAudience;
+  public final String hcpTokenUrl;
+  public final String hcpOrganizationId;
+  public final String hcpProjectId;
+  public final String hcpAppName;
 
   void checkNotDefault(String item) {
     ConfigDef config = config();
@@ -207,6 +239,7 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
 
   public VaultConfigProviderConfig(Map<?, ?> originals) {
     super(config(), originals);
+    this.address = getString(ADDRESS_CONFIG);
     this.sslVerifyEnabled = getBoolean(SSL_VERIFY_ENABLED_CONFIG);
     this.authMethod = getEnum(AuthMethod.class, this, AUTH_METHOD_CONFIG);
     this.username = getString(USERNAME_CONFIG);
@@ -217,6 +250,13 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     this.version = getInt(SECRETS_ENGINE_CONFIG);
     this.prefixPath = getString(PREFIXPATH_CONFIG);
     this.urlLoggingEnabled = getBoolean(URL_LOGGING_ENABLED_CONFIG);
+    this.hcpClientId = getString(HCP_CLIENT_ID);
+    this.hcpClientSecret = getPassword(HCP_CLIENT_SECRET).value();
+    this.hcpAudience = getString(HCP_AUDIENCE);
+    this.hcpTokenUrl = getString(HCP_TOKEN_URL);
+    this.hcpOrganizationId = getString(HCP_ORGANIZATION_ID);
+    this.hcpProjectId = getString(HCP_PROJECT_ID);
+    this.hcpAppName = getString(HCP_APP_NAME);
 
     switch (this.authMethod) {
       case LDAP:
@@ -320,6 +360,48 @@ class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
             ConfigKeyBuilder.of(PREFIXPATH_CONFIG, ConfigDef.Type.STRING)
                 .documentation(PREFIXPATH_DOC)
                 .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_CLIENT_ID, ConfigDef.Type.STRING)
+                .documentation(HCP_CLIENT_ID_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_CLIENT_SECRET, ConfigDef.Type.PASSWORD)
+                .documentation(HCP_CLIENT_SECRET_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_AUDIENCE, ConfigDef.Type.STRING)
+                .documentation(HCP_AUDIENCE_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue(HCP_AUDIENCE_DEFAULT)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_TOKEN_URL, ConfigDef.Type.STRING)
+                .documentation(HCP_TOKEN_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue(HCP_TOKEN_DEFAULT)
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_ORGANIZATION_ID, ConfigDef.Type.STRING)
+                .documentation(HCP_ORGANIZATION_ID_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_PROJECT_ID, ConfigDef.Type.STRING)
+                .documentation(HCP_PROJECT_ID_DOC)
+                .importance(ConfigDef.Importance.HIGH)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(HCP_APP_NAME, ConfigDef.Type.STRING)
+                .documentation(HCP_APP_NAME_DOC)
+                .importance(ConfigDef.Importance.HIGH)
                 .defaultValue("")
                 .build()
     );
