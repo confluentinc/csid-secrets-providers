@@ -169,7 +169,7 @@ public class VaultClientHcpImpl implements VaultClient {
     String accessToken = getHCPAccessToken(config);
 
     String secretUrl = String.format(
-            "%s/secrets/2023-06-13/organizations/%s/projects/%s/apps/%s/secrets/%s:open",
+            "%s/secrets/2023-11-28/organizations/%s/projects/%s/apps/%s/secrets/%s:open",
             config.address, config.hcpOrganizationId, config.hcpProjectId, config.hcpAppName,
             secretName);
 
