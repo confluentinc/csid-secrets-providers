@@ -118,7 +118,7 @@
 
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.response.LogicalResponse;
+import io.github.jopenlibs.vault.response.LogicalResponse;
 import java.util.Map;
 
 /**
@@ -136,10 +136,4 @@ class LogicalResponseWrapper implements VaultResponse {
     return logicalResponse.getData();
   }
 
-  /**
-   * Get the underlying LogicalResponse if needed
-   */
-  public LogicalResponse getLogicalResponse() {
-    return logicalResponse;
-  }
 } 

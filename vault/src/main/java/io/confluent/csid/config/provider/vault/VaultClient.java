@@ -119,7 +119,6 @@ package io.confluent.csid.config.provider.vault;
 
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.github.jopenlibs.vault.VaultException;
-import io.github.jopenlibs.vault.response.LogicalResponse;
 
 interface VaultClient {
   VaultResponse read(SecretRequest request) throws VaultException;

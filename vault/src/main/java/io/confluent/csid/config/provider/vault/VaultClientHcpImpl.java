@@ -117,10 +117,10 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.VaultException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.csid.config.provider.common.SecretRequest;
+import io.github.jopenlibs.vault.VaultException;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
