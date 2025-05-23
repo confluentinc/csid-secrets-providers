@@ -118,10 +118,28 @@
 package io.confluent.csid.config.provider.vault;
 
 import java.util.concurrent.ScheduledExecutorService;
+import static io.confluent.csid.config.provider.common.util.Utils.isNullOrEmpty;
 
 class VaultClientFactoryImpl implements VaultClientFactory {
   @Override
   public VaultClient create(VaultConfigProviderConfig config, ScheduledExecutorService executorService) {
-    return new VaultClientImpl(config, executorService);
+    // Determine which implementation to use based on configuration
+    if (isHcpVault(config)) {
+      return new VaultClientHcpImpl(config, executorService);
+    } else {
+      return new VaultClientImpl(config, executorService);
+    }
+  }
+
+  /**
+   * Determines if this is an HCP Vault configuration based on the presence
+   * of HCP-specific configuration parameters
+   */
+  private boolean isHcpVault(VaultConfigProviderConfig config) {
+    // Check if HCP-specific configuration is present
+    return !isNullOrEmpty(config.hcpClientId)
+            &&  !isNullOrEmpty(config.hcpClientSecret)
+            &&  !isNullOrEmpty(config.hcpOrganizationId)
+            &&  !isNullOrEmpty(config.hcpProjectId);
   }
 }

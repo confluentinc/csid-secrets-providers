@@ -117,76 +117,121 @@
  */
 package io.confluent.csid.config.provider.vault;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.csid.config.provider.common.SecretRequest;
-import io.github.jopenlibs.vault.Vault;
-import io.github.jopenlibs.vault.VaultConfig;
 import io.github.jopenlibs.vault.VaultException;
-import io.github.jopenlibs.vault.response.LogicalResponse;
-import org.apache.kafka.common.config.ConfigException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
-class VaultClientImpl implements VaultClient {
-  private static final Logger log = LoggerFactory.getLogger(VaultClientImpl.class);
-  final AtomicReference<Vault> vaultStore = new AtomicReference<>();
-  final AtomicReference<AuthHandler.AuthResult> authResultStore = new AtomicReference<>();
+public class VaultClientHcpImpl implements VaultClient {
+  private final VaultConfigProviderConfig config;
+  private final ScheduledExecutorService executorService;
 
+  private final OkHttpClient httpClient = new OkHttpClient.Builder()
+          .connectTimeout(30, TimeUnit.SECONDS)
+          .readTimeout(30, TimeUnit.SECONDS)
+          .writeTimeout(30, TimeUnit.SECONDS)
+          .build();
 
-  public VaultClientImpl(VaultConfigProviderConfig config, ScheduledExecutorService executorService) {
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    VaultConfig vaultConfig = config.createConfig();
-    log.info("ctor() - creating initial vault client");
-
-    Vault initialVault = Vault.create(vaultConfig);
-    this.vaultStore.set(initialVault);
-    AuthHandler.AuthResult result = authenticateVault(config, vaultConfig);
-
-    if (result.ttl().isPresent() && result.ttl().get() > 0) {
-      log.debug("ctor() - AuthResult does have a ttl - scheduling token renewal.");
-      executorService.scheduleAtFixedRate(() -> authenticateVault(config, vaultConfig),
-              0, result.ttl().get() - (result.ttl().get() / 10), TimeUnit.SECONDS);
-    } else {
-      log.debug("ctor() - AuthResult does not have a ttl so not scheduling token refresh.");
-    }
+  public VaultClientHcpImpl(VaultConfigProviderConfig config, ScheduledExecutorService executorService) {
+    this.config = config;
+    this.executorService = executorService;
   }
-
-  private AuthHandler.AuthResult authenticateVault(VaultConfigProviderConfig config, VaultConfig vaultConfig) {
-    log.debug("ctor() - authenticating vault");
-    AuthHandler authHandler = AuthHandlers.get(config.authMethod);
-    AuthHandler.AuthResult result;
-    try {
-      result = authHandler.execute(config, this.vaultStore.get());
-    } catch (VaultException exception) {
-      log.error("ctor() - exception thrown during initial authentication", exception);
-      ConfigException configException = new ConfigException("Exception during initial authentication");
-      configException.initCause(exception);
-      throw configException;
-    }
-    log.debug("ctor() - authResult = {}", result);
-    result.token().ifPresent(vaultConfig::token);
-    return result;
-  }
-
 
   @Override
   public VaultResponse read(SecretRequest request) throws VaultException {
-    log.debug("read() - request = '{}'", request);
-    Vault vault = this.vaultStore.get();
-
-    LogicalResponse logicalResponse;
-    if (request.version().isPresent()) {
-      Integer version = Integer.parseInt(request.version().get());
-      logicalResponse = vault.logical().read(request.path(), false, version);
-    } else {
-      logicalResponse = vault.logical().read(request.path());
+    try {
+      return new MapResponseWrapper(getSecret(config, request.path()));
+    } catch (Exception e) {
+      throw new VaultException("Failed to read from HCP Vault: Exception: " + e.getMessage());
     }
-    
-    return new LogicalResponseWrapper(logicalResponse);
+
   }
 
 
+  /**
+   * Fetch a specific secret from HCP Vault Secrets
+   */
+  private Map<String, String> getSecret(VaultConfigProviderConfig config, String secretName)
+          throws IOException {
+    String accessToken = getHCPAccessToken(config);
+
+    String secretUrl = String.format(
+            "%s/secrets/2023-11-28/organizations/%s/projects/%s/apps/%s/secrets/%s:open",
+            config.address, config.hcpOrganizationId, config.hcpProjectId, config.hcpAppName,
+            secretName);
+
+    Request request = new Request.Builder()
+            .url(secretUrl)
+            .get()
+            .addHeader("Authorization", "Bearer " + accessToken)
+            .addHeader("Content-Type", "application/json")
+            .build();
+
+    try (Response response = httpClient.newCall(request).execute()) {
+      if (!response.isSuccessful()) {
+        throw new IOException("Failed to get secret: " + response.code() + " " + response.message());
+      }
+
+      String responseBody = response.body().string();
+      JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+      Map<String, String> secretData = new HashMap<>();
+      JsonNode secret = jsonNode.get("secret");
+
+      if (secret != null) {
+        String value = secret.has("static_version") && secret.get("static_version").has("value")
+                ? secret.get("static_version").get("value").asText()
+                : null;
+        secretData.put("secret", value);
+      }
+
+      return secretData;
+    }
+  }
+
+
+  /**
+   * Get HCP access token using client credentials
+   */
+  private String getHCPAccessToken(VaultConfigProviderConfig config) throws IOException {
+    String tokenUrl = config.hcpTokenUrl;
+
+    RequestBody formBody = new FormBody.Builder()
+            .add("client_id", config.hcpClientId)
+            .add("client_secret", config.hcpClientSecret)
+            .add("grant_type", "client_credentials")
+            .add("audience", config.hcpAudience)
+            .build();
+
+    Request request = new Request.Builder()
+            .url(tokenUrl)
+            .post(formBody)
+            .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            .build();
+
+    try (Response response = httpClient.newCall(request).execute()) {
+      if (!response.isSuccessful()) {
+        throw new IOException("Failed to get HCP access token: " + response.code() + " " + response.message());
+      }
+
+      String responseBody = response.body().string();
+      JsonNode jsonNode = objectMapper.readTree(responseBody);
+      return jsonNode.get("access_token").asText();
+    } catch (Exception e) {
+      throw new IOException("Failed to get HCP access token: " + e.getMessage());
+    }
+  }
 }

@@ -168,16 +168,17 @@ public class VaultConfigProviderTests {
     });
   }
 
-  OngoingStubbing<LogicalResponse> addVaultException(OngoingStubbing<LogicalResponse> stub, int statusCode, String message) throws VaultException {
+  OngoingStubbing<VaultResponse> addVaultException(OngoingStubbing<VaultResponse> stub, int statusCode, String message) throws VaultException {
     return stub.thenThrow(new VaultException(message, statusCode));
   }
 
-  OngoingStubbing<LogicalResponse> addLogicalResponse(OngoingStubbing<LogicalResponse> stub, int status, Body body) throws JsonProcessingException, VaultException {
+  OngoingStubbing<VaultResponse> addLogicalResponse(OngoingStubbing<VaultResponse> stub, int status, Body body) throws JsonProcessingException, VaultException {
     ObjectMapper objectMapper = new ObjectMapper();
     byte[] payload = objectMapper.writeValueAsBytes(body);
     RestResponse restResponse = new RestResponse(status, "application/json", payload);
     LogicalResponse response = new LogicalResponse(restResponse, 1, Logical.logicalOperations.readV2);
-    return stub.thenReturn(response);
+    LogicalResponseWrapper wrapper = new LogicalResponseWrapper(response);
+    return stub.thenReturn(wrapper);
   }
 
   @Test
@@ -191,7 +192,7 @@ public class VaultConfigProviderTests {
                 .build()
         ).build();
 
-    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
+    OngoingStubbing<VaultResponse> stub = when(this.vaultClient.read(any()));
     stub = addLogicalResponse(stub, 200, expected);
 
 
@@ -210,7 +211,7 @@ public class VaultConfigProviderTests {
                 .build()
         ).build();
 
-    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
+    OngoingStubbing<VaultResponse> stub = when(this.vaultClient.read(any()));
     stub = addLogicalResponse(stub, 200, expected);
 
 
@@ -231,7 +232,7 @@ public class VaultConfigProviderTests {
                 .build()
         ).build();
 
-    OngoingStubbing<LogicalResponse> stub = when(this.vaultClient.read(any()));
+    OngoingStubbing<VaultResponse> stub = when(this.vaultClient.read(any()));
     stub = addVaultException(stub, 503, "Vault Sealed");
     stub = addVaultException(stub, 503, "Vault Sealed");
     stub = addLogicalResponse(stub, 200, expected);

@@ -124,7 +124,6 @@ import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.github.jopenlibs.vault.VaultException;
-import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -217,7 +216,7 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   protected Map<String, String> getSecret(SecretRequest request) throws Exception {
     log.info("getSecret() - request = '{}'", request);
     try {
-      LogicalResponse response = this.vaultClient.read(request);
+      VaultResponse response = this.vaultClient.read(request);
       return response.getData();
     } catch (VaultException ex) {
       if (RETRIABLE.contains(ex.getHttpStatusCode())) {
