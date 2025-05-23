@@ -124,19 +124,22 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.42-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Hashicorp Vault</description>
+    <properties>
+        <vault-java-driver.version>6.2.0</vault-java-driver.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>io.confluent.csid</groupId>
             <artifactId>csid-secrets-provider-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.bettercloud</groupId>
+            <groupId>io.github.jopenlibs</groupId>
             <artifactId>vault-java-driver</artifactId>
-            <version>5.1.0</version>
+            <version>${vault-java-driver.version}</version>
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
@@ -145,6 +148,7 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>
@@ -154,14 +158,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>vault</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -169,13 +176,26 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <documentationUrl>${documentationUrl}/hashicorp_vault</documentationUrl>
+                            <sourceUrl>${project.parent.scm.url}/tree/main/vault</sourceUrl>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- jar plugin is called from kafka-connect-maven-plugin. Disable here -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

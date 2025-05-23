@@ -1,7 +1,7 @@
 # Microsoft Azure Key Vault Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-azure:latest
+confluent-hub install confluentinc/csid-secrets-provider-azure:latest
 ```
 
 Note: if this command does not work and the package is not online available to download, then you need to download the zip file for azure and include it manually in the plugins path, for example for Azure Key Vault 1.0.5 you would get confluent-csid-secrets-provider-azure-1.0.5.zip from https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.5.

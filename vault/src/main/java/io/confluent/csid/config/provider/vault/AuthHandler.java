@@ -117,10 +117,10 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.response.AuthResponse;
-import com.bettercloud.vault.response.LookupResponse;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultException;
+import io.github.jopenlibs.vault.response.AuthResponse;
+import io.github.jopenlibs.vault.response.LookupResponse;
 import org.immutables.value.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -274,8 +274,8 @@ abstract class AuthHandler {
         log.trace("execute() - calling loginByAppRole('{}', '*****')", config.role);
         response = vault.auth().loginByAppRole(config.role, config.secret);
       } else {
-        log.trace("execute() - calling loginByUserPass('{}', ****, '{}')", config.username, config.mount);
-        response = vault.auth().loginByUserPass(config.username, config.password, config.mount);
+        log.trace("execute() - calling loginByAppRole('{}', '{}', ****)", config.mount, config.role);
+        response = vault.auth().loginByAppRole(config.mount, config.role, config.secret);
       }
       return result(response);
     }

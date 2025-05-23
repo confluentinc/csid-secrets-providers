@@ -5,15 +5,15 @@
                         Confluent Community License Agreement
                                     Version 1.0
 
-    This Confluent Community License Agreement Version 1.0 (the “Agreement”) sets
-    forth the terms on which Confluent, Inc. (“Confluent”) makes available certain
-    software made available by Confluent under this Agreement (the “Software”).  BY
+    This Confluent Community License Agreement Version 1.0 (the "Agreement") sets
+    forth the terms on which Confluent, Inc. ("Confluent") makes available certain
+    software made available by Confluent under this Agreement (the "Software").  BY
     INSTALLING, DOWNLOADING, ACCESSING, USING OR DISTRIBUTING ANY OF THE SOFTWARE,
     YOU AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO
     SUCH TERMS AND CONDITIONS, YOU MUST NOT USE THE SOFTWARE.  IF YOU ARE RECEIVING
     THE SOFTWARE ON BEHALF OF A LEGAL ENTITY, YOU REPRESENT AND WARRANT THAT YOU
     HAVE THE ACTUAL AUTHORITY TO AGREE TO THE TERMS AND CONDITIONS OF THIS
-    AGREEMENT ON BEHALF OF SUCH ENTITY.  “Licensee” means you, an individual, or
+    AGREEMENT ON BEHALF OF SUCH ENTITY.  "Licensee" means you, an individual, or
     the entity on whose behalf you are receiving the Software.
 
        1. LICENSE GRANT AND CONDITIONS.
@@ -24,14 +24,14 @@
           of this Agreement to: (a) use the Software; (b) prepare modifications and
           derivative works of the Software; (c) distribute the Software (including
           without limitation in source code or object code form); and (d) reproduce
-          copies of the Software (the “License”).  Licensee is not granted the
+          copies of the Software (the "License").  Licensee is not granted the
           right to, and Licensee shall not, exercise the License for an Excluded
-          Purpose.  For purposes of this Agreement, “Excluded Purpose” means making
+          Purpose.  For purposes of this Agreement, "Excluded Purpose" means making
           available any software-as-a-service, platform-as-a-service,
           infrastructure-as-a-service or other similar online service that competes
           with Confluent products or services that provide the Software.
 
-          1.2 Conditions.  In consideration of the License, Licensee’s distribution
+          1.2 Conditions.  In consideration of the License, Licensee's distribution
           of the Software is subject to the following conditions:
 
              (a) Licensee must cause any Software modified by Licensee to carry
@@ -42,16 +42,16 @@
              notices contained in the Software, and Licensee must provide the
              notice below with each copy.
 
-                “This software is made available by Confluent, Inc., under the
+                "This software is made available by Confluent, Inc., under the
                 terms of the Confluent Community License Agreement, Version 1.0
                 located at http://www.confluent.io/confluent-community-license.  BY
                 INSTALLING, DOWNLOADING, ACCESSING, USING OR DISTRIBUTING ANY OF
-                THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT.”
+                THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT."
 
           1.3 Licensee Modifications.  Licensee may add its own copyright notices
           to modifications made by Licensee and may provide additional or different
           license terms and conditions for use, reproduction, or distribution of
-          Licensee’s modifications.  While redistributing the Software or
+          Licensee's modifications.  While redistributing the Software or
           modifications thereof, Licensee may choose to offer, for a fee or free of
           charge, support, warranty, indemnity, or other obligations. Licensee, and
           not Confluent, will be responsible for any such obligations.
@@ -119,327 +119,383 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>io.confluent.csid</groupId>
-    <artifactId>csid-secrets-providers</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
-    <packaging>pom</packaging>
-
-    <properties>
-        <license.path>${project.basedir}/LICENSE</license.path>
-        <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-        <mockito.version>4.8.0</mockito.version>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <surefire.version>3.0.0-M7</surefire.version>
-        <failsafe.version>3.0.0-M7</failsafe.version>
-        <maven.checkstyle.version>3.2.0</maven.checkstyle.version>
-        <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
-        <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
-        <testcontainers.version>1.17.6</testcontainers.version>
-    </properties>
-
-    <scm>
-        <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
-        <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
-        <url>https://github.com/confluentinc/csid-secrets-providers.git</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <modules>
-        <module>annotations</module>
-        <module>aws</module>
-        <module>azure</module>
-        <module>common</module>
-        <module>common-testing</module>
-        <module>gcloud</module>
-        <module>k8s</module>
-        <module>vault</module>
-    </modules>
-
-    <licenses>
-        <license>
-            <name>Confluent Community License</name>
-            <url>https://www.confluent.io/confluent-community-license</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <profiles>
-		<profile>
-			<id>publish-to-s3</id>
-			<distributionManagement>
-				<repository>
-					<id>confluent-csid-repo</id>
-					<url>s3://confluent-csid-maven/releases</url>
-				</repository>
-				<snapshotRepository>
-					<id>confluent-csid-repo</id>
-					<url>s3://confluent-csid-maven/snapshots</url>
-				</snapshotRepository>
-			</distributionManagement>
-		</profile>
-	</profiles>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-secrets-provider-common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-secrets-provider-annotations</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.confluent.csid</groupId>
-                <artifactId>csid-secrets-provider-common-testing</artifactId>
-                <version>${project.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.immutables</groupId>
-                <artifactId>value</artifactId>
-                <version>2.8.2</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>2.14.1</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.9.1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!--
-            TODO: Move to the junit bom
-            -->
-
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>vault</artifactId>
-                <version>${testcontainers.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>32.0.0-android</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>3.3.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.4.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <extensions>
-			<extension>
-				<groupId>org.springframework.build</groupId>
-				<artifactId>aws-maven</artifactId>
-				<version>5.0.0.RELEASE</version>
-			</extension>
-		</extensions>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>io.confluent</groupId>
-                    <artifactId>kafka-connect-maven-plugin</artifactId>
-                    <version>${confluent.hub.packaging.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <id>hub</id>
-                            <goals>
-                                <goal>kafka-connect</goal>
-                            </goals>
-                            <configuration>
-                                <ownerName>Confluent</ownerName>
-                                <ownerUsername>confluent</ownerUsername>
-                                <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
-                                <supportUrl>${project.issueManagement.url}</supportUrl>
-                                <supportSummary>Support provided through community involvement.</supportSummary>
-                                <componentTypes>
-                                    <type>Converter</type>
-                                </componentTypes>
-                                <fileSets>
-                                    <fileSet>
-                                        <outputDirectory>doc</outputDirectory>
-                                        <includes>
-                                            <include>README.md</include>
-                                        </includes>
-                                    </fileSet>
-                                </fileSets>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.10.0</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.confluent.csid</groupId>
+  <artifactId>csid-secrets-providers</artifactId>
+  <version>1.0.42-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <description>Enables use of external third-party systems for storing/retrieving key/value pairs with Confluent clusters.</description>
+  <url>https://confluent.io</url>
+  <organization>
+    <name>Confluent, Inc.</name>
+    <url>https://confluent.io</url>
+  </organization>
+  <properties>
+    <license.path>${project.basedir}/LICENSE</license.path>
+    <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
+    <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
+    <guava.version>33.4.0-jre</guava.version>
+    <immutables.version>2.10.1</immutables.version>
+    <jackson.version>2.18.2</jackson.version>
+    <junit.version>5.11.4</junit.version>
+    <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
+    <kafka-clients.version>3.9.0</kafka-clients.version>
+    <logback.version>1.5.16</logback.version>
+    <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
+    <maven.release.version>3.1.1</maven.release.version>
+    <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.site.plugin.version>3.21.0</maven.site.plugin.version>
+    <maven-s3-wagon.version>1.3.3</maven-s3-wagon.version>
+    <failsafe.version>3.5.2</failsafe.version>
+    <surefire.version>3.5.2</surefire.version>
+    <mockito.version>4.11.0</mockito.version>
+    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+    <slf4j.version>2.0.16</slf4j.version>
+    <testcontainers.version>1.20.4</testcontainers.version>
+    <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
+    <netty.version>4.1.118.Final</netty.version>
+    <json-smart.version>2.5.2</json-smart.version>
+  </properties>
+  <scm>
+    <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
+    <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
+    <url>https://github.com/confluentinc/csid-secrets-providers</url>
+    <tag>HEAD</tag>
+  </scm>
+  <modules>
+    <module>annotations</module>
+    <module>aws</module>
+    <module>azure</module>
+    <module>common</module>
+    <module>common-testing</module>
+    <module>gcloud</module>
+    <module>k8s</module>
+    <module>vault</module>
+  </modules>
+  <licenses>
+    <license>
+      <name>Confluent Community License</name>
+      <url>https://www.confluent.io/confluent-community-license</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <profiles>
+    <profile>
+      <id>publish-to-s3</id>
+      <distributionManagement>
+        <repository>
+          <id>confluent-csid-repo</id>
+          <url>s3://confluent-csid-maven/releases</url>
+        </repository>
+        <snapshotRepository>
+          <id>confluent-csid-repo</id>
+          <url>s3://confluent-csid-maven/snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+    <profile>
+      <id>publish-to-central</id>
+      <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+      <build>
         <plugins>
             <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <header>${license.path}</header>
-                    <properties>
-                        <owner>Confluent, Inc</owner>
-                    </properties>
-                    <excludes>
-                        <exclude>**/README</exclude>
-                        <exclude>LICENSE</exclude>
-                        <exclude>src/test/resources/**</exclude>
-                        <exclude>src/main/resources/**</exclude>
-                        <exclude>src/assembly/**</exclude>
-                        <exclude>docs/</exclude>
-                        <exclude>docs_src/</exclude>
-                        <exclude>.mvn/</exclude>
-                        <exclude>mvnw</exclude>
-                        <exclude>mvnw.cmd</exclude>
-                        <exclude>.github/</exclude>
-                        <exclude>Jenkinsfile</exclude>
-                        <exclude>venv/</exclude>
-                    </excludes>
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>check-source</id>
-                        <phase>compile</phase>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
                         <goals>
-                            <goal>check</goal>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <inherited>true</inherited>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.7.0</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*IT.java</exclude>
-                        <exclude>**/*IntegrationTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${failsafe.version}</version>
-                <executions>
-                    <execution>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven.checkstyle.version}</version>
-                <executions>
-                    <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <configuration>
-                            <configLocation>checkstyle.xml</configLocation>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <includeResources>false</includeResources>
-                            <includeTestResources>false</includeTestResources>
-                            <sourceDirectories>
-                                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                            </sourceDirectories>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.github.jcustenborder.kafka.connect</groupId>
-                        <artifactId>kafka-connect-style-checkstyle</artifactId>
-                        <version>${kafka-connect-style.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
-    </build>
+      </build>
+    </profile>
+    <profile>
+      <id>publish-to-codeartifact</id>
+      <distributionManagement>
+        <snapshotRepository>
+          <id>confluent-codeartifact-internal</id>
+          <name>confluent-snapshots</name>
+          <url>https://confluent-519856050701.d.codeartifact.us-west-2.amazonaws.com/maven/maven-releases
+          </url>
+        </snapshotRepository>
+        <repository>
+          <id>confluent-codeartifact-internal</id>
+          <name>confluent-releases</name>
+          <url>https://confluent-519856050701.d.codeartifact.us-west-2.amazonaws.com/maven/maven-releases
+          </url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.confluent.csid</groupId>
+        <artifactId>csid-secrets-provider-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.confluent.csid</groupId>
+        <artifactId>csid-secrets-provider-annotations</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.confluent.csid</groupId>
+        <artifactId>csid-secrets-provider-common-testing</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-common</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>${json-smart.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>bom</artifactId>
+        <version>${immutables.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers-bom</artifactId>
+        <version>${testcontainers.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+      <!--
+            TODO: Move to the junit bom
+            -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka-clients.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <extensions>
+      <extension>
+        <groupId>com.github.seahen</groupId>
+        <artifactId>maven-s3-wagon</artifactId>
+        <version>${maven-s3-wagon.version}</version>
+      </extension>
+    </extensions>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-connect-maven-plugin</artifactId>
+          <version>${confluent.hub.packaging.version}</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <id>hub</id>
+              <goals>
+                <goal>kafka-connect</goal>
+              </goals>
+              <configuration>
+                <ownerName>Confluent</ownerName>
+                <ownerUsername>confluentinc</ownerUsername>
+                <confluentControlCenterIntegration>true</confluentControlCenterIntegration>
+                <dockerNamespace>confluentinc</dockerNamespace>
+                <dockerName>cp-kafka-connect</dockerName>
+                <supportSummary>Support provided through community involvement.</supportSummary>
+                <componentTypes>
+                  <type>Converter</type>
+                </componentTypes>
+                <fileSets>
+                  <fileSet>
+                    <outputDirectory>doc</outputDirectory>
+                    <includes>
+                      <include>README.md</include>
+                    </includes>
+                  </fileSet>
+                </fileSets>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${maven.site.plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven.release.version}</version>
+          <configuration>
+            <tagNameFormat>${project.version}</tagNameFormat>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <inherited>true</inherited>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire.version}</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*IT.java</exclude>
+            <exclude>**/*IntegrationTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${failsafe.version}</version>
+        <executions>
+          <execution>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven.checkstyle.version}</version>
+        <executions>
+          <execution>
+            <id>validate</id>
+            <phase>validate</phase>
+            <configuration>
+              <configLocation>checkstyle.xml</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <includeResources>false</includeResources>
+              <includeTestResources>false</includeTestResources>
+              <sourceDirectories>
+                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+              </sourceDirectories>
+            </configuration>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.github.jcustenborder.kafka.connect</groupId>
+            <artifactId>kafka-connect-style-checkstyle</artifactId>
+            <version>${kafka-connect-style.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <tagNameFormat>${project.version}</tagNameFormat>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

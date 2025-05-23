@@ -117,15 +117,14 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-
-import com.bettercloud.vault.EnvironmentLoader;
-import com.bettercloud.vault.SslConfig;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
 import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
 import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
 import io.confluent.csid.config.provider.common.config.ConfigUtils;
 import io.confluent.csid.config.provider.common.config.Validators;
+import io.github.jopenlibs.vault.EnvironmentLoader;
+import io.github.jopenlibs.vault.SslConfig;
+import io.github.jopenlibs.vault.VaultConfig;
+import io.github.jopenlibs.vault.VaultException;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.config.types.Password;

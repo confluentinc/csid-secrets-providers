@@ -1,14 +1,14 @@
 # AWS Secrets Manager Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-aws:latest
+confluent-hub install confluentinc/csid-secrets-provider-aws:latest
 ```
 
 This plugin provides integration with the AWS Secrets Manager service.
 
 ## SecretsManagerConfigProvider
 
-This config provider is used to retrieve secrets from the AWS Secrets Manager service.
+This config provider is used to retrieve secrets from the AWS Secrets Manager service.  This uses the SDK2 from AWS.
 
 ### Secret Value
 
@@ -29,7 +29,7 @@ The value for the secret must be formatted as a JSON object. This allows multipl
 ```properties
 aws.access.key
 ```
-AWS access key ID to connect with. If this value is not set the `DefaultAWSCredentialsProviderChain <https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html>`_ will be used to attempt loading the credentials from several default locations.
+AWS access key ID to connect with. If this value is not set the `DefaultCredentialsProvider <https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/auth/credentials/DefaultCredentialsProvider.html>`_ will be used to attempt loading the credentials from several default locations.
 
 * Type: STRING
 * Default: 
@@ -84,6 +84,16 @@ Sets a prefix that will be added to all paths. For example you can use `staging`
 * Type: STRING
 * Default: 
 * Valid Values: 
+* Importance: LOW
+* 
+```properties
+endpoint.override
+```
+The value to override the service address used by Secrets Manager Client.  Defaults to the inbuilt value from the AWS SDK if blank.
+
+* Type: STRING
+* Default:
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -140,7 +150,7 @@ The number of seconds to wait between polling intervals.
 
 #### Loading from environment variables
 
-The following example uses us-west-2 as the region but relies on the DefaultAWSCredentialsProviderChain to find the credentials.
+The following example uses us-west-2 as the region but relies on the DefaultCredentialsProvider to find the credentials.
 
 ```properties
 config.providers=secretsManager

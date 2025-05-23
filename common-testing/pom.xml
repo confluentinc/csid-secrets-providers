@@ -10,14 +10,17 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.42-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <properties>
+        <freemarker.version>2.3.34</freemarker.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>2.3.31</version>
+            <version>${freemarker.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -35,6 +38,7 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.confluent.csid</groupId>

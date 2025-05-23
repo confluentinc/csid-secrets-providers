@@ -1,18 +1,16 @@
 # Hashicorp Vault Config Provider
 
 ```bash
-confluent-hub install confluent/kafka-config-provider-vault:latest
+confluent-hub install confluentinc/csid-secrets-provider-vault:latest
 ```
 
-This plugin provides integration with Hashicorp Vault.
+This plugin provides integration with [Hashicorp Vault](https://www.hashicorp.com/products/vault/secrets-management).
 
 ## VaultConfigProvider
 
 This config provider is used to retrieve secrets from the Hashicorp Vault.
 
-
 ### Configuration
-
 
 #### General
 
@@ -23,7 +21,7 @@ The number of attempts to retrieve a secret from the upstream secret store.
 
 * Type: INT
 * Default: 3
-* Valid Values: 
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -33,7 +31,7 @@ The amount of time in seconds to wait between each attempt to retrieve a secret 
 
 * Type: LONG
 * Default: 10
-* Valid Values: 
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -43,7 +41,7 @@ The number of threads to use when retrieving secrets and executing subscription 
 
 * Type: INT
 * Default: 3
-* Valid Values: 
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -53,7 +51,7 @@ The amount of time in seconds to wait before timing out a call to retrieve a sec
 
 * Type: LONG
 * Default: 30
-* Valid Values: 
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -62,8 +60,8 @@ vault.namespace
 Sets a global namespace to the Vault server instance, if desired.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: LOW
 
 ```properties
@@ -73,7 +71,7 @@ Determines if the config provider supports polling the upstream secret stores fo
 
 * Type: BOOLEAN
 * Default: true
-* Valid Values: 
+* Valid Values:
 * Importance: MEDIUM
 
 ```properties
@@ -83,7 +81,7 @@ The number of seconds to wait between polling intervals.
 
 * Type: LONG
 * Default: 300
-* Valid Values: 
+* Valid Values:
 * Importance: MEDIUM
 
 ```properties
@@ -92,8 +90,8 @@ vault.address
 Sets the address (URL) of the Vault server instance to which API calls should be sent. If no address is explicitly set, the object will look to the `VAULT_ADDR` If you do not supply it explicitly AND no environment variable value is found, then initialization may fail.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -117,8 +115,8 @@ vault.auth.mount
 Location of the mount to use for authentication.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -128,7 +126,7 @@ The password to authenticate with.
 
 * Type: PASSWORD
 * Default: [hidden]
-* Valid Values: 
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -137,8 +135,8 @@ vault.auth.role
 The role to use for authentication.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -148,17 +146,17 @@ The secret to use for authentication.
 
 * Type: PASSWORD
 * Default: [hidden]
-* Valid Values: 
+* Valid Values:
 * Importance: HIGH
 
 ```properties
 vault.auth.token
 ```
-Sets the token used to access Vault. If no token is explicitly set then the `VAULT_TOKEN` environment variable will be used. 
+Sets the token used to access Vault. If no token is explicitly set then the `VAULT_TOKEN` environment variable will be used.
 
 * Type: PASSWORD
 * Default: [hidden]
-* Valid Values: 
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -167,8 +165,8 @@ vault.auth.username
 The username to authenticate with.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: HIGH
 
 ```properties
@@ -178,17 +176,17 @@ Flag to copy java.util.logging messages for "sun.net.www.protocol.http.HttpURLCo
 
 * Type: BOOLEAN
 * Default: false
-* Valid Values: 
+* Valid Values:
 * Importance: LOW
 
 ```properties
 vault.prefixpath
 ```
-Path prefix for the secrets.
+Path prefix of the secret. Used to compute the path depth at which "/data" is inserted for kv v2 secrets. A placeholder may be used as only its depth is considered.
 
 * Type: STRING
-* Default: 
-* Valid Values: 
+* Default:
+* Valid Values:
 * Importance: MEDIUM
 
 ```properties
@@ -198,7 +196,7 @@ The secrets engine version (1 or 2) to use.
 
 * Type: INT
 * Default: 2
-* Valid Values: 
+* Valid Values:
 * Importance: MEDIUM
 
 ```properties
@@ -208,7 +206,7 @@ Flag to determine if the configProvider should verify the SSL Certificate of the
 
 * Type: BOOLEAN
 * Default: true
-* Valid Values: 
+* Valid Values:
 * Importance: HIGH
 
 ### Examples
@@ -220,9 +218,9 @@ The following example uses a ldap username and password to authenticate to vault
 ```properties
 config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.login.by=LDAP
+config.providers.vault.param.vault.auth.method=LDAP
 ```
 
 #### Token
@@ -232,9 +230,20 @@ The following example uses a token to authenticate to vault.
 ```properties
 config.providers=vault
 config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
-config.providers.vault.param.vault.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
 config.providers.vault.param.vault.address=https://vault.example.com
-config.providers.vault.param.vault.login.by=Token
+config.providers.vault.param.vault.auth.method=Token
 ```
 
+#### Token, using kv store Version 1
 
+The following example uses a token to authenticate to vault.
+
+```properties
+config.providers=vault
+config.providers.vault.class=io.confluent.csid.config.provider.vault.VaultConfigProvider
+config.providers.vault.param.vault.auth.token=sdifgnabdifgasbffvasdfasdfadf
+config.providers.vault.param.vault.address=https://vault.example.com
+config.providers.vault.param.vault.auth.method=Token
+config.providers.vault.param.secrets.version=1
+```

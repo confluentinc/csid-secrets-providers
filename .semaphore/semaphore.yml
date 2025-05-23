@@ -1,0 +1,46 @@
+# This file is managed by ServiceBot plugin - Semaphore. The content in this file is created using a common
+# template and configurations in service.yml.
+# Any modifications made to version, name, agent, and global_job_config will be overwritten by the generated
+# content in nightly runs. Code changes made to the remaining sections will not be affected.
+# For more information, please refer to the page:
+# https://confluentinc.atlassian.net/wiki/spaces/Foundations/pages/2871296194/Add+SemaphoreCI
+version: v1.0
+name: build-test-release
+agent:
+  machine:
+    type: s1-prod-ubuntu24-04-amd64-1
+execution_time_limit:
+  hours: 2
+auto_cancel:
+  running:
+    when: "branch != 'main'"
+blocks:
+  - name: Build
+    dependencies: []
+    task:
+      env_vars:
+        - name: MAVEN_OPTS
+          value: "-Dmaven.repo.local=.m2"
+      prologue:
+        commands:
+          - sem-version java 17
+          - checkout
+          - . vault-setup
+          - make docker-login-ci
+      jobs:
+        - name: Build without Tests
+          commands:
+            - ./mvnw clean verify install dependency:analyze validate
+            - cache store
+after_pipeline:
+  task:
+    jobs:
+      - name: Publish Results
+        commands:
+          - test-results gen-pipeline-report
+
+promotions:
+  - name: Publish to Codeartifact
+    pipeline_file: publish_to_codeartifact.yml
+  - name : Publish to Maven Central
+    pipeline_file : publish_to_mavencentral.yml

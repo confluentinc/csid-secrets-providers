@@ -117,8 +117,8 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.EnvironmentLoader;
-import com.bettercloud.vault.VaultConfig;
+import io.github.jopenlibs.vault.EnvironmentLoader;
+import io.github.jopenlibs.vault.VaultConfig;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

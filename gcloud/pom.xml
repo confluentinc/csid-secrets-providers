@@ -124,16 +124,19 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.42-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Google Cloud Secret Manager</description>
+    <properties>
+        <google.cloud.version>26.53.0</google.cloud.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>libraries-bom</artifactId>
-                <version>26.14.0</version>
+                <version>${google.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -159,6 +162,7 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -168,19 +172,36 @@
             <groupId>io.confluent.csid</groupId>
             <artifactId>csid-secrets-provider-annotations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-rls</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <documentationUrl>${documentationUrl}/google_secret_manager</documentationUrl>
+                            <sourceUrl>${project.parent.scm.url}/tree/main/gcloud</sourceUrl>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- jar plugin is called from kafka-connect-maven-plugin. Disable here -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

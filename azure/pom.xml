@@ -124,16 +124,19 @@
     <parent>
         <groupId>io.confluent.csid</groupId>
         <artifactId>csid-secrets-providers</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.42-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <description>Secrets Provider for Azure Key Vault</description>
+    <properties>
+        <azure-sdk.version>1.2.31</azure-sdk.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.azure</groupId>
                 <artifactId>azure-sdk-bom</artifactId>
-                <version>1.2.12</version>
+                <version>${azure-sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -163,6 +166,7 @@
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -178,13 +182,28 @@
             <plugin>
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-connect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>hub</id>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <documentationUrl>${documentationUrl}/azure_key_vault</documentationUrl>
+                            <sourceUrl>${project.parent.scm.url}/tree/main/azure</sourceUrl>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- jar plugin is called from kafka-connect-maven-plugin. Disable here -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+
+                <version>3.4.2</version>
+
                 <configuration>
                     <skip>true</skip>
                 </configuration>

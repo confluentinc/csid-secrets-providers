@@ -1,0 +1,17 @@
+name: csid-secrets-providers
+lang: java
+lang_version: 17
+git:
+  enable: true
+semaphore:
+  enable: true
+  pipeline_enable: false
+  maven_build_goals: "clean verify install dependency:analyze validate"
+
+  tasks:
+    - name: Upload to Codeartifact
+      branch: main
+      pipeline_file: ".semaphore/publish_to_codeartifact.yml"
+    - name: Publish to Maven Central
+      branch: main
+      pipeline_file: ".semaphore/publish_to_mavencentral.yml"

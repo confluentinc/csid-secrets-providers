@@ -135,7 +135,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
+public class SecretManagerConfigProviderConfig extends AbstractConfigProviderConfig {
   private static final Logger log = LoggerFactory.getLogger(SecretManagerConfigProviderConfig.class);
 
   public static final String CREDENTIAL_LOCATION_CONFIG = "credential.location";

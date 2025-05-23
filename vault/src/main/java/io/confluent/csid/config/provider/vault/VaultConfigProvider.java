@@ -118,12 +118,15 @@
 package io.confluent.csid.config.provider.vault;
 
 import com.bettercloud.vault.VaultException;
+import com.bettercloud.vault.response.LogicalResponse;
 import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
 import io.confluent.csid.config.provider.common.SecretRequest;
+import io.github.jopenlibs.vault.VaultException;
+import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

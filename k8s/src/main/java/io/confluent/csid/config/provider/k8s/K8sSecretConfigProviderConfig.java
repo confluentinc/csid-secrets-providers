@@ -122,7 +122,7 @@ import org.apache.kafka.common.config.ConfigDef;
 
 import java.util.Map;
 
-class K8sSecretConfigProviderConfig extends AbstractConfigProviderConfig {
+public class K8sSecretConfigProviderConfig extends AbstractConfigProviderConfig {
   public K8sSecretConfigProviderConfig(Map<String, ?> settings) {
     super(config(), settings);
   }

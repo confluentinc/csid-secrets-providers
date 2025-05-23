@@ -117,13 +117,12 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.SslConfig;
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
+import io.github.jopenlibs.vault.SslConfig;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultConfig;
+import io.github.jopenlibs.vault.VaultException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.utility.DockerImageName;
@@ -138,13 +137,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
 
   final Network network = Network.newNetwork();
-  final VaultContainer<?> vaultContainer = new VaultContainer<>("vault:1.6.3")
+  final VaultContainer<?> vaultContainer = new VaultContainer<>(HASHICORP_VAULT_DOCKER_IMAGE)
       .withVaultToken("kxbfgiertgibadsf")
       .withNetworkAliases("vault")
       .withNetwork(network)
       .withExposedPorts(8200);
 
-  final VaultContainer<?> vaultConfigContainer = new VaultContainer<>("vault:1.6.3")
+  final VaultContainer<?> vaultConfigContainer = new VaultContainer<>(HASHICORP_VAULT_DOCKER_IMAGE)
       .withCopyFileToContainer(
           MountableFile.forClasspathResource("/docker/ldap/ldap-policy.hcl", 0755),
           "/ldap-policy.hcl"
@@ -157,7 +156,7 @@ public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
       .withVaultToken("kxbfgiertgibadsf")
       .withEnv("VAULT_ADDR", "http://vault:8200");
 
-  final GenericContainer<?> ldapContainer = new GenericContainer<>(DockerImageName.parse("osixia/openldap:1.5.0"))
+  final GenericContainer<?> ldapContainer = new GenericContainer<>(DockerImageName.parse(LDAP_DOCKER_IMAGE))
       .withCopyFileToContainer(
           MountableFile.forClasspathResource("/docker/ldap/example.ldif"),
           "/container/service/slapd/assets/config/bootstrap/ldif/example.ldif"
@@ -203,7 +202,7 @@ public class LDAPVaultConfigProviderIT extends VaultConfigProviderIT {
         .token(Constants.TOKEN)
         .sslConfig(config)
         .build();
-    this.vault = new Vault(vaultConfig);
+    this.vault = Vault.create(vaultConfig);
   }
 
   @AfterEach

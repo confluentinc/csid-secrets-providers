@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/aws/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/azure/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/gcloud/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/k8s/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "maven"
+    directory: "/vault/"
+    schedule:
+      interval: "weekly"

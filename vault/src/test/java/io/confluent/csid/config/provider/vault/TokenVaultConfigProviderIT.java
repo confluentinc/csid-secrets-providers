@@ -117,10 +117,10 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.SslConfig;
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
+import io.github.jopenlibs.vault.SslConfig;
+import io.github.jopenlibs.vault.Vault;
+import io.github.jopenlibs.vault.VaultConfig;
+import io.github.jopenlibs.vault.VaultException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.vault.VaultContainer;
@@ -132,7 +132,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
 
-  final VaultContainer<?> vaultContainer = new VaultContainer<>("vault:latest")
+  final VaultContainer<?> vaultContainer = new VaultContainer<>(HASHICORP_VAULT_DOCKER_IMAGE)
       .withVaultToken("kxbfgiertgibadsf")
       .withNetworkAliases("vault")
       .withExposedPorts(8200);
@@ -165,7 +165,7 @@ public class TokenVaultConfigProviderIT extends VaultConfigProviderIT {
         .token(Constants.TOKEN)
         .sslConfig(config)
         .build();
-    this.vault = new Vault(vaultConfig);
+    this.vault = Vault.create(vaultConfig);
   }
 
   @AfterEach

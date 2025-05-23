@@ -117,19 +117,17 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.api.Logical;
-import com.bettercloud.vault.response.LogicalResponse;
-import com.bettercloud.vault.rest.RestResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
+import io.github.jopenlibs.vault.VaultException;
+import io.github.jopenlibs.vault.api.Logical;
+import io.github.jopenlibs.vault.response.LogicalResponse;
+import io.github.jopenlibs.vault.rest.RestResponse;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.LinkedHashMap;
@@ -139,9 +137,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class VaultConfigProviderTests {

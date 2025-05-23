@@ -116,7 +116,7 @@
  *       or as a waiver of any other right.
  */
 @PluginOwner("confluent")
-@PluginName("kafka-config-provider-aws")
+@PluginName("csid-secrets-provider-aws")
 @Introduction("This plugin provides integration with the AWS Secrets Manager service.")
 @Title("AWS Secrets Manager Config Provider")
 package io.confluent.csid.config.provider.aws;
