@@ -133,7 +133,7 @@
             <dependency>
                 <groupId>com.google.cloud</groupId>
                 <artifactId>libraries-bom</artifactId>
-                <version>26.14.0</version>
+                <version>26.60.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -180,7 +180,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
