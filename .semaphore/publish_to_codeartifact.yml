@@ -8,25 +8,28 @@ agent:
   machine:
     type: s1-prod-ubuntu24-04-amd64-1
 
-global_job_config:
-  env_vars:
-    - name: MAVEN_OPTS
-      value: "-Dmaven.repo.local=.m2"
-  prologue:
-    commands:
-      - checkout
-      - sem-version java 17
-      - . vault-setup
-      - make docker-login-ci
-
 blocks:
   - name: Deploy to Codeartifact
     task:
+      env_vars:
+        - name: MAVEN_OPTS
+          value: "-Dmaven.repo.local=.m2"
+      prologue:
+        commands:
+          - sem-version java 17
+          - checkout
+          - . vault-setup
+          - make docker-login-ci
       jobs:
         - name: Publish Artifacts
           commands:
             - ./mvnw clean verify install dependency:analyze validate
-            - cache store
             # Download all JARs possible and compile as much as possible
             # Use -q to reduce output spam
             - ./mvnw -q -DskipTests -Ppublish-to-codeartifact deploy
+after_pipeline:
+  task:
+    jobs:
+      - name: Publish Results
+        commands:
+          - test-results gen-pipeline-report
