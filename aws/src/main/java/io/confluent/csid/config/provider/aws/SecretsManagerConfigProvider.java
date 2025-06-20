@@ -132,8 +132,11 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.core.SdkBytes;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the AWS Secrets Manager service.")
@@ -182,15 +185,15 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
     log.trace("getSecret() - request = {}", request);
     GetSecretValueResponse result = this.secretsManager.getSecretValue(request);
 
-    if (null != result.secretString()) {
-      return readJsonValue(result.secretString());
-    } else if (null != result.secretBinary()) {
-      return readJsonValue(result.secretBinary().asByteArray());
-    } else {
-      throw new ConfigException(
-          "Result from SecretsManagerClient did not return value for secretString() or secretBinary(). Cannot proceed."
-      );
+    String secretString = result.secretString();
+    if (null == secretString) {
+      SdkBytes secretBinary = result.secretBinary();
+      if (secretBinary == null) {
+        throw new ConfigException("Secret " + request.secretId() + " contained neither secretString nor secretBinary.");
+      }
+      secretString = StandardCharsets.UTF_8.decode(result.secretBinary().asByteBuffer()).toString();
     }
+    return config.isPlainSecret() ? Map.of(secretRequest.path(), secretString) : readJsonValue(secretString);
   }
 
   @Override

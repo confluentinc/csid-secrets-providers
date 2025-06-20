@@ -150,6 +150,9 @@ public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderCo
   public static final String ENDPOINT_OVERRIDE_DOC = "The value to override the service address used by Secrets Manager Client.  See `Developer " +
       "Guide <https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/using.html>` for more details.";
 
+  public static final String SECRET_FORMAT_PLAIN = "secret.format.plain";
+  static final String SECRET_FORMAT_PLAIN_DOC = "Whether the format of the secret is plain. If false, the secret will be parsed as a json object and the keys will be used as the config keys.";
+
   public final String region;
   public final long minimumSecretTTL;
   public final AwsCredentials credentials;
@@ -213,6 +216,16 @@ public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderCo
                 .importance(ConfigDef.Importance.LOW)
                 .defaultValue("")
                 .build()
+        ).define(
+                 ConfigKeyBuilder.of(SECRET_FORMAT_PLAIN, ConfigDef.Type.BOOLEAN)
+                 .documentation(SECRET_FORMAT_PLAIN_DOC)
+                 .importance(ConfigDef.Importance.MEDIUM)
+                 .defaultValue(false)
+                 .build()
         );
+  }
+
+  public boolean isPlainSecret() {
+    return getBoolean(SECRET_FORMAT_PLAIN);
   }
 }
