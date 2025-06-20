@@ -143,6 +143,7 @@ import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.ENDPOINT_OVERRIDE;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.PREFIX_CONFIG;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.REGION_CONFIG;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.USE_JSON_CONFIG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -161,10 +162,14 @@ public class SecretsManagerConfigProviderIT {
   public static void setUp() {
     localstack.start();
     provider = new SecretsManagerConfigProvider();
+  }
+
+  private static void configureProvider(boolean useJsonConfig) {
     provider.configure(ImmutableMap.of(ENDPOINT_OVERRIDE, localstack.getEndpoint().toString(),
             REGION_CONFIG, localstack.getRegion(),
             AWS_ACCESS_KEY_ID_CONFIG, localstack.getAccessKey(),
-            AWS_SECRET_KEY_CONFIG, localstack.getSecretKey()));
+            AWS_SECRET_KEY_CONFIG, localstack.getSecretKey(),
+            USE_JSON_CONFIG, useJsonConfig));
   }
 
   @AfterAll
@@ -172,12 +177,14 @@ public class SecretsManagerConfigProviderIT {
     provider.close();
   }
 
+
   @Test
   public void get() {
+    configureProvider(true);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
-              AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+                    AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
             ))
             .region(Region.of(localstack.getRegion()))
             .build()) {
@@ -190,10 +197,37 @@ public class SecretsManagerConfigProviderIT {
               .build());
     }
 
+
     final String secretName = "foo/bar/baz";
     Map<String, String> expected = ImmutableMap.of(
-        "username", "asdf",
-        "password", "asdf"
+            "username", "asdf",
+            "password", "asdf"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+  }
+
+  @Test
+  public void getNoJson() {
+    configureProvider(false);
+    try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+      secretsManagerClient.createSecret(CreateSecretRequest.builder()
+              .name("clientId")
+              .secretString("mappedClientId/mappedClientSecret")
+              .build());
+    }
+
+
+    final String secretName = "clientId";
+    Map<String, String> expected = ImmutableMap.of(
+            "clientId", "mappedClientId/mappedClientSecret"
     );
     ConfigData configData = provider.get(secretName, ImmutableSet.of());
     assertNotNull(configData);
@@ -202,6 +236,7 @@ public class SecretsManagerConfigProviderIT {
 
   @Test
   public void getBinary() {
+    configureProvider(true);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
@@ -230,6 +265,7 @@ public class SecretsManagerConfigProviderIT {
 
   @Test
   public void getWithPrefix() {
+    configureProvider(true);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(

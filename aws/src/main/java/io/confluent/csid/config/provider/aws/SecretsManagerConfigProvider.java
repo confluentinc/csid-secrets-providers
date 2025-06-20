@@ -134,6 +134,7 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueReques
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @Description("This config provider is used to retrieve secrets from the AWS Secrets Manager service.")
@@ -183,9 +184,21 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
     GetSecretValueResponse result = this.secretsManager.getSecretValue(request);
 
     if (null != result.secretString()) {
-      return readJsonValue(result.secretString());
+      if (config.isJsonSecret()) {
+        return readJsonValue(result.secretString());
+      } else {
+        Map<String, String> secret = new HashMap<>();
+        secret.put(secretRequest.path(), result.secretString());
+        return secret;
+      }
     } else if (null != result.secretBinary()) {
-      return readJsonValue(result.secretBinary().asByteArray());
+      if (config.isJsonSecret()) {
+        return readJsonValue(result.secretBinary().asByteArray());
+      } else {
+        Map<String, String> secret = new HashMap<>();
+        secret.put(secretRequest.path(), new String(result.secretBinary().asByteArray()));
+        return secret;
+      }
     } else {
       throw new ConfigException(
           "Result from SecretsManagerClient did not return value for secretString() or secretBinary(). Cannot proceed."
