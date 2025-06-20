@@ -193,7 +193,7 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
       }
       secretString = StandardCharsets.UTF_8.decode(result.secretBinary().asByteBuffer()).toString();
     }
-    return config.isPlainSecret() ? Map.of(secretRequest.path(), secretString) : readJsonValue(secretString);
+    return config.isJsonSecret() ? readJsonValue(secretString) : Map.of(secretRequest.path(), secretString);
   }
 
   @Override
