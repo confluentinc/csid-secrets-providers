@@ -150,8 +150,8 @@ public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderCo
   public static final String ENDPOINT_OVERRIDE_DOC = "The value to override the service address used by Secrets Manager Client.  See `Developer " +
       "Guide <https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/using.html>` for more details.";
 
-  public static final String USE_JSON_CONFIG = "use.json";
-  static final String USE_JSON_DOC = "Whether the secret is a json object. If true, the secret will be parsed as a json object and the keys will be used as the config keys.";
+  public static final String SECRET_FORMAT_PLAIN = "secret.format.plain";
+  static final String SECRET_FORMAT_PLAIN_DOC = "Whether the format of the secret is plain. If false, the secret will be parsed as a json object and the keys will be used as the config keys.";
 
   public final String region;
   public final long minimumSecretTTL;
@@ -217,15 +217,15 @@ public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderCo
                 .defaultValue("")
                 .build()
         ).define(
-                 ConfigKeyBuilder.of(USE_JSON_CONFIG, ConfigDef.Type.BOOLEAN)
-                 .documentation(USE_JSON_DOC)
+                 ConfigKeyBuilder.of(SECRET_FORMAT_PLAIN, ConfigDef.Type.BOOLEAN)
+                 .documentation(SECRET_FORMAT_PLAIN_DOC)
                  .importance(ConfigDef.Importance.MEDIUM)
-                 .defaultValue(true)
+                 .defaultValue(false)
                  .build()
         );
   }
 
-  public boolean isJsonSecret() {
-    return getBoolean(USE_JSON_CONFIG);
+  public boolean isPlainSecret() {
+    return getBoolean(SECRET_FORMAT_PLAIN);
   }
 }

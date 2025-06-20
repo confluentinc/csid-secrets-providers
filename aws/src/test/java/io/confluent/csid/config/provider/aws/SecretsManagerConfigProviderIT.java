@@ -143,7 +143,7 @@ import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.ENDPOINT_OVERRIDE;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.PREFIX_CONFIG;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.REGION_CONFIG;
-import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.USE_JSON_CONFIG;
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.SECRET_FORMAT_PLAIN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -164,12 +164,12 @@ public class SecretsManagerConfigProviderIT {
     provider = new SecretsManagerConfigProvider();
   }
 
-  private static void configureProvider(boolean useJsonConfig) {
+  private static void configureProvider(boolean isSecretFormatPlain) {
     provider.configure(ImmutableMap.of(ENDPOINT_OVERRIDE, localstack.getEndpoint().toString(),
             REGION_CONFIG, localstack.getRegion(),
             AWS_ACCESS_KEY_ID_CONFIG, localstack.getAccessKey(),
             AWS_SECRET_KEY_CONFIG, localstack.getSecretKey(),
-            USE_JSON_CONFIG, useJsonConfig));
+            SECRET_FORMAT_PLAIN, isSecretFormatPlain));
   }
 
   @AfterAll
@@ -180,7 +180,7 @@ public class SecretsManagerConfigProviderIT {
 
   @Test
   public void get() {
-    configureProvider(true);
+    configureProvider(false);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
@@ -209,8 +209,8 @@ public class SecretsManagerConfigProviderIT {
   }
 
   @Test
-  public void getNoJson() {
-    configureProvider(false);
+  public void getPlainSecretValue() {
+    configureProvider(true);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
@@ -236,7 +236,7 @@ public class SecretsManagerConfigProviderIT {
 
   @Test
   public void getBinary() {
-    configureProvider(true);
+    configureProvider(false);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
@@ -265,7 +265,7 @@ public class SecretsManagerConfigProviderIT {
 
   @Test
   public void getWithPrefix() {
-    configureProvider(true);
+    configureProvider(false);
     try (SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
             .endpointOverride(localstack.getEndpoint())
             .credentialsProvider(StaticCredentialsProvider.create(
