@@ -117,76 +117,20 @@
  */
 package io.confluent.csid.config.provider.vault;
 
-import io.confluent.csid.config.provider.common.SecretRequest;
-import io.github.jopenlibs.vault.Vault;
-import io.github.jopenlibs.vault.VaultConfig;
-import io.github.jopenlibs.vault.VaultException;
-import io.github.jopenlibs.vault.response.LogicalResponse;
-import org.apache.kafka.common.config.ConfigException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+/**
+ * Wrapper for Map<String, String> responses that implements VaultResponse interface
+ */
+class MapResponseWrapper implements VaultResponse {
+  private final Map<String, String> data;
 
-class VaultClientImpl implements VaultClient {
-  private static final Logger log = LoggerFactory.getLogger(VaultClientImpl.class);
-  final AtomicReference<Vault> vaultStore = new AtomicReference<>();
-  final AtomicReference<AuthHandler.AuthResult> authResultStore = new AtomicReference<>();
-
-
-  public VaultClientImpl(VaultConfigProviderConfig config, ScheduledExecutorService executorService) {
-
-    VaultConfig vaultConfig = config.createConfig();
-    log.info("ctor() - creating initial vault client");
-
-    Vault initialVault = Vault.create(vaultConfig);
-    this.vaultStore.set(initialVault);
-    AuthHandler.AuthResult result = authenticateVault(config, vaultConfig);
-
-    if (result.ttl().isPresent() && result.ttl().get() > 0) {
-      log.debug("ctor() - AuthResult does have a ttl - scheduling token renewal.");
-      executorService.scheduleAtFixedRate(() -> authenticateVault(config, vaultConfig),
-              0, result.ttl().get() - (result.ttl().get() / 10), TimeUnit.SECONDS);
-    } else {
-      log.debug("ctor() - AuthResult does not have a ttl so not scheduling token refresh.");
-    }
+  public MapResponseWrapper(Map<String, String> data) {
+    this.data = data;
   }
-
-  private AuthHandler.AuthResult authenticateVault(VaultConfigProviderConfig config, VaultConfig vaultConfig) {
-    log.debug("ctor() - authenticating vault");
-    AuthHandler authHandler = AuthHandlers.get(config.authMethod);
-    AuthHandler.AuthResult result;
-    try {
-      result = authHandler.execute(config, this.vaultStore.get());
-    } catch (VaultException exception) {
-      log.error("ctor() - exception thrown during initial authentication", exception);
-      ConfigException configException = new ConfigException("Exception during initial authentication");
-      configException.initCause(exception);
-      throw configException;
-    }
-    log.debug("ctor() - authResult = {}", result);
-    result.token().ifPresent(vaultConfig::token);
-    return result;
-  }
-
 
   @Override
-  public VaultResponse read(SecretRequest request) throws VaultException {
-    log.debug("read() - request = '{}'", request);
-    Vault vault = this.vaultStore.get();
-
-    LogicalResponse logicalResponse;
-    if (request.version().isPresent()) {
-      Integer version = Integer.parseInt(request.version().get());
-      logicalResponse = vault.logical().read(request.path(), false, version);
-    } else {
-      logicalResponse = vault.logical().read(request.path());
-    }
-    
-    return new LogicalResponseWrapper(logicalResponse);
+  public Map<String, String> getData() {
+    return data;
   }
-
-
-}
+} 
