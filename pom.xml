@@ -148,7 +148,7 @@
     <guava.version>33.4.0-jre</guava.version>
     <immutables.version>2.10.1</immutables.version>
     <jackson.version>2.18.2</jackson.version>
-    <junit.version>5.13.0</junit.version>
+    <junit.version>5.13.2</junit.version>
     <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
     <kafka-clients.version>3.9.1</kafka-clients.version>
     <logback.version>1.5.18</logback.version>
