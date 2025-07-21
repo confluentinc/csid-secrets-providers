@@ -187,7 +187,7 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
   @Override
   protected Map<String, String> getSecret(SecretRequest secretRequest) throws Exception {
     KeyVaultSecret response = secretClient.getSecret(secretRequest.path(), secretRequest.version().orElse(null));
-    return readJsonValue(response.getValue());
+    return config.isJsonSecret() ? readJsonValue(response.getValue()) : Map.of(secretRequest.path(), response.getValue());
   }
 
 
