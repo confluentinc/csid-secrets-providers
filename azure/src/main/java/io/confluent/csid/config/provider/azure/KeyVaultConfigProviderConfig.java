@@ -178,6 +178,9 @@ public class KeyVaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public static final String VAULT_URL_CONFIG = "vault.url";
   public static final String VAULT_URL_DOC = "The vault url to connect to. For example `https://example.vault.azure.net/`";
 
+  public static final String USE_JSON_CONFIG = "use.json";
+  static final String USE_JSON_DOC = "If true, the secret will be parsed as a json object and the keys will be used as the config keys.";
+
 
   public final String prefix;
   public final CredentialLocation credentialLocation;
@@ -303,6 +306,12 @@ public class KeyVaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .importance(ConfigDef.Importance.LOW)
                 .defaultValue("")
                 .build()
+        ).define(
+            ConfigKeyBuilder.of(USE_JSON_CONFIG, ConfigDef.Type.BOOLEAN)
+                .documentation(USE_JSON_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue(true)
+                .build()
         );
   }
 
@@ -394,6 +403,10 @@ public class KeyVaultConfigProviderConfig extends AbstractConfigProviderConfig {
     }
     log.info("Credential Type = {}", result.getClass().getName());
     return result;
+  }
+
+  public boolean isJsonSecret() {
+    return getBoolean(USE_JSON_CONFIG);
   }
 
 }
