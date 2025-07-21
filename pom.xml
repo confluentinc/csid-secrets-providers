@@ -122,7 +122,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.confluent.csid</groupId>
   <artifactId>csid-secrets-providers</artifactId>
-  <version>1.0.44</version>
+  <version>1.0.45-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Confluent CSID Secrets Providers</name>
   <description>Enables use of external third-party systems for storing/retrieving key/value pairs with Confluent clusters.</description>
@@ -173,7 +173,7 @@
     <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
     <developerConnection>scm:git:git@github.com:confluentinc/csid-secrets-providers.git</developerConnection>
     <url>https://github.com/confluentinc/csid-secrets-providers</url>
-    <tag>1.0.44</tag>
+    <tag>HEAD</tag>
   </scm>
   <modules>
     <module>annotations</module>
