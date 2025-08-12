@@ -8,14 +8,15 @@ agent:
   machine:
     type: s1-prod-ubuntu24-04-amd64-1
 
-global_job_config:
-  prologue:
-    commands:
-      - sem-version java 17
-
 blocks:
   - name: Deploy to Maven Central
     task:
+      env_vars:
+        - name: MAVEN_OPTS
+          value: "-Dmaven.repo.local=.m2"
+      prologue:
+        commands:
+          - sem-version java 17
       jobs:
         - name: Publish Artifacts
           commands:

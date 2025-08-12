@@ -223,6 +223,34 @@ public class KeyVaultConfigProviderTest {
     assertEquals(expectedData, configData.data());
   }
 
+  @Test
+  public void getPlainSecretValue() throws IOException {
+    // Configure provider with use.json set to false
+    this.settings.put(KeyVaultConfigProviderConfig.USE_JSON_CONFIG, "false");
+    this.provider.configure(this.settings);
+    
+    final String expectedRequestName = "clientId";
+    final String secretName = "clientId";
+    final String plainSecretValue = "mappedClientId/mappedClientSecret";
+    
+    // Mock the secret client to return a plain string value
+    when(this.secretClientWrapper.getSecret(any(), any())).thenAnswer(invocationOnMock -> {
+      String actualName = invocationOnMock.getArgument(0);
+      String version = invocationOnMock.getArgument(1);
+      assertEquals(expectedRequestName, actualName);
+      assertEquals(null, version);
+      return new KeyVaultSecret(expectedRequestName, plainSecretValue);
+    });
+
+    Map<String, String> expectedData = ImmutableMap.of(
+        "clientId", "mappedClientId/mappedClientSecret"
+    );
+    
+    ConfigData configData = this.provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expectedData, configData.data());
+  }
+
 
 //  @Test
 //  public void getPrefixed() throws IOException {

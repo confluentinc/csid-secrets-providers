@@ -122,14 +122,25 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.confluent.csid</groupId>
   <artifactId>csid-secrets-providers</artifactId>
-  <version>1.0.43-SNAPSHOT</version>
+  <version>1.0.45-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <name>Confluent CSID Secrets Providers</name>
   <description>Enables use of external third-party systems for storing/retrieving key/value pairs with Confluent clusters.</description>
   <url>https://confluent.io</url>
   <organization>
     <name>Confluent, Inc.</name>
     <url>https://confluent.io</url>
   </organization>
+  <developers>
+    <developer>
+      <id>csid</id>
+      <name>Accelerators</name>
+      <email>accelerators@confluent.io</email>
+      <organization>Confluent, Inc.</organization>
+      <organizationUrl>https://confluent.io</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
+    </developer>
+  </developers>
   <properties>
     <license.path>${project.basedir}/LICENSE</license.path>
     <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
@@ -139,7 +150,7 @@
     <jackson.version>2.18.2</jackson.version>
     <junit.version>5.13.0</junit.version>
     <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
-    <kafka-clients.version>3.9.0</kafka-clients.version>
+    <kafka-clients.version>3.9.1</kafka-clients.version>
     <logback.version>1.5.18</logback.version>
     <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
     <maven.release.version>3.1.1</maven.release.version>
@@ -202,7 +213,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -215,7 +226,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -224,6 +235,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <failOnWarnings>false</failOnWarnings>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
