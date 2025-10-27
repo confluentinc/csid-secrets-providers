@@ -163,7 +163,7 @@
     <surefire.version>3.5.4</surefire.version>
     <mockito.version>5.0.0</mockito.version>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <slf4j.version>2.0.16</slf4j.version>
+    <slf4j.version>2.0.17</slf4j.version>
     <testcontainers.version>1.21.1</testcontainers.version>
     <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
     <netty.version>4.2.2.Final</netty.version>
