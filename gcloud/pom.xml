@@ -141,6 +141,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- CVE-2025-55163: Upgraded gRPC Netty shaded transport to 1.75.0 -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>1.75.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
