@@ -317,6 +317,18 @@
         <artifactId>netty-handler</artifactId>
         <version>${netty.version}</version>
       </dependency>
+      <!-- CVE-2025-55163: Upgraded Netty HTTP/2 codec to 4.1.124.Final -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-http2</artifactId>
+        <version>4.1.124.Final</version>
+      </dependency>
+      <!-- CVE-2025-55163: Upgraded gRPC Netty shaded transport to 1.75.0 -->
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-netty-shaded</artifactId>
+        <version>1.75.0</version>
+      </dependency>
       <dependency>
         <groupId>net.minidev</groupId>
         <artifactId>json-smart</artifactId>
