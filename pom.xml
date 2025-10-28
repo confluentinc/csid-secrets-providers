@@ -130,7 +130,7 @@
     <properties>
         <license.path>${project.basedir}/LICENSE</license.path>
         <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-        <mockito.version>4.8.0</mockito.version>
+        <mockito.version>5.17.0</mockito.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
