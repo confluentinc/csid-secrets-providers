@@ -93,7 +93,7 @@ Sets a prefix that will be added to all paths. For example you can use `staging`
 ```java
 secret.ttl.ms
 ```
-The minimum amount of time that a secret should be used. After this TTL has expired Secrets Manager will be queried again in case there is an updated configuration.
+**DEPRECATED**: No longer used. Will be removed in a future release.
 
 * Type: LONG
 * Default: 300000
