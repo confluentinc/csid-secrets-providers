@@ -1,5 +1,11 @@
 # Change Log
 
+
+
+### Deprecations
+
+- **AWS Secrets Manager**: Deprecated `secret.ttl.ms` configuration option. This configuration is no longer used and will be removed in a future release. A deprecation warning will be logged when this configuration is used.
+
 ## [1.0.10](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.10)
 
 ### Features and Fixes
