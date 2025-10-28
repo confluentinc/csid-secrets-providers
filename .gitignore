@@ -24,6 +24,7 @@ hs_err_pid*
 target
 target
 **/.idea/
+**/.vscode/
 
 **/.project
 **/.settings/
