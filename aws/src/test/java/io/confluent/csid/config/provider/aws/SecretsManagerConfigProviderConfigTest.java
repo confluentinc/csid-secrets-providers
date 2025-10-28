@@ -3,15 +3,15 @@
  *                     Confluent Community License Agreement
  *                                 Version 1.0
  *
- * This Confluent Community License Agreement Version 1.0 (the “Agreement”) sets
- * forth the terms on which Confluent, Inc. (“Confluent”) makes available certain
- * software made available by Confluent under this Agreement (the “Software”).  BY
+ * This Confluent Community License Agreement Version 1.0 (the "Agreement") sets
+ * forth the terms on which Confluent, Inc. ("Confluent") makes available certain
+ * software made available by Confluent under this Agreement (the "Software").  BY
  * INSTALLING, DOWNLOADING, ACCESSING, USING OR DISTRIBUTING ANY OF THE SOFTWARE,
  * YOU AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO
  * SUCH TERMS AND CONDITIONS, YOU MUST NOT USE THE SOFTWARE.  IF YOU ARE RECEIVING
  * THE SOFTWARE ON BEHALF OF A LEGAL ENTITY, YOU REPRESENT AND WARRANT THAT YOU
  * HAVE THE ACTUAL AUTHORITY TO AGREE TO THE TERMS AND CONDITIONS OF THIS
- * AGREEMENT ON BEHALF OF SUCH ENTITY.  “Licensee” means you, an individual, or
+ * AGREEMENT ON BEHALF OF SUCH ENTITY.  "Licensee" means you, an individual, or
  * the entity on whose behalf you are receiving the Software.
  *
  *    1. LICENSE GRANT AND CONDITIONS.
@@ -22,14 +22,14 @@
  *       of this Agreement to: (a) use the Software; (b) prepare modifications and
  *       derivative works of the Software; (c) distribute the Software (including
  *       without limitation in source code or object code form); and (d) reproduce
- *       copies of the Software (the “License”).  Licensee is not granted the
+ *       copies of the Software (the "License").  Licensee is not granted the
  *       right to, and Licensee shall not, exercise the License for an Excluded
- *       Purpose.  For purposes of this Agreement, “Excluded Purpose” means making
+ *       Purpose.  For purposes of this Agreement, "Excluded Purpose" means making
  *       available any software-as-a-service, platform-as-a-service,
  *       infrastructure-as-a-service or other similar online service that competes
  *       with Confluent products or services that provide the Software.
  *
- *       1.2 Conditions.  In consideration of the License, Licensee’s distribution
+ *       1.2 Conditions.  In consideration of the License, Licensee's distribution
  *       of the Software is subject to the following conditions:
  *
  *          (a) Licensee must cause any Software modified by Licensee to carry
@@ -40,16 +40,16 @@
  *          notices contained in the Software, and Licensee must provide the
  *          notice below with each copy.
  *
- *             “This software is made available by Confluent, Inc., under the
+ *             "This software is made available by Confluent, Inc., under the
  *             terms of the Confluent Community License Agreement, Version 1.0
  *             located at http://www.confluent.io/confluent-community-license.  BY
  *             INSTALLING, DOWNLOADING, ACCESSING, USING OR DISTRIBUTING ANY OF
- *             THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT.”
+ *             THE SOFTWARE, YOU AGREE TO THE TERMS OF SUCH LICENSE AGREEMENT."
  *
  *       1.3 Licensee Modifications.  Licensee may add its own copyright notices
  *       to modifications made by Licensee and may provide additional or different
  *       license terms and conditions for use, reproduction, or distribution of
- *       Licensee’s modifications.  While redistributing the Software or
+ *       Licensee's modifications.  While redistributing the Software or
  *       modifications thereof, Licensee may choose to offer, for a fee or free of
  *       charge, support, warranty, indemnity, or other obligations. Licensee, and
  *       not Confluent, will be responsible for any such obligations.
@@ -117,127 +117,90 @@
  */
 package io.confluent.csid.config.provider.aws;
 
-import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
-import io.confluent.csid.config.provider.common.config.ConfigKeyBuilder;
-import org.apache.kafka.common.config.ConfigDef;
-import org.slf4j.Logger;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import com.google.common.collect.ImmutableMap;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
-import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
-public class SecretsManagerConfigProviderConfig extends AbstractConfigProviderConfig {
-  private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProviderConfig.class);
-  
-  public static final String REGION_CONFIG = "aws.region";
-  static final String REGION_DOC = "Sets the region to be used by the client. For example `us-west-2`";
+import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.MIN_TTL_MS_CONFIG;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  public static final String PREFIX_CONFIG = "secret.prefix";
-  static final String PREFIX_DOC = "Sets a prefix that will be added to all paths. For example you can use `staging` or `production` " +
-      "and all of the calls to Secrets Manager will be prefixed with that path. This allows the same configuration settings to be used across " +
-      "multiple environments.";
+public class SecretsManagerConfigProviderConfigTest {
 
-  /**
-   * @deprecated No longer used. Will be removed in a future release.
-   */
-  @Deprecated
-  public static final String MIN_TTL_MS_CONFIG = "secret.ttl.ms";
-  static final String MIN_TTL_MS_DOC = "DEPRECATED. No longer used. Will be removed in a future release.";
+  private ListAppender<ILoggingEvent> listAppender;
+  private Logger logger;
 
-  public static final String AWS_ACCESS_KEY_ID_CONFIG = "aws.access.key";
-  public static final String AWS_ACCESS_KEY_ID_DOC = "AWS access key ID to connect with. If this value is not " +
-      "set the `DefaultCredentialsProvider <https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/auth/credentials/DefaultCredentialsProvider.html>`_ " +
-      "will be used to attempt loading the credentials from several default locations.";
-  public static final String AWS_SECRET_KEY_CONFIG = "aws.secret.key";
-  public static final String AWS_SECRET_KEY_DOC = "AWS secret access key to connect with.";
-  public static final String ENDPOINT_OVERRIDE = "endpoint.override";
-  public static final String ENDPOINT_OVERRIDE_DOC = "The value to override the service address used by Secrets Manager Client.  See `Developer " +
-      "Guide <https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/using.html>` for more details.";
+  @BeforeEach
+  public void setUp() {
+    // Set up log capture
+    logger = (Logger) LoggerFactory.getLogger(SecretsManagerConfigProviderConfig.class);
+    listAppender = new ListAppender<>();
+    listAppender.start();
+    logger.addAppender(listAppender);
+    logger.setLevel(Level.WARN);
+  }
 
-  public static final String USE_JSON_CONFIG = "use.json";
-  static final String USE_JSON_DOC = "If true, the secret will be parsed as a json object and the keys will be used as the config keys.";
+  @AfterEach
+  public void tearDown() {
+    logger.detachAppender(listAppender);
+  }
 
-  public final String region;
-  public final long minimumSecretTTL;
-  public final AwsCredentials credentials;
-  public final String prefix;
-  public final String endpointOverride;
+  @Test
+  @SuppressWarnings("deprecation")
+  public void testDeprecatedConfigParsing() {
+    // Test that deprecated config can be parsed without throwing exceptions
+    Map<String, Object> configMap = ImmutableMap.of(
+        MIN_TTL_MS_CONFIG, 30000L,
+        "aws.region", "us-west-2"
+    );
 
-  public SecretsManagerConfigProviderConfig(Map<String, ?> settings) {
-    super(config(), settings);
-    this.minimumSecretTTL = getLong(MIN_TTL_MS_CONFIG);
-    this.region = getString(REGION_CONFIG);
-
-    String awsAccessKeyId = getString(AWS_ACCESS_KEY_ID_CONFIG);
-    String awsSecretKey = getPassword(AWS_SECRET_KEY_CONFIG).value();
-
-    if (null != awsAccessKeyId && !awsAccessKeyId.isEmpty()) {
-      credentials = AwsBasicCredentials.create(awsAccessKeyId, awsSecretKey);
-    } else {
-      credentials = DefaultCredentialsProvider.create().resolveCredentials();
-    }
-    this.prefix = getString(PREFIX_CONFIG);
-    this.endpointOverride = getString(ENDPOINT_OVERRIDE);
+    // This should not throw an exception
+    SecretsManagerConfigProviderConfig config = new SecretsManagerConfigProviderConfig(configMap);
     
-    // Log deprecation warning if deprecated config is used
-    if (originals().containsKey(MIN_TTL_MS_CONFIG)) {
-      log.warn("Configuration '{}' is deprecated and has no effect.", MIN_TTL_MS_CONFIG);
-    }
+    // Verify the config was created successfully
+    assertNotNull(config);
+    assertEquals("us-west-2", config.region);
+    
+    // Verify deprecation warning was logged
+    List<ILoggingEvent> logEvents = listAppender.list;
+    assertTrue(logEvents.size() > 0, "Expected deprecation warning to be logged");
+    
+    boolean foundDeprecationWarning = logEvents.stream()
+        .anyMatch(event -> event.getLevel() == Level.WARN 
+            && event.getFormattedMessage().contains("Configuration 'secret.ttl.ms' is deprecated"));
+    
+    assertTrue(foundDeprecationWarning, "Expected deprecation warning for secret.ttl.ms");
   }
 
-  public static ConfigDef config() {
-    return AbstractConfigProviderConfig.config()
-        .define(
-            ConfigKeyBuilder.of(REGION_CONFIG, ConfigDef.Type.STRING)
-                .documentation(REGION_DOC)
-                .importance(ConfigDef.Importance.HIGH)
-                .defaultValue("")
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(AWS_ACCESS_KEY_ID_CONFIG, ConfigDef.Type.STRING)
-                .documentation(AWS_ACCESS_KEY_ID_DOC)
-                .importance(ConfigDef.Importance.HIGH)
-                .defaultValue("")
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(AWS_SECRET_KEY_CONFIG, ConfigDef.Type.PASSWORD)
-                .documentation(AWS_SECRET_KEY_DOC)
-                .importance(ConfigDef.Importance.HIGH)
-                .defaultValue("")
-                .build()
-        )
-        .define(
-            ConfigKeyBuilder.of(PREFIX_CONFIG, ConfigDef.Type.STRING)
-                .documentation(PREFIX_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue("")
-                .build()
-        ).define(
-            ConfigKeyBuilder.of(MIN_TTL_MS_CONFIG, ConfigDef.Type.LONG)
-                .documentation(MIN_TTL_MS_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue(Duration.ofMinutes(5L).toMillis())
-                .validator(ConfigDef.Range.atLeast(1000L))
-                .build()
-        ).define(
-                ConfigKeyBuilder.of(ENDPOINT_OVERRIDE, ConfigDef.Type.STRING)
-                .documentation(ENDPOINT_OVERRIDE_DOC)
-                .importance(ConfigDef.Importance.LOW)
-                .defaultValue("")
-                .build()
-        ).define(
-                 ConfigKeyBuilder.of(USE_JSON_CONFIG, ConfigDef.Type.BOOLEAN)
-                 .documentation(USE_JSON_DOC)
-                 .importance(ConfigDef.Importance.MEDIUM)
-                 .defaultValue(true)
-                 .build()
-        );
-  }
+  @Test
+  public void testConfigWithoutDeprecatedOption() {
+    // Test that config works normally without the deprecated option
+    Map<String, Object> configMap = ImmutableMap.of(
+        "aws.region", "us-west-2"
+    );
 
-  public boolean isJsonSecret() {
-    return getBoolean(USE_JSON_CONFIG);
+    SecretsManagerConfigProviderConfig config = new SecretsManagerConfigProviderConfig(configMap);
+    
+    // Verify the config was created successfully
+    assertNotNull(config);
+    assertEquals("us-west-2", config.region);
+    
+    // Verify no deprecation warning was logged
+    List<ILoggingEvent> logEvents = listAppender.list;
+    boolean foundDeprecationWarning = logEvents.stream()
+        .anyMatch(event -> event.getLevel() == Level.WARN 
+            && event.getFormattedMessage().contains("Configuration 'secret.ttl.ms' is deprecated"));
+    
+    assertTrue(!foundDeprecationWarning, "No deprecation warning should be logged when deprecated config is not used");
   }
 }

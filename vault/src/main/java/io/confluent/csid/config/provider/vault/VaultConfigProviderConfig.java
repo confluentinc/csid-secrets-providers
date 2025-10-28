@@ -129,6 +129,7 @@ import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
 import org.apache.kafka.common.config.types.Password;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -178,6 +179,15 @@ public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   static final String URL_LOGGING_ENABLED_DOC = "Flag to copy java.util.logging messages for \"sun.net.www.protocol.http.HttpURLConnection\" to the providers logger. " +
       "Warning this will log all of the traffic for ANY Vault client that is in the current JVM. This could also receive any log message for other code that uses java.net.UrlConnection.";
 
+  public static final String PEM_CERT_PATH_CONFIG = "vault.ssl.pem_cert_path";
+  static final String PEM_CERT_PATH_DOC = "Path to the PEM-encoded client certificate for Vault mTLS authentication.";
+
+  public static final String PEM_KEY_PATH_CONFIG = "vault.ssl.pem_key_path";
+  static final String PEM_KEY_PATH_DOC = "Path to the PEM-encoded client key for Vault mTLS authentication.";
+
+  public static final String PEM_TRUST_PATH_CONFIG = "vault.ssl.pem_trust_path";
+  static final String PEM_TRUST_PATH_DOC = "Path to the PEM-encoded trusted CA bundle for Vault mTLS authentication.";
+
   public final boolean sslVerifyEnabled;
   public final AuthMethod authMethod;
 
@@ -190,6 +200,13 @@ public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   public final Integer version;
   public final String prefixPath;
   public final boolean urlLoggingEnabled;
+
+  /**
+   * Optional PEM paths for mTLS configuration when using certificate authentication.
+   */
+  public final String pemCertPath;
+  public final String pemKeyPath;
+  public final String pemTrustPath;
 
   void checkNotDefault(String item) {
     ConfigDef config = config();
@@ -216,6 +233,9 @@ public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
     this.version = getInt(SECRETS_ENGINE_CONFIG);
     this.prefixPath = getString(PREFIXPATH_CONFIG);
     this.urlLoggingEnabled = getBoolean(URL_LOGGING_ENABLED_CONFIG);
+    this.pemCertPath = getString(PEM_CERT_PATH_CONFIG);
+    this.pemKeyPath = getString(PEM_KEY_PATH_CONFIG);
+    this.pemTrustPath = getString(PEM_TRUST_PATH_CONFIG);
 
     switch (this.authMethod) {
       case LDAP:
@@ -321,6 +341,24 @@ public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
                 .importance(ConfigDef.Importance.MEDIUM)
                 .defaultValue("")
                 .build()
+        ).define(
+            ConfigKeyBuilder.of(PEM_CERT_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(PEM_CERT_PATH_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(PEM_KEY_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(PEM_KEY_PATH_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue("")
+                .build()
+        ).define(
+            ConfigKeyBuilder.of(PEM_TRUST_PATH_CONFIG, ConfigDef.Type.STRING)
+                .documentation(PEM_TRUST_PATH_DOC)
+                .importance(ConfigDef.Importance.MEDIUM)
+                .defaultValue("")
+                .build()
     );
   }
 
@@ -337,6 +375,35 @@ public class VaultConfigProviderConfig extends AbstractConfigProviderConfig {
   VaultConfig createConfig(EnvironmentLoader environmentLoader) {
     SslConfig sslConfig = new SslConfig()
         .verify(this.sslVerifyEnabled);
+
+    // Add PEM paths if provided
+    if (this.pemCertPath != null && !this.pemCertPath.isEmpty()) {
+      try {
+        sslConfig.clientPemFile(new File(this.pemCertPath));
+      } catch (VaultException e) {
+        ConfigException configException = new ConfigException("Exception thrown while configuring client certificate");
+        configException.initCause(e);
+        throw configException;
+      }
+    }
+    if (this.pemKeyPath != null && !this.pemKeyPath.isEmpty()) {
+      try {
+        sslConfig.clientKeyPemFile(new File(this.pemKeyPath));
+      } catch (VaultException e) {
+        ConfigException configException = new ConfigException("Exception thrown while configuring client key");
+        configException.initCause(e);
+        throw configException;
+      }
+    }
+    if (this.pemTrustPath != null && !this.pemTrustPath.isEmpty()) {
+      try {
+        sslConfig.trustStoreFile(new File(this.pemTrustPath));
+      } catch (VaultException e) {
+        ConfigException configException = new ConfigException("Exception thrown while configuring trust store");
+        configException.initCause(e);
+        throw configException;
+      }
+    }
 
     VaultConfig result = new VaultConfig();
     if (null != environmentLoader) {
