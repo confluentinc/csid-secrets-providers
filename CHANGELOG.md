@@ -1,5 +1,15 @@
 # Change Log
 
+
+
+### Features
+
+- **Vault**: Added support for PEM-based SSL configuration with certificate-based authentication. New configuration options include `vault.ssl.pem_cert_path` (client certificate), `vault.ssl.pem_key_path` (client key), and `vault.ssl.pem_trust_path` (trusted CA bundle) for enabling mTLS authentication with HashiCorp Vault.
+
+### Deprecations
+
+- **AWS Secrets Manager**: Deprecated `secret.ttl.ms` configuration option. This configuration is no longer used and will be removed in a future release. A deprecation warning will be logged when this configuration is used.
+
 ## [1.0.10](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.10)
 
 ### Features and Fixes
