@@ -124,6 +124,8 @@ import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.DocumentationSections;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretModifier;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
@@ -194,6 +196,34 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
     }
     return config.isJsonSecret() ? readJsonValue(secretString) : Map.of(secretRequest.path(), secretString);
   }
+
+//  @Override
+//  public void createSecret(PutSecretRequest putSecretRequest) {
+//    CreateSecretRequest request = new CreateSecretRequest()
+//            .withName(putSecretRequest.key())
+//            .withSecretString(putSecretRequest.value());
+//    log.trace("putSecret() - request = {}", request);
+//    CreateSecretResult result = this.secretsManager.createSecret(request);
+//
+//  }
+//
+//  @Override
+//  public void updateSecret(PutSecretRequest putSecretRequest) {
+//    PutSecretValueRequest request = new PutSecretValueRequest()
+//            .withSecretId(putSecretRequest.key())
+//            .withSecretString(putSecretRequest.value());
+//    log.trace("updateSecret() - request = {}", request);
+//    PutSecretValueResult result = this.secretsManager.putSecretValue(request);
+//
+//  }
+//
+//  @Override
+//  public void deleteSecret(SecretRequest secretRequest) {
+//    DeleteSecretRequest request = new DeleteSecretRequest().withSecretId(secretRequest.path());
+//    log.trace("deleteSecret() - request = {}", request);
+//    DeleteSecretResult result = this.secretsManager.deleteSecret(request);
+//
+//  }
 
   @Override
   public void close() throws IOException {

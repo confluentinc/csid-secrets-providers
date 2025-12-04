@@ -120,9 +120,7 @@ package io.confluent.csid.config.provider.vault;
 import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
 import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
-import io.confluent.csid.config.provider.common.AbstractConfigProvider;
-import io.confluent.csid.config.provider.common.RetriableException;
-import io.confluent.csid.config.provider.common.SecretRequest;
+import io.confluent.csid.config.provider.common.*;
 import io.github.jopenlibs.vault.VaultException;
 import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigDef;
@@ -141,7 +139,7 @@ import java.util.stream.Stream;
 @Description("This config provider is used to retrieve secrets from the Hashicorp Vault.")
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("vault")
-public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> {
+public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> implements SecretModifier {
   private static final Logger log = LoggerFactory.getLogger(VaultConfigProvider.class);
 
   private static class LogHandler extends java.util.logging.Handler {
@@ -226,6 +224,26 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
         throw ex;
       }
     }
+  }
+
+  @Override
+  public void createSecret(PutSecretRequest putSecretRequest) throws Exception {
+    log.info("putSecret() - request = '{}'", putSecretRequest);
+    this.vaultClient.write(putSecretRequest);
+
+  }
+
+  @Override
+  public void updateSecret(PutSecretRequest putSecretRequest) throws Exception {
+    log.info("updateSecret() - request = '{}'", putSecretRequest);
+    this.vaultClient.update(putSecretRequest);
+  }
+
+  @Override
+  public void deleteSecret(SecretRequest secretRequest) throws Exception {
+    log.info("deleteSecret() - request = '{}'", secretRequest);
+    this.vaultClient.delete(secretRequest);
+
   }
 
   @Override

@@ -117,15 +117,20 @@
  */
 package io.confluent.csid.config.provider.vault;
 
+import io.confluent.csid.config.provider.common.PutSecretRequest;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.github.jopenlibs.vault.Vault;
 import io.github.jopenlibs.vault.VaultConfig;
 import io.github.jopenlibs.vault.VaultException;
+import io.github.jopenlibs.vault.api.WriteOptions;
 import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -183,6 +188,41 @@ class VaultClientImpl implements VaultClient {
     } else {
       return vault.logical().read(request.path());
     }
+  }
+
+  @Override
+  public LogicalResponse write(PutSecretRequest putSecretRequest) throws VaultException {
+    log.debug("write() - request = '{}'", putSecretRequest);
+    Map<String, Object> valueMap = new HashMap<>();
+    valueMap.put(putSecretRequest.key(), putSecretRequest.value());
+    Vault vault = this.vaultStore.get();
+    return vault.logical().write(putSecretRequest.path(), valueMap);
+  }
+
+  @Override
+  public LogicalResponse update(PutSecretRequest putSecretRequest) throws VaultException {
+    log.debug("update() - request = '{}'", putSecretRequest);
+    Map<String, Object> valueMap = new HashMap<>();
+    valueMap.put(putSecretRequest.key(), putSecretRequest.value());
+    Vault vault = this.vaultStore.get();
+    Long version = getVersion(putSecretRequest, vault);
+    int[] versions = new int[] {version.intValue()};
+    vault.logical().destroy(putSecretRequest.path(), versions);
+    return vault.logical().write(putSecretRequest.path(), valueMap);
+  }
+
+  private static Long getVersion(SecretRequest putSecretRequest, Vault vault) throws VaultException {
+    LogicalResponse readResponse = vault.logical().read(putSecretRequest.path());
+    return readResponse.getDataMetadata().getVersion();
+  }
+
+  @Override
+  public LogicalResponse delete(SecretRequest request) throws VaultException {
+    log.debug("delete() - request = '{}'", request);
+    Vault vault = this.vaultStore.get();
+    Long version = getVersion(request, vault);
+    int[] versions = new int[] {version.intValue()};
+    return vault.logical().destroy(request.path(), versions);
   }
 
 
