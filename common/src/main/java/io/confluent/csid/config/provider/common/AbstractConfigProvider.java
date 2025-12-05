@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
+import static io.confluent.csid.config.provider.common.SecretRequestParser.parseModifyRequest;
 
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever {
@@ -172,6 +173,50 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     }
 
     return new ConfigData(result);
+  }
+
+  public void createSecret(String path, String value) {
+    if (this instanceof SecretModifier) {
+        SecretModifier modifier = (SecretModifier) this;
+        PutSecretRequest request = parseModifyRequest(path, value);
+        try {
+          modifier.createSecret(request);
+        } catch (Exception e) {
+          throw new ConfigException(String.format("Could not create secret for request '%s'", request), e);
+        }
+        } else {
+        throw new UnsupportedOperationException();
+
+    }
+  }
+
+  public void updateSecret(String path, String value) {
+    if (this instanceof SecretModifier) {
+        SecretModifier modifier = (SecretModifier) this;
+        PutSecretRequest request = parseModifyRequest(path, value);
+        try {
+          modifier.updateSecret(request);
+        } catch (Exception e) {
+            throw new ConfigException(String.format("Could not update secret for request '%s'", request), e);
+        }
+        } else {
+        throw new UnsupportedOperationException();
+    }
+  }
+
+  public void deleteSecret(String path) {
+    if (this instanceof SecretModifier) {
+        SecretModifier modifier = (SecretModifier) this;
+        SecretRequest request = parse(path);
+        try {
+          modifier.deleteSecret(request);
+        } catch (Exception e) {
+          throw new ConfigException(String.format("Could not delete secret for request '%s'", request), e);
+        }
+        } else {
+        throw new UnsupportedOperationException();
+
+    }
   }
 
 
