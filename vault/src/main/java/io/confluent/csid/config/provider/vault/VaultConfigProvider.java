@@ -124,9 +124,11 @@ import io.confluent.csid.config.provider.common.*;
 import io.github.jopenlibs.vault.VaultException;
 import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -229,21 +231,40 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   @Override
   public void createSecret(PutSecretRequest putSecretRequest) throws Exception {
     log.info("putSecret() - request = '{}'", putSecretRequest);
-    this.vaultClient.write(putSecretRequest);
-
+    validateVaultResponse(this.vaultClient.write(putSecretRequest), "Failed to create secret");
   }
 
   @Override
   public void updateSecret(PutSecretRequest putSecretRequest) throws Exception {
     log.info("updateSecret() - request = '{}'", putSecretRequest);
-    this.vaultClient.update(putSecretRequest);
+    validateVaultResponse(this.vaultClient.update(putSecretRequest), "Failed to update secret");
   }
 
   @Override
   public void deleteSecret(SecretRequest secretRequest) throws Exception {
     log.info("deleteSecret() - request = '{}'", secretRequest);
-    this.vaultClient.delete(secretRequest);
+    validateVaultResponse(this.vaultClient.delete(secretRequest), "Failed to delete secret");
+  }
 
+  /**
+   * Validates the Vault API response and throws ConfigException on failure.
+   *
+   * @param response   The LogicalResponse from Vault
+   * @param operation  Description of the operation for error message
+   * @throws ConfigException if the response status indicates failure
+   */
+  private void validateVaultResponse(LogicalResponse response, String operation) {
+    int status = response.getRestResponse().getStatus();
+
+    if (status != 200 && status != 204) {
+      String errorBody = new String(
+              response.getRestResponse().getBody(),
+              StandardCharsets.UTF_8
+      );
+      throw new ConfigException(
+              String.format("Failed to %s: %s", operation, errorBody)
+      );
+    }
   }
 
   @Override

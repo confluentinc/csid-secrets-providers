@@ -119,6 +119,10 @@ package io.confluent.csid.config.provider.aws;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.confluent.csid.config.provider.common.ImmutablePutSecretRequest;
+import io.confluent.csid.config.provider.common.ImmutableSecretRequest;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
@@ -126,10 +130,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.DecryptionFailureException;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
-import software.amazon.awssdk.services.secretsmanager.model.ResourceNotFoundException;
+import software.amazon.awssdk.services.secretsmanager.model.*;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 import uk.org.webcompere.systemstubs.jupiter.SystemStub;
 import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
@@ -142,8 +143,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(SystemStubsExtension.class)
 public class SecretsManagerConfigProviderTest {
   @SystemStub
@@ -235,5 +236,96 @@ public class SecretsManagerConfigProviderTest {
     ConfigData configData = this.provider.get(secretName, ImmutableSet.of());
     assertNotNull(configData);
     assertEquals(expected, configData.data());
+  }
+
+  @Test
+  public void createSecretSuccess() {
+    final String secretName = "new-secret";
+    final String secretValue = "{\"username\":\"admin\",\"password\":\"secret123\"}";
+
+    CreateSecretResponse response = CreateSecretResponse.builder()
+            .name(secretName)
+            .arn("arn:aws:secretsmanager:us-east-1:123456789:secret:new-secret-abc123")
+            .versionId("EXAMPLE1-90ab-cdef-fedc-ba987EXAMPLE")
+            .build();
+
+    when(secretsManager.createSecret(any(CreateSecretRequest.class))).thenAnswer(invocationOnMock -> {
+      CreateSecretRequest request = invocationOnMock.getArgument(0);
+      assertEquals(secretName, request.name());
+      assertEquals(secretValue, request.secretString());
+      return response;
+    });
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .key(secretName)
+            .value(secretValue)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Should not throw
+    this.provider.createSecret(request);
+
+    // Verify createSecret was called
+    verify(secretsManager, times(1)).createSecret(any(CreateSecretRequest.class));
+  }
+
+  @Test
+  public void updateSecretSuccess() {
+    final String secretName = "existing-secret";
+    final String newValue = "{\"username\":\"admin\",\"password\":\"newPassword123\"}";
+
+    PutSecretValueResponse response = PutSecretValueResponse.builder()
+            .name(secretName)
+            .arn("arn:aws:secretsmanager:us-east-1:123456789:secret:existing-secret-abc123")
+            .versionId("EXAMPLE2-90ab-cdef-fedc-ba987EXAMPLE")
+            .build();
+
+    when(secretsManager.putSecretValue(any(PutSecretValueRequest.class))).thenAnswer(invocationOnMock -> {
+      PutSecretValueRequest request = invocationOnMock.getArgument(0);
+      assertEquals(secretName, request.secretId());
+      assertEquals(newValue, request.secretString());
+      return response;
+    });
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .key(secretName)
+            .value(newValue)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Should not throw
+    this.provider.updateSecret(request);
+
+    // Verify putSecretValue was called
+    verify(secretsManager, times(1)).putSecretValue(any(PutSecretValueRequest.class));
+  }
+
+  @Test
+  public void deleteSecretSuccess() {
+    final String secretName = "secret-to-delete";
+
+    DeleteSecretResponse response = DeleteSecretResponse.builder()
+            .name(secretName)
+            .arn("arn:aws:secretsmanager:us-east-1:123456789:secret:secret-to-delete-abc123")
+            .build();
+
+    when(secretsManager.deleteSecret(any(DeleteSecretRequest.class))).thenAnswer(invocationOnMock -> {
+      DeleteSecretRequest request = invocationOnMock.getArgument(0);
+      assertEquals(secretName, request.secretId());
+      return response;
+    });
+
+    SecretRequest request = ImmutableSecretRequest.builder()
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Should not throw
+    this.provider.deleteSecret(request);
+
+    // Verify deleteSecret was called
+    verify(secretsManager, times(1)).deleteSecret(any(DeleteSecretRequest.class));
   }
 }

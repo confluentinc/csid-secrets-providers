@@ -205,7 +205,7 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
 
   @Override
   public void updateSecret(PutSecretRequest putSecretRequest) {
-    secretClient.createSecret(putSecretRequest.key(), putSecretRequest.value());
+    secretClient.updateSecret(putSecretRequest.key(), putSecretRequest.value());
   }
 
   @Override

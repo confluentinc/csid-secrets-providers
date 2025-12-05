@@ -122,5 +122,6 @@ import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 interface SecretClientWrapper {
   KeyVaultSecret getSecret(String name, String version);
   void createSecret(String name, String value);
+  void updateSecret(String name, String value);
   void deleteSecret(String name);
 }

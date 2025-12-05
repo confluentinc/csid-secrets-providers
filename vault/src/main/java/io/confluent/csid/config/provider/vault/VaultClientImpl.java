@@ -128,6 +128,7 @@ import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,6 +214,9 @@ class VaultClientImpl implements VaultClient {
 
   private static Long getVersion(SecretRequest putSecretRequest, Vault vault) throws VaultException {
     LogicalResponse readResponse = vault.logical().read(putSecretRequest.path());
+    if (readResponse.getRestResponse().getStatus() != 200 && readResponse.getRestResponse().getStatus() != 204) {
+      throw new ConfigException("Secret does not exist");
+    }
     return readResponse.getDataMetadata().getVersion();
   }
 
