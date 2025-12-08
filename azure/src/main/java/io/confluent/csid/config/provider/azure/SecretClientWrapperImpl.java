@@ -115,137 +115,40 @@
  *       will not be construed as a waiver of any subsequent breach of that right
  *       or as a waiver of any other right.
  */
-package io.confluent.csid.config.provider.aws;
+package io.confluent.csid.config.provider.azure;
 
-import io.confluent.csid.config.provider.annotations.CodeBlock;
-import io.confluent.csid.config.provider.annotations.ConfigProviderKey;
-import io.confluent.csid.config.provider.annotations.Description;
-import io.confluent.csid.config.provider.annotations.DocumentationSection;
-import io.confluent.csid.config.provider.annotations.DocumentationSections;
-import io.confluent.csid.config.provider.annotations.DocumentationTip;
-import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
-import io.confluent.csid.config.provider.common.PutSecretRequest;
-import io.confluent.csid.config.provider.common.SecretModifier;
-import io.confluent.csid.config.provider.common.SecretRequest;
-import org.apache.kafka.common.config.ConfigDef;
+import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 import org.apache.kafka.common.config.ConfigException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
-import software.amazon.awssdk.services.secretsmanager.model.CreateSecretRequest;
-import software.amazon.awssdk.services.secretsmanager.model.CreateSecretResponse;
-import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueRequest;
-import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueResponse;
-import software.amazon.awssdk.services.secretsmanager.model.DeleteSecretRequest;
-import software.amazon.awssdk.services.secretsmanager.model.DeleteSecretResponse;
-import software.amazon.awssdk.core.SdkBytes;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
+public class SecretClientWrapperImpl implements SecretClientWrapper {
+  SecretClient secretClient;
+  SecretClientWrapperImpl(SecretClient secretClient) {
+    this.secretClient = secretClient;
+  }
+  @Override
+  public KeyVaultSecret getSecret(String name, String version) {
+    return secretClient.getSecret(name, version);
+  }
 
-@Description("This config provider is used to retrieve secrets from the AWS Secrets Manager service.")
-@DocumentationSections(
-    sections = {
-        @DocumentationSection(title = "Secret Value", text = "The value for the secret must be formatted as a JSON object. " +
-            "This allows multiple keys of data to be stored in a single secret. The name of the secret in AWS Secrets Manager " +
-            "will correspond to the path that is requested by the config provider.",
-            codeblocks = {
-                @CodeBlock(
-                    title = "Example Secret Value",
-                    language = "json",
-                    text = "{\n" +
-                        "  \"username\" : \"appdbsecret\",\n" +
-                        "  \"password\" : \"u$3@b3tt3rp@$$w0rd\"\n" +
-                        "}"
-                    )
-            }
-          )
+  @Override
+  public void createSecret(String name, String value) {
+    secretClient.setSecret(name, value);
+  }
+
+  @Override
+  public void updateSecret(String name, String value) {
+    try {
+      secretClient.getSecret(name, null);
+    } catch (Exception e) {
+      throw new ConfigException("Secret " + name + " does not exist for update.");
     }
-)
-@DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
-@ConfigProviderKey("secretsManager")
-public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> implements SecretModifier {
-  private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
-  SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
-  SecretsManagerClient secretsManager;
-
-  @Override
-  protected SecretsManagerConfigProviderConfig config(Map<String, ?> settings) {
-    return new SecretsManagerConfigProviderConfig(settings);
+    secretClient.setSecret(name, value);
   }
 
   @Override
-  protected void configure() {
-    super.configure();
-    this.secretsManager = this.secretsManagerFactory.create(this.config);
-    setSecretModifier(this);
+  public void deleteSecret(String name) {
+    secretClient.beginDeleteSecret(name);
   }
 
-  @Override
-  protected Map<String, String> getSecret(SecretRequest secretRequest) throws Exception {
-    GetSecretValueRequest.Builder builder = GetSecretValueRequest.builder();
-    secretRequest.version().ifPresent(builder::versionId);
-    builder.secretId(null == config.prefix ? secretRequest.path() : config.prefix + secretRequest.path());
-    GetSecretValueRequest request = builder.build();
-    log.trace("getSecret() - request = {}", request);
-    GetSecretValueResponse result = this.secretsManager.getSecretValue(request);
-
-    String secretString = result.secretString();
-    if (null == secretString) {
-      SdkBytes secretBinary = result.secretBinary();
-      if (secretBinary == null) {
-        throw new ConfigException("Secret " + request.secretId() + " contained neither secretString nor secretBinary.");
-      }
-      secretString = StandardCharsets.UTF_8.decode(result.secretBinary().asByteBuffer()).toString();
-    }
-    return config.isJsonSecret() ? readJsonValue(secretString) : Map.of(secretRequest.path(), secretString);
-  }
-
-  @Override
-  public void createSecret(PutSecretRequest putSecretRequest) {
-    CreateSecretRequest.Builder builder = CreateSecretRequest.builder();
-    builder.name(putSecretRequest.key()).secretString(putSecretRequest.value());
-    CreateSecretRequest request = builder.build();
-    log.trace("putSecret() - request = {}", request);
-    CreateSecretResponse result = this.secretsManager.createSecret(request);
-
-  }
-
-  @Override
-  public void updateSecret(PutSecretRequest putSecretRequest) {
-    PutSecretValueRequest.Builder builder = PutSecretValueRequest.builder();
-    builder.secretId(putSecretRequest.key()).secretString(putSecretRequest.value());
-    PutSecretValueRequest request = builder.build();
-    log.trace("updateSecret() - request = {}", request);
-    PutSecretValueResponse result = this.secretsManager.putSecretValue(request);
-
-  }
-
-  @Override
-  public void deleteSecret(SecretRequest secretRequest) {
-    DeleteSecretRequest.Builder builder = DeleteSecretRequest.builder();
-    builder.secretId(secretRequest.path());
-    DeleteSecretRequest request = builder.build();
-    log.trace("deleteSecret() - request = {}", request);
-    DeleteSecretResponse result = this.secretsManager.deleteSecret(request);
-
-  }
-
-  @Override
-  public void close() throws IOException {
-    if (null != this.secretsManager) {
-      this.secretsManager.close();
-      this.secretsManagerFactory.closeDefaultCredentials();
-    }
-    super.close();
-  }
-
-
-  @Override
-  public ConfigDef config() {
-    return SecretsManagerConfigProviderConfig.config();
-  }
 }

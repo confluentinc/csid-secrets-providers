@@ -123,6 +123,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.confluent.csid.config.provider.common.ImmutablePutSecretRequest;
+import io.confluent.csid.config.provider.common.ImmutableSecretRequest;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigData;
 import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterEach;
@@ -139,8 +143,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class KeyVaultConfigProviderTest {
   KeyVaultConfigProvider provider;
@@ -289,4 +292,58 @@ public class KeyVaultConfigProviderTest {
 //    assertEquals(expected, configData.data());
 //    assertEquals(expectedTTL, configData.ttl());
 //  }
+
+  @Test
+  public void createSecretSuccess() {
+    // Mock successful create
+    doNothing().when(this.secretClientWrapper).createSecret(any(), any());
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .key("new-secret")
+            .value("{\"username\":\"admin\",\"password\":\"secret123\"}")
+            .path("new-secret")
+            .raw("new-secret")
+            .build();
+
+    // Should not throw
+    this.provider.createSecret(request);
+
+    // Verify createSecret was called with correct arguments
+    verify(this.secretClientWrapper, times(1)).createSecret("new-secret", "{\"username\":\"admin\",\"password\":\"secret123\"}");
+  }
+
+  @Test
+  public void updateSecretSuccess() {
+    // In Azure Key Vault, update is the same as create (setSecret)
+    doNothing().when(this.secretClientWrapper).createSecret(any(), any());
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .key("existing-secret")
+            .value("{\"username\":\"admin\",\"password\":\"newPassword\"}")
+            .path("existing-secret")
+            .raw("existing-secret")
+            .build();
+
+    // Should not throw
+    this.provider.updateSecret(request);
+
+    // Verify createSecret was called (Azure uses setSecret for both create and update)
+    verify(this.secretClientWrapper, times(1)).updateSecret("existing-secret", "{\"username\":\"admin\",\"password\":\"newPassword\"}");
+  }
+
+  @Test
+  public void deleteSecretSuccess() {
+    doNothing().when(this.secretClientWrapper).deleteSecret(any());
+
+    SecretRequest request = ImmutableSecretRequest.builder()
+            .path("secret-to-delete")
+            .raw("secret-to-delete")
+            .build();
+
+    // Should not throw
+    this.provider.deleteSecret(request);
+
+    // Verify deleteSecret was called with correct path
+    verify(this.secretClientWrapper, times(1)).deleteSecret("secret-to-delete");
+  }
 }
