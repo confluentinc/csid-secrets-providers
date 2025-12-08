@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static io.confluent.csid.config.provider.common.SecretRequestParser.parse;
+import static io.confluent.csid.config.provider.common.SecretRequestParser.parseModifyRequest;
 
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProviderConfig> implements ConfigProvider, SecretRetriever {
@@ -119,7 +120,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
 
   ConfigException createConfigException(SecretRequest storeName, Throwable causedBy) {
     ConfigException configException = new ConfigException(
-        String.format("Exception thrown while retrieving '%s'. See log for previous exceptions", storeName)
+            String.format("Exception thrown while retrieving '%s'. See log for previous exceptions", storeName)
     );
     configException.initCause(causedBy);
     return configException;
@@ -138,7 +139,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     if (null == data || data.isEmpty()) {
       log.error("get() - Could not find request '{}}'", request);
       throw new ConfigException(
-          String.format("Could not find secret for request '%s'", request)
+              String.format("Could not find secret for request '%s'", request)
       );
     }
     this.configDataHasher.updateHash(request, data);
@@ -159,11 +160,11 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
       }
       if (!misses.isEmpty()) {
         throw new ConfigException(
-            String.format(
-                "Key(s) '%s' are missing for request '%s'",
-                String.join("', '", misses),
-                request
-            )
+                String.format(
+                        "Key(s) '%s' are missing for request '%s'",
+                        String.join("', '", misses),
+                        request
+                )
         );
       }
       result = r;
@@ -172,6 +173,50 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     }
 
     return new ConfigData(result);
+  }
+
+  public void createSecret(String path, String value) {
+    if (this instanceof SecretModifier) {
+      SecretModifier modifier = (SecretModifier) this;
+      PutSecretRequest request = parseModifyRequest(path, value);
+      try {
+        modifier.createSecret(request);
+      } catch (Exception e) {
+        throw new ConfigException(String.format("Could not create secret for request '%s'", request), e);
+      }
+    } else {
+      throw new UnsupportedOperationException();
+
+    }
+  }
+
+  public void updateSecret(String path, String value) {
+    if (this instanceof SecretModifier) {
+      SecretModifier modifier = (SecretModifier) this;
+      PutSecretRequest request = parseModifyRequest(path, value);
+      try {
+        modifier.updateSecret(request);
+      } catch (Exception e) {
+        throw new ConfigException(String.format("Could not update secret for request '%s'", request), e);
+      }
+    } else {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  public void deleteSecret(String path) {
+    if (this instanceof SecretModifier) {
+      SecretModifier modifier = (SecretModifier) this;
+      SecretRequest request = parse(path);
+      try {
+        modifier.deleteSecret(request);
+      } catch (Exception e) {
+        throw new ConfigException(String.format("Could not delete secret for request '%s'", request), e);
+      }
+    } else {
+      throw new UnsupportedOperationException();
+
+    }
   }
 
 
@@ -210,12 +255,12 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     }
     SecretRequest request = parse(path);
     Subscription.Key key = ImmutableKey.builder()
-        .keys(keys)
-        .build();
+            .keys(keys)
+            .build();
     log.info("subscribe(request = '{}' keys='{}')", request, keys);
     Subscription subscription = this.subscriptions.compute(request.raw(), (s, existing) -> {
       ImmutableSubscription.Builder builder = ImmutableSubscription.builder()
-          .path(request.raw());
+              .path(request.raw());
 
       ImmutableState.Builder stateBuilder;
 
@@ -231,36 +276,36 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
         Subscription.State existingState = existing.states().get(key);
         if (null != existingState) {
           stateBuilder = ImmutableState.builder()
-              .from(existingState);
+                  .from(existingState);
 
           if (existingState.callbacks().contains(callback)) {
             log.warn("subscribe() - callback already exists.");
           } else {
             log.trace("subscribe() - adding callback to existing callback(s).");
             stateBuilder = stateBuilder
-                .addCallbacks(callback);
+                    .addCallbacks(callback);
           }
         } else {
           stateBuilder = ImmutableState.builder()
-              .addCallbacks(callback);
+                  .addCallbacks(callback);
         }
       } else {
         ScheduledFuture<?> future = this.executorService.scheduleAtFixedRate(
-            new UpdateHandler(
-                this.configDataHasher,
-                this.subscriptions,
-                request,
-                this,
-                this.executorService
-            ),
-            0,
-            this.config.pollingIntervalSeconds,
-            TimeUnit.SECONDS
+                new UpdateHandler(
+                        this.configDataHasher,
+                        this.subscriptions,
+                        request,
+                        this,
+                        this.executorService
+                ),
+                0,
+                this.config.pollingIntervalSeconds,
+                TimeUnit.SECONDS
         );
         builder.future(future);
 
         stateBuilder = ImmutableState.builder()
-            .addCallbacks(callback);
+                .addCallbacks(callback);
       }
 
       Subscription.State state = stateBuilder.build();
@@ -278,8 +323,8 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
     }
     SecretRequest request = parse(path);
     Subscription.Key key = ImmutableKey.builder()
-        .keys(keys)
-        .build();
+            .keys(keys)
+            .build();
     log.info("unsubscribe(request = '{}' keys='{}')", request, keys);
     this.subscriptions.compute(request.raw(), (s, existing) -> {
       if (null == existing) {
@@ -295,15 +340,15 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
         return existing;
       }
       ImmutableSubscription.Builder subscriptionBuilder = ImmutableSubscription.builder()
-          .future(existing.future())
-          .path(existing.path());
+              .future(existing.future())
+              .path(existing.path());
       Map<Subscription.Key, Subscription.State> states = new LinkedHashMap<>(existing.states());
       if (state.callbacks().size() > 1) {
         ImmutableState.Builder stateBuilder = ImmutableState.builder();
         state.callbacks()
-            .stream()
-            .filter(c -> !Objects.equals(c, callback))
-            .forEach(stateBuilder::addCallbacks);
+                .stream()
+                .filter(c -> !Objects.equals(c, callback))
+                .forEach(stateBuilder::addCallbacks);
         states.put(key, stateBuilder.build());
       } else {
         log.debug("unsubscribe(request = '{}' keys='{}') - removing all callbacks.", request, keys);

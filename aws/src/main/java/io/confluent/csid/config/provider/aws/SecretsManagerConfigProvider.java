@@ -124,6 +124,8 @@ import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.DocumentationSections;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretModifier;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
@@ -132,6 +134,12 @@ import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.CreateSecretRequest;
+import software.amazon.awssdk.services.secretsmanager.model.CreateSecretResponse;
+import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.DeleteSecretRequest;
+import software.amazon.awssdk.services.secretsmanager.model.DeleteSecretResponse;
 import software.amazon.awssdk.core.SdkBytes;
 
 import java.io.IOException;
@@ -159,7 +167,7 @@ import java.util.Map;
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("secretsManager")
-public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> {
+public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> implements SecretModifier {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
   SecretsManagerClient secretsManager;
@@ -193,6 +201,36 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
       secretString = StandardCharsets.UTF_8.decode(result.secretBinary().asByteBuffer()).toString();
     }
     return config.isJsonSecret() ? readJsonValue(secretString) : Map.of(secretRequest.path(), secretString);
+  }
+
+  @Override
+  public void createSecret(PutSecretRequest putSecretRequest) {
+    CreateSecretRequest.Builder builder = CreateSecretRequest.builder();
+    builder.name(putSecretRequest.key()).secretString(putSecretRequest.value());
+    CreateSecretRequest request = builder.build();
+    log.trace("putSecret() - request = {}", request);
+    CreateSecretResponse result = this.secretsManager.createSecret(request);
+
+  }
+
+  @Override
+  public void updateSecret(PutSecretRequest putSecretRequest) {
+    PutSecretValueRequest.Builder builder = PutSecretValueRequest.builder();
+    builder.secretId(putSecretRequest.key()).secretString(putSecretRequest.value());
+    PutSecretValueRequest request = builder.build();
+    log.trace("updateSecret() - request = {}", request);
+    PutSecretValueResponse result = this.secretsManager.putSecretValue(request);
+
+  }
+
+  @Override
+  public void deleteSecret(SecretRequest secretRequest) {
+    DeleteSecretRequest.Builder builder = DeleteSecretRequest.builder();
+    builder.secretId(secretRequest.path());
+    DeleteSecretRequest request = builder.build();
+    log.trace("deleteSecret() - request = {}", request);
+    DeleteSecretResponse result = this.secretsManager.deleteSecret(request);
+
   }
 
   @Override
