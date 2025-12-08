@@ -184,6 +184,7 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
   protected void configure() {
     super.configure();
     this.secretClient = this.keyVaultFactory.create(this.config);
+    setSecretModifier(this);
   }
 
   @Override

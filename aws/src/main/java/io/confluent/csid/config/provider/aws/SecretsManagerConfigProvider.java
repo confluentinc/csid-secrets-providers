@@ -181,6 +181,7 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
   protected void configure() {
     super.configure();
     this.secretsManager = this.secretsManagerFactory.create(this.config);
+    setSecretModifier(this);
   }
 
   @Override

@@ -41,6 +41,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   ScheduledExecutorServiceFactory executorServiceFactory = config -> Executors.newScheduledThreadPool(config.threadCount);
   Map<String, Subscription> subscriptions;
   ConfigDataHasher configDataHasher;
+  private SecretModifier secretModifier;
 
   /**
    * Method is used to load the config.
@@ -54,6 +55,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
    * Method is called after the AbstractConfigProvider has been configured.
    */
   protected abstract void configure();
+
+  protected void setSecretModifier(SecretModifier secretModifier) {
+    this.secretModifier = secretModifier;
+  }
 
   /**
    * Method is used to retrieve all of the entries that are stored in the specified store.
@@ -176,11 +181,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void createSecret(String path, String value) {
-    if (this instanceof SecretModifier) {
-      SecretModifier modifier = (SecretModifier) this;
+    if (secretModifier != null) {
       PutSecretRequest request = parseModifyRequest(path, value);
       try {
-        modifier.createSecret(request);
+        secretModifier.createSecret(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not create secret for request '%s'", request), e);
       }
@@ -191,11 +195,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void updateSecret(String path, String value) {
-    if (this instanceof SecretModifier) {
-      SecretModifier modifier = (SecretModifier) this;
+    if (secretModifier != null) {
       PutSecretRequest request = parseModifyRequest(path, value);
       try {
-        modifier.updateSecret(request);
+        secretModifier.updateSecret(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not update secret for request '%s'", request), e);
       }
@@ -205,11 +208,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void deleteSecret(String path) {
-    if (this instanceof SecretModifier) {
-      SecretModifier modifier = (SecretModifier) this;
+    if (secretModifier != null) {
       SecretRequest request = parse(path);
       try {
-        modifier.deleteSecret(request);
+        secretModifier.deleteSecret(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not delete secret for request '%s'", request), e);
       }

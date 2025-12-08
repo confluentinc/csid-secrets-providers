@@ -207,7 +207,9 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
 
   @Override
   protected void configure() {
+
     this.vaultClient = this.vaultClientFactory.create(this.config, this.executorService);
+    setSecretModifier(this);
   }
 
   /**
