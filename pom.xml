@@ -151,7 +151,7 @@
     <junit.version>5.13.0</junit.version>
     <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
     <kafka-clients.version>4.1.0</kafka-clients.version>
-    <logback.version>1.5.18</logback.version>
+    <logback.version>1.5.20</logback.version>
     <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
     <maven.release.version>3.1.1</maven.release.version>
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
