@@ -122,13 +122,17 @@ import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
+import io.confluent.csid.config.provider.common.SecretWriter;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.github.jopenlibs.vault.VaultException;
 import io.github.jopenlibs.vault.response.LogicalResponse;
 import org.apache.kafka.common.config.ConfigDef;
+import org.apache.kafka.common.config.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -141,7 +145,7 @@ import java.util.stream.Stream;
 @Description("This config provider is used to retrieve secrets from the Hashicorp Vault.")
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("vault")
-public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> {
+public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> implements SecretWriter {
   private static final Logger log = LoggerFactory.getLogger(VaultConfigProvider.class);
 
   private static class LogHandler extends java.util.logging.Handler {
@@ -203,7 +207,9 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
 
   @Override
   protected void configure() {
+
     this.vaultClient = this.vaultClientFactory.create(this.config, this.executorService);
+    setSecretModifier(this);
   }
 
   /**
@@ -225,6 +231,45 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
       } else {
         throw ex;
       }
+    }
+  }
+
+  @Override
+  public void create(PutSecretRequest updatedSecret) throws Exception {
+    log.info("putSecret() - request = '{}'", updatedSecret);
+    validateVaultResponse(this.vaultClient.write(updatedSecret), "Failed to create secret");
+  }
+
+  @Override
+  public void update(PutSecretRequest updatedSecret) throws Exception {
+    log.info("updateSecret() - request = '{}'", updatedSecret);
+    validateVaultResponse(this.vaultClient.update(updatedSecret), "Failed to update secret");
+  }
+
+  @Override
+  public void delete(SecretRequest secret) throws Exception {
+    log.info("deleteSecret() - request = '{}'", secret);
+    validateVaultResponse(this.vaultClient.delete(secret), "Failed to delete secret");
+  }
+
+  /**
+   * Validates the Vault API response and throws ConfigException on failure.
+   *
+   * @param response   The LogicalResponse from Vault
+   * @param operation  Description of the operation for error message
+   * @throws ConfigException if the response status indicates failure
+   */
+  private void validateVaultResponse(LogicalResponse response, String operation) {
+    int status = response.getRestResponse().getStatus();
+
+    if (status != 200 && status != 204) {
+      String errorBody = new String(
+              response.getRestResponse().getBody(),
+              StandardCharsets.UTF_8
+      );
+      throw new ConfigException(
+              String.format("Failed to %s: %s", operation, errorBody)
+      );
     }
   }
 

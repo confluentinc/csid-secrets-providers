@@ -119,7 +119,12 @@ package io.confluent.csid.config.provider.aws;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.confluent.csid.config.provider.common.ImmutablePutSecretRequest;
+import io.confluent.csid.config.provider.common.ImmutableSecretRequest;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigData;
+import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -132,7 +137,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
-import software.amazon.awssdk.services.secretsmanager.model.CreateSecretRequest;
+import software.amazon.awssdk.services.secretsmanager.model.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -144,6 +149,7 @@ import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProvider
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.PREFIX_CONFIG;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.REGION_CONFIG;
 import static io.confluent.csid.config.provider.aws.SecretsManagerConfigProviderConfig.USE_JSON_CONFIG;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -297,5 +303,382 @@ public class SecretsManagerConfigProviderIT {
     ConfigData configData = provider.get(secretName, ImmutableSet.of());
     assertNotNull(configData);
     assertEquals(expected, configData.data());
+  }
+
+  @Test
+  public void createSecretSuccess() {
+    configureProvider(true);
+
+    final String secretName = "it-create-test-" + System.currentTimeMillis();
+    final String secretJson = "{\n  \"username\": \"created-user\",\n  \"password\": \"created-pass\"\n}";
+
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(secretJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Create using provider
+    provider.create(createRequest);
+
+    // Verify by reading back
+    Map<String, String> expected = ImmutableMap.of(
+            "username", "created-user",
+            "password", "created-pass"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void createSecretPlainValue() {
+    configureProvider(false);  // use.json = false
+
+    final String secretName = "it-create-plain-" + System.currentTimeMillis();
+    final String secretValue = "plain-secret-value-12345";
+
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(secretValue)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Create using provider
+    provider.create(createRequest);
+
+    // Verify by reading back
+    Map<String, String> expected = ImmutableMap.of(secretName, secretValue);
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void createSecretWithComplexJson() {
+    configureProvider(true);
+
+    final String secretName = "it-create-complex-" + System.currentTimeMillis();
+    final String secretJson = "{\n" +
+            "  \"db_host\": \"localhost\",\n" +
+            "  \"db_port\": \"5432\",\n" +
+            "  \"db_user\": \"admin\",\n" +
+            "  \"db_password\": \"super$ecret!\"\n" +
+            "}";
+
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(secretJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    provider.create(createRequest);
+
+    // Verify
+    Map<String, String> expected = ImmutableMap.of(
+            "db_host", "localhost",
+            "db_port", "5432",
+            "db_user", "admin",
+            "db_password", "super$ecret!"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(configData);
+    assertEquals(expected, configData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void updateSecretSuccess() {
+    configureProvider(true);
+
+    final String secretName = "it-update-test-" + System.currentTimeMillis();
+    final String originalJson = "{\n  \"username\": \"original-user\",\n  \"password\": \"original-pass\"\n}";
+    final String updatedJson = "{\n  \"username\": \"updated-user\",\n  \"password\": \"updated-pass\"\n}";
+
+    // First create the secret
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(originalJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.create(createRequest);
+
+    // Verify original value
+    Map<String, String> originalExpected = ImmutableMap.of(
+            "username", "original-user",
+            "password", "original-pass"
+    );
+    ConfigData originalData = provider.get(secretName, ImmutableSet.of());
+    assertEquals(originalExpected, originalData.data());
+
+    // Now update the secret
+    PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
+            .value(updatedJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.update(updateRequest);
+
+    // Verify updated value
+    Map<String, String> updatedExpected = ImmutableMap.of(
+            "username", "updated-user",
+            "password", "updated-pass"
+    );
+    ConfigData updatedData = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(updatedData);
+    assertEquals(updatedExpected, updatedData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void updateSecretMultipleTimes() {
+    configureProvider(true);
+
+    final String secretName = "it-multi-update-" + System.currentTimeMillis();
+
+    // Create initial secret
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value("{\"version\": \"1\"}")
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.create(createRequest);
+
+    // Update multiple times
+    for (int i = 2; i <= 5; i++) {
+      PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
+              .value("{\"version\": \"" + i + "\"}")
+              .path(secretName)
+              .raw(secretName)
+              .build();
+      provider.update(updateRequest);
+    }
+
+    // Verify final value
+    Map<String, String> expected = ImmutableMap.of("version", "5");
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertEquals(expected, configData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void updateSecretAddNewFields() {
+    configureProvider(true);
+
+    final String secretName = "it-update-fields-" + System.currentTimeMillis();
+    final String originalJson = "{\"key1\": \"value1\"}";
+    final String updatedJson = "{\"key1\": \"value1\", \"key2\": \"value2\", \"key3\": \"value3\"}";
+
+    // Create
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(originalJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.create(createRequest);
+
+    // Update with more fields
+    PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
+            .value(updatedJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.update(updateRequest);
+
+    // Verify
+    Map<String, String> expected = ImmutableMap.of(
+            "key1", "value1",
+            "key2", "value2",
+            "key3", "value3"
+    );
+    ConfigData configData = provider.get(secretName, ImmutableSet.of());
+    assertEquals(expected, configData.data());
+
+    // Cleanup
+    cleanupSecret(secretName);
+  }
+
+  @Test
+  public void deleteSecretSuccess() {
+    configureProvider(true);
+
+    final String secretName = "it-delete-test-" + System.currentTimeMillis();
+    final String secretJson = "{\"username\": \"to-be-deleted\"}";
+
+    // Create secret first
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value(secretJson)
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.create(createRequest);
+
+    // Verify it exists
+    ConfigData beforeDelete = provider.get(secretName, ImmutableSet.of());
+    assertNotNull(beforeDelete);
+
+    // Delete the secret
+    SecretRequest deleteRequest = ImmutableSecretRequest.builder()
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.delete(deleteRequest);
+
+    // Verify it's deleted (should throw exception)
+    assertThrows(ConfigException.class, () -> {
+      provider.get(secretName, ImmutableSet.of());
+    });
+  }
+
+  @Test
+  public void deleteSecretNotFound() {
+    configureProvider(true);
+
+    final String secretName = "it-nonexistent-secret-" + System.currentTimeMillis();
+
+    SecretRequest deleteRequest = ImmutableSecretRequest.builder()
+            .path(secretName)
+            .raw(secretName)
+            .build();
+
+    // Deleting non-existent secret should throw ResourceNotFoundException
+    assertThrows(ResourceNotFoundException.class, () -> {
+      provider.delete(deleteRequest);
+    });
+  }
+
+  @Test
+  public void fullSecretLifecycle() {
+    configureProvider(true);
+
+    final String secretName = "it-lifecycle-" + System.currentTimeMillis();
+
+    // 1. CREATE
+    PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
+            .value("{\"step\": \"created\"}")
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.create(createRequest);
+
+    ConfigData afterCreate = provider.get(secretName, ImmutableSet.of());
+    assertEquals("created", afterCreate.data().get("step"));
+
+    // 2. UPDATE
+    PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
+            .value("{\"step\": \"updated\"}")
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.update(updateRequest);
+
+    ConfigData afterUpdate = provider.get(secretName, ImmutableSet.of());
+    assertEquals("updated", afterUpdate.data().get("step"));
+
+    // 3. DELETE
+    SecretRequest deleteRequest = ImmutableSecretRequest.builder()
+            .path(secretName)
+            .raw(secretName)
+            .build();
+    provider.delete(deleteRequest);
+
+    // 4. VERIFY DELETED
+    assertThrows(ConfigException.class, () -> {
+      provider.get(secretName, ImmutableSet.of());
+    });
+  }
+
+  @Test
+  public void createReadUpdateReadDeleteRead() {
+    configureProvider(true);
+
+    final String secretName = "it-crud-" + System.currentTimeMillis();
+
+    // CREATE
+    provider.create(ImmutablePutSecretRequest.builder()
+            .value("{\"username\": \"user1\", \"password\": \"pass1\"}")
+            .path(secretName)
+            .raw(secretName)
+            .build());
+
+    // READ 1
+    ConfigData read1 = provider.get(secretName, ImmutableSet.of());
+    assertEquals("user1", read1.data().get("username"));
+    assertEquals("pass1", read1.data().get("password"));
+
+    // UPDATE
+    provider.update(ImmutablePutSecretRequest.builder()
+            .value("{\"username\": \"user2\", \"password\": \"pass2\"}")
+            .path(secretName)
+            .raw(secretName)
+            .build());
+
+    // READ 2
+    ConfigData read2 = provider.get(secretName, ImmutableSet.of());
+    assertEquals("user2", read2.data().get("username"));
+    assertEquals("pass2", read2.data().get("password"));
+
+    // DELETE
+    provider.delete(ImmutableSecretRequest.builder()
+            .path(secretName)
+            .raw(secretName)
+            .build());
+
+    // READ 3 (should fail)
+    assertThrows(ConfigException.class, () -> {
+      provider.get(secretName, ImmutableSet.of());
+    });
+  }
+
+  /**
+   * Helper method to cleanup secrets after tests.
+   * Uses force delete without recovery window.
+   */
+  private void cleanupSecret(String secretName) {
+    try (SecretsManagerClient client = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+
+      client.deleteSecret(DeleteSecretRequest.builder()
+              .secretId(secretName)
+              .forceDeleteWithoutRecovery(Boolean.TRUE)
+              .build());
+    } catch (Exception e) {
+      // Ignore cleanup errors
+    }
+  }
+
+  /**
+   * Helper to verify a secret exists in AWS directly.
+   */
+  private GetSecretValueResponse getSecretDirect(String secretName) {
+    try (SecretsManagerClient client = SecretsManagerClient.builder()
+            .endpointOverride(localstack.getEndpoint())
+            .credentialsProvider(StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(localstack.getAccessKey(), localstack.getSecretKey())
+            ))
+            .region(Region.of(localstack.getRegion()))
+            .build()) {
+
+      return client.getSecretValue(GetSecretValueRequest.builder()
+              .secretId(secretName)
+              .build());
+    }
   }
 }
