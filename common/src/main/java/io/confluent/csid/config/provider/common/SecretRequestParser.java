@@ -37,4 +37,14 @@ class SecretRequestParser {
         .path(uri.getPath())
         .build();
   }
+
+  public static PutSecretRequest parseModifyRequest(String path, String value) {
+    SecretRequest request = parse(path);
+    return ImmutablePutSecretRequest.builder()
+            .raw(path)
+            .version(request.version())
+            .path(request.path())
+            .value(value)
+            .build();
+  }
 }

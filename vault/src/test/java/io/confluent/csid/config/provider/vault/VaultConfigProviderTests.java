@@ -119,7 +119,7 @@ package io.confluent.csid.config.provider.vault;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.confluent.csid.config.provider.common.AbstractConfigProviderConfig;
+import io.confluent.csid.config.provider.common.*;
 import io.github.jopenlibs.vault.VaultException;
 import io.github.jopenlibs.vault.api.Logical;
 import io.github.jopenlibs.vault.response.LogicalResponse;
@@ -129,6 +129,9 @@ import org.apache.kafka.common.config.ConfigException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.OngoingStubbing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -262,5 +265,128 @@ public class VaultConfigProviderTests {
 //    assertEquals(expected.data().data(), actual.data());
 //  }
 
+  @Test
+  public void createSecretSuccess() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    // Mock successful write response
+    Body responseBody = ImmutableBody.builder()
+            .data(ImmutableData.builder()
+                    .putData("username", "admin")
+                    .build())
+            .build();
+    addLogicalResponse(when(this.vaultClient.write(any())), 200, responseBody);
+
+    // Create request
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .value("admin")
+            .path("secret/test-secret")
+            .raw("secret/test-secret")
+            .build();
+
+    // Should not throw
+    this.configProvider.create(request);
+
+    // Verify write was called
+    verify(this.vaultClient, times(1)).write(any());
+  }
+
+  @Test
+  public void createSecretNotFound() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    // Mock 404 response
+    addLogicalResponse(when(this.vaultClient.write(any())), 404, null);
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .value("admin")
+            .path("secret/test-secret")
+            .raw("secret/test-secret")
+            .build();
+
+    assertThrows(ConfigException.class, () -> {
+      this.configProvider.create(request);
+    });
+  }
+
+  @Test
+  public void updateSecretSuccess() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    // Mock successful write response
+    Body responseBody = ImmutableBody.builder()
+            .data(ImmutableData.builder()
+                    .putData("username", "admin-updated")
+                    .build())
+            .build();
+    addLogicalResponse(when(this.vaultClient.update(any())), 200, responseBody);
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .value("admin-updated")
+            .path("secret/test-secret")
+            .raw("secret/test-secret")
+            .build();
+
+    // Should not throw
+    this.configProvider.update(request);
+
+    // Verify write was called
+    verify(this.vaultClient, times(1)).update(any());
+  }
+
+  @Test
+  public void updateSecretNotFound() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    addLogicalResponse(when(this.vaultClient.update(any())), 404, null);
+
+    PutSecretRequest request = ImmutablePutSecretRequest.builder()
+            .value("admin-updated")
+            .path("secret/nonexistent-secret")
+            .raw("secret/nonexistent-secret")
+            .build();
+
+    assertThrows(ConfigException.class, () -> {
+      this.configProvider.update(request);
+    });
+  }
+
+  @Test
+  public void deleteSecretSuccess() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    // Mock successful delete response (204 No Content)
+    Body responseBody = ImmutableBody.builder()
+            .data(ImmutableData.builder().build())
+            .build();
+    addLogicalResponse(when(this.vaultClient.delete(any())), 204, responseBody);
+
+    SecretRequest request = ImmutableSecretRequest.builder()
+            .path("secret/test-secret")
+            .raw("secret/test-secret")
+            .build();
+
+    // Should not throw
+    this.configProvider.delete(request);
+
+    // Verify delete was called
+    verify(this.vaultClient, times(1)).delete(any());
+  }
+
+  @Test
+  public void deleteSecretNotFound() throws Exception {
+    this.configProvider.configure(this.settings);
+
+    addVaultException(when(this.vaultClient.delete(any())), 404, "secret not found");
+
+    SecretRequest request = ImmutableSecretRequest.builder()
+            .path("secret/nonexistent-secret")
+            .raw("secret/nonexistent-secret")
+            .build();
+
+    assertThrows(VaultException.class, () -> {
+      this.configProvider.delete(request);
+    });
+  }
 
 }

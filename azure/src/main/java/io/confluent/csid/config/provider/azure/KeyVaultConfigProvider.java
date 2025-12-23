@@ -125,6 +125,8 @@ import io.confluent.csid.config.provider.annotations.DocumentationSection;
 import io.confluent.csid.config.provider.annotations.DocumentationSections;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
+import io.confluent.csid.config.provider.common.PutSecretRequest;
+import io.confluent.csid.config.provider.common.SecretWriter;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
@@ -167,7 +169,7 @@ import java.util.Map;
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("keyVault")
-public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> {
+public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> implements SecretWriter {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
   KeyVaultFactory keyVaultFactory = new KeyVaultFactoryImpl();
 
@@ -182,6 +184,7 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
   protected void configure() {
     super.configure();
     this.secretClient = this.keyVaultFactory.create(this.config);
+    setSecretModifier(this);
   }
 
   @Override
@@ -194,5 +197,20 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
   @Override
   public ConfigDef config() {
     return KeyVaultConfigProviderConfig.config();
+  }
+
+  @Override
+  public void create(PutSecretRequest updatedSecret) {
+    secretClient.createSecret(updatedSecret.path(), updatedSecret.value());
+  }
+
+  @Override
+  public void update(PutSecretRequest updatedSecret) {
+    secretClient.updateSecret(updatedSecret.path(), updatedSecret.value());
+  }
+
+  @Override
+  public void delete(SecretRequest secret) {
+    secretClient.deleteSecret(secret.path());
   }
 }

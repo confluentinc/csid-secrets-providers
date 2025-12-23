@@ -130,7 +130,7 @@ class KeyVaultFactoryImpl implements KeyVaultFactory {
           .httpClient(config.httpClient)
           .credential(config.buildCredential());
       final SecretClient secretClient = builder.buildClient();
-      return secretClient::getSecret;
+      return new SecretClientWrapperImpl(secretClient);
     } catch (Exception ex) {
       ConfigException exception = new ConfigException("Exception during configuration");
       exception.initCause(exception);
