@@ -126,7 +126,7 @@ import io.confluent.csid.config.provider.annotations.DocumentationSections;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.PutSecretRequest;
-import io.confluent.csid.config.provider.common.SecretModifier;
+import io.confluent.csid.config.provider.common.SecretWriter;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigDef;
 import org.slf4j.Logger;
@@ -169,7 +169,7 @@ import java.util.Map;
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("keyVault")
-public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> implements SecretModifier {
+public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVaultConfigProviderConfig> implements SecretWriter {
   private static final Logger log = LoggerFactory.getLogger(KeyVaultConfigProvider.class);
   KeyVaultFactory keyVaultFactory = new KeyVaultFactoryImpl();
 
@@ -200,17 +200,17 @@ public class KeyVaultConfigProvider extends AbstractJacksonConfigProvider<KeyVau
   }
 
   @Override
-  public void createSecret(PutSecretRequest putSecretRequest) {
-    secretClient.createSecret(putSecretRequest.key(), putSecretRequest.value());
+  public void create(PutSecretRequest updatedSecret) {
+    secretClient.createSecret(updatedSecret.path(), updatedSecret.value());
   }
 
   @Override
-  public void updateSecret(PutSecretRequest putSecretRequest) {
-    secretClient.updateSecret(putSecretRequest.key(), putSecretRequest.value());
+  public void update(PutSecretRequest updatedSecret) {
+    secretClient.updateSecret(updatedSecret.path(), updatedSecret.value());
   }
 
   @Override
-  public void deleteSecret(SecretRequest secretRequest) {
-    secretClient.deleteSecret(secretRequest.path());
+  public void delete(SecretRequest secret) {
+    secretClient.deleteSecret(secret.path());
   }
 }

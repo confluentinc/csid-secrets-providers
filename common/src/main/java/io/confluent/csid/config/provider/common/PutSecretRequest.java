@@ -8,7 +8,5 @@ import org.immutables.value.Value;
 @Value.Immutable
 public interface PutSecretRequest extends SecretRequest {
 
-  String key();
-
   String value();
 }

@@ -122,7 +122,7 @@ import io.confluent.csid.config.provider.annotations.Description;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractConfigProvider;
 import io.confluent.csid.config.provider.common.RetriableException;
-import io.confluent.csid.config.provider.common.SecretModifier;
+import io.confluent.csid.config.provider.common.SecretWriter;
 import io.confluent.csid.config.provider.common.PutSecretRequest;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import io.github.jopenlibs.vault.VaultException;
@@ -145,7 +145,7 @@ import java.util.stream.Stream;
 @Description("This config provider is used to retrieve secrets from the Hashicorp Vault.")
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("vault")
-public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> implements SecretModifier {
+public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProviderConfig> implements SecretWriter {
   private static final Logger log = LoggerFactory.getLogger(VaultConfigProvider.class);
 
   private static class LogHandler extends java.util.logging.Handler {
@@ -235,21 +235,21 @@ public class VaultConfigProvider extends AbstractConfigProvider<VaultConfigProvi
   }
 
   @Override
-  public void createSecret(PutSecretRequest putSecretRequest) throws Exception {
-    log.info("putSecret() - request = '{}'", putSecretRequest);
-    validateVaultResponse(this.vaultClient.write(putSecretRequest), "Failed to create secret");
+  public void create(PutSecretRequest updatedSecret) throws Exception {
+    log.info("putSecret() - request = '{}'", updatedSecret);
+    validateVaultResponse(this.vaultClient.write(updatedSecret), "Failed to create secret");
   }
 
   @Override
-  public void updateSecret(PutSecretRequest putSecretRequest) throws Exception {
-    log.info("updateSecret() - request = '{}'", putSecretRequest);
-    validateVaultResponse(this.vaultClient.update(putSecretRequest), "Failed to update secret");
+  public void update(PutSecretRequest updatedSecret) throws Exception {
+    log.info("updateSecret() - request = '{}'", updatedSecret);
+    validateVaultResponse(this.vaultClient.update(updatedSecret), "Failed to update secret");
   }
 
   @Override
-  public void deleteSecret(SecretRequest secretRequest) throws Exception {
-    log.info("deleteSecret() - request = '{}'", secretRequest);
-    validateVaultResponse(this.vaultClient.delete(secretRequest), "Failed to delete secret");
+  public void delete(SecretRequest secret) throws Exception {
+    log.info("deleteSecret() - request = '{}'", secret);
+    validateVaultResponse(this.vaultClient.delete(secret), "Failed to delete secret");
   }
 
   /**

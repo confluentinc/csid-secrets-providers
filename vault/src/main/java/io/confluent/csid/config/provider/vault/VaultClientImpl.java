@@ -195,7 +195,7 @@ class VaultClientImpl implements VaultClient {
   public LogicalResponse write(PutSecretRequest putSecretRequest) throws VaultException {
     log.debug("write() - request = '{}'", putSecretRequest);
     Map<String, Object> valueMap = new HashMap<>();
-    valueMap.put(putSecretRequest.key(), putSecretRequest.value());
+    valueMap.put(putSecretRequest.path(), putSecretRequest.value());
     Vault vault = this.vaultStore.get();
     return vault.logical().write(putSecretRequest.path(), valueMap);
   }
@@ -204,7 +204,7 @@ class VaultClientImpl implements VaultClient {
   public LogicalResponse update(PutSecretRequest putSecretRequest) throws VaultException {
     log.debug("update() - request = '{}'", putSecretRequest);
     Map<String, Object> valueMap = new HashMap<>();
-    valueMap.put(putSecretRequest.key(), putSecretRequest.value());
+    valueMap.put(putSecretRequest.path(), putSecretRequest.value());
     Vault vault = this.vaultStore.get();
     if (isV2Engine) {
       Long version = getVersion(putSecretRequest, vault);

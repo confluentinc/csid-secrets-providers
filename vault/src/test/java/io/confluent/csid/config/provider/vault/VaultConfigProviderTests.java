@@ -279,14 +279,13 @@ public class VaultConfigProviderTests {
 
     // Create request
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("username")
             .value("admin")
             .path("secret/test-secret")
             .raw("secret/test-secret")
             .build();
 
     // Should not throw
-    this.configProvider.createSecret(request);
+    this.configProvider.create(request);
 
     // Verify write was called
     verify(this.vaultClient, times(1)).write(any());
@@ -300,14 +299,13 @@ public class VaultConfigProviderTests {
     addLogicalResponse(when(this.vaultClient.write(any())), 404, null);
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("username")
             .value("admin")
             .path("secret/test-secret")
             .raw("secret/test-secret")
             .build();
 
     assertThrows(ConfigException.class, () -> {
-      this.configProvider.createSecret(request);
+      this.configProvider.create(request);
     });
   }
 
@@ -324,14 +322,13 @@ public class VaultConfigProviderTests {
     addLogicalResponse(when(this.vaultClient.update(any())), 200, responseBody);
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("username")
             .value("admin-updated")
             .path("secret/test-secret")
             .raw("secret/test-secret")
             .build();
 
     // Should not throw
-    this.configProvider.updateSecret(request);
+    this.configProvider.update(request);
 
     // Verify write was called
     verify(this.vaultClient, times(1)).update(any());
@@ -344,14 +341,13 @@ public class VaultConfigProviderTests {
     addLogicalResponse(when(this.vaultClient.update(any())), 404, null);
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("username")
             .value("admin-updated")
             .path("secret/nonexistent-secret")
             .raw("secret/nonexistent-secret")
             .build();
 
     assertThrows(ConfigException.class, () -> {
-      this.configProvider.updateSecret(request);
+      this.configProvider.update(request);
     });
   }
 
@@ -371,7 +367,7 @@ public class VaultConfigProviderTests {
             .build();
 
     // Should not throw
-    this.configProvider.deleteSecret(request);
+    this.configProvider.delete(request);
 
     // Verify delete was called
     verify(this.vaultClient, times(1)).delete(any());
@@ -389,7 +385,7 @@ public class VaultConfigProviderTests {
             .build();
 
     assertThrows(VaultException.class, () -> {
-      this.configProvider.deleteSecret(request);
+      this.configProvider.delete(request);
     });
   }
 

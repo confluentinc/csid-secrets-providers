@@ -41,7 +41,7 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   ScheduledExecutorServiceFactory executorServiceFactory = config -> Executors.newScheduledThreadPool(config.threadCount);
   Map<String, Subscription> subscriptions;
   ConfigDataHasher configDataHasher;
-  private SecretModifier secretModifier;
+  private SecretWriter secretWriter;
 
   /**
    * Method is used to load the config.
@@ -56,8 +56,8 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
    */
   protected abstract void configure();
 
-  protected void setSecretModifier(SecretModifier secretModifier) {
-    this.secretModifier = secretModifier;
+  protected void setSecretModifier(SecretWriter secretWriter) {
+    this.secretWriter = secretWriter;
   }
 
   /**
@@ -181,10 +181,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void createSecret(String path, String value) {
-    if (secretModifier != null) {
+    if (secretWriter != null) {
       PutSecretRequest request = parseModifyRequest(path, value);
       try {
-        secretModifier.createSecret(request);
+        secretWriter.create(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not create secret for request '%s'", request), e);
       }
@@ -195,10 +195,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void updateSecret(String path, String value) {
-    if (secretModifier != null) {
+    if (secretWriter != null) {
       PutSecretRequest request = parseModifyRequest(path, value);
       try {
-        secretModifier.updateSecret(request);
+        secretWriter.update(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not update secret for request '%s'", request), e);
       }
@@ -208,10 +208,10 @@ public abstract class AbstractConfigProvider<CONFIG extends AbstractConfigProvid
   }
 
   public void deleteSecret(String path) {
-    if (secretModifier != null) {
+    if (secretWriter != null) {
       SecretRequest request = parse(path);
       try {
-        secretModifier.deleteSecret(request);
+        secretWriter.delete(request);
       } catch (Exception e) {
         throw new ConfigException(String.format("Could not delete secret for request '%s'", request), e);
       }

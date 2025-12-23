@@ -45,7 +45,6 @@ class SecretRequestParser {
             .version(request.version())
             .path(request.path())
             .value(value)
-            .key(path)
             .build();
   }
 }

@@ -257,14 +257,13 @@ public class SecretsManagerConfigProviderTest {
     });
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(secretValue)
             .path(secretName)
             .raw(secretName)
             .build();
 
     // Should not throw
-    this.provider.createSecret(request);
+    this.provider.create(request);
 
     // Verify createSecret was called
     verify(secretsManager, times(1)).createSecret(any(CreateSecretRequest.class));
@@ -289,14 +288,13 @@ public class SecretsManagerConfigProviderTest {
     });
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(newValue)
             .path(secretName)
             .raw(secretName)
             .build();
 
     // Should not throw
-    this.provider.updateSecret(request);
+    this.provider.update(request);
 
     // Verify putSecretValue was called
     verify(secretsManager, times(1)).putSecretValue(any(PutSecretValueRequest.class));
@@ -323,7 +321,7 @@ public class SecretsManagerConfigProviderTest {
             .build();
 
     // Should not throw
-    this.provider.deleteSecret(request);
+    this.provider.delete(request);
 
     // Verify deleteSecret was called
     verify(secretsManager, times(1)).deleteSecret(any(DeleteSecretRequest.class));

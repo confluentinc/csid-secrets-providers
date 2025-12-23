@@ -125,7 +125,7 @@ import io.confluent.csid.config.provider.annotations.DocumentationSections;
 import io.confluent.csid.config.provider.annotations.DocumentationTip;
 import io.confluent.csid.config.provider.common.AbstractJacksonConfigProvider;
 import io.confluent.csid.config.provider.common.PutSecretRequest;
-import io.confluent.csid.config.provider.common.SecretModifier;
+import io.confluent.csid.config.provider.common.SecretWriter;
 import io.confluent.csid.config.provider.common.SecretRequest;
 import org.apache.kafka.common.config.ConfigDef;
 import org.apache.kafka.common.config.ConfigException;
@@ -167,7 +167,7 @@ import java.util.Map;
 )
 @DocumentationTip("Config providers can be used with anything that supports the AbstractConfig base class that is shipped with Apache Kafka.")
 @ConfigProviderKey("secretsManager")
-public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> implements SecretModifier {
+public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<SecretsManagerConfigProviderConfig> implements SecretWriter {
   private static final Logger log = LoggerFactory.getLogger(SecretsManagerConfigProvider.class);
   SecretsManagerFactory secretsManagerFactory = new SecretsManagerFactoryImpl();
   SecretsManagerClient secretsManager;
@@ -205,9 +205,9 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
   }
 
   @Override
-  public void createSecret(PutSecretRequest putSecretRequest) {
+  public void create(PutSecretRequest putSecretRequest) {
     CreateSecretRequest.Builder builder = CreateSecretRequest.builder();
-    builder.name(putSecretRequest.key()).secretString(putSecretRequest.value());
+    builder.name(putSecretRequest.path()).secretString(putSecretRequest.value());
     CreateSecretRequest request = builder.build();
     log.trace("putSecret() - request = {}", request);
     CreateSecretResponse result = this.secretsManager.createSecret(request);
@@ -215,9 +215,9 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
   }
 
   @Override
-  public void updateSecret(PutSecretRequest putSecretRequest) {
+  public void update(PutSecretRequest putSecretRequest) {
     PutSecretValueRequest.Builder builder = PutSecretValueRequest.builder();
-    builder.secretId(putSecretRequest.key()).secretString(putSecretRequest.value());
+    builder.secretId(putSecretRequest.path()).secretString(putSecretRequest.value());
     PutSecretValueRequest request = builder.build();
     log.trace("updateSecret() - request = {}", request);
     PutSecretValueResponse result = this.secretsManager.putSecretValue(request);
@@ -225,7 +225,7 @@ public class SecretsManagerConfigProvider extends AbstractJacksonConfigProvider<
   }
 
   @Override
-  public void deleteSecret(SecretRequest secretRequest) {
+  public void delete(SecretRequest secretRequest) {
     DeleteSecretRequest.Builder builder = DeleteSecretRequest.builder();
     builder.secretId(secretRequest.path());
     DeleteSecretRequest request = builder.build();

@@ -299,14 +299,13 @@ public class KeyVaultConfigProviderTest {
     doNothing().when(this.secretClientWrapper).createSecret(any(), any());
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("new-secret")
             .value("{\"username\":\"admin\",\"password\":\"secret123\"}")
             .path("new-secret")
             .raw("new-secret")
             .build();
 
     // Should not throw
-    this.provider.createSecret(request);
+    this.provider.create(request);
 
     // Verify createSecret was called with correct arguments
     verify(this.secretClientWrapper, times(1)).createSecret("new-secret", "{\"username\":\"admin\",\"password\":\"secret123\"}");
@@ -318,14 +317,13 @@ public class KeyVaultConfigProviderTest {
     doNothing().when(this.secretClientWrapper).createSecret(any(), any());
 
     PutSecretRequest request = ImmutablePutSecretRequest.builder()
-            .key("existing-secret")
             .value("{\"username\":\"admin\",\"password\":\"newPassword\"}")
             .path("existing-secret")
             .raw("existing-secret")
             .build();
 
     // Should not throw
-    this.provider.updateSecret(request);
+    this.provider.update(request);
 
     // Verify createSecret was called (Azure uses setSecret for both create and update)
     verify(this.secretClientWrapper, times(1)).updateSecret("existing-secret", "{\"username\":\"admin\",\"password\":\"newPassword\"}");
@@ -341,7 +339,7 @@ public class KeyVaultConfigProviderTest {
             .build();
 
     // Should not throw
-    this.provider.deleteSecret(request);
+    this.provider.delete(request);
 
     // Verify deleteSecret was called with correct path
     verify(this.secretClientWrapper, times(1)).deleteSecret("secret-to-delete");

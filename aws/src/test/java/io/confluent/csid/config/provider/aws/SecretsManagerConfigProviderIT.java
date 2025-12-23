@@ -313,14 +313,13 @@ public class SecretsManagerConfigProviderIT {
     final String secretJson = "{\n  \"username\": \"created-user\",\n  \"password\": \"created-pass\"\n}";
 
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(secretJson)
             .path(secretName)
             .raw(secretName)
             .build();
 
     // Create using provider
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Verify by reading back
     Map<String, String> expected = ImmutableMap.of(
@@ -343,14 +342,13 @@ public class SecretsManagerConfigProviderIT {
     final String secretValue = "plain-secret-value-12345";
 
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(secretValue)
             .path(secretName)
             .raw(secretName)
             .build();
 
     // Create using provider
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Verify by reading back
     Map<String, String> expected = ImmutableMap.of(secretName, secretValue);
@@ -375,13 +373,12 @@ public class SecretsManagerConfigProviderIT {
             "}";
 
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(secretJson)
             .path(secretName)
             .raw(secretName)
             .build();
 
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Verify
     Map<String, String> expected = ImmutableMap.of(
@@ -408,12 +405,11 @@ public class SecretsManagerConfigProviderIT {
 
     // First create the secret
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(originalJson)
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Verify original value
     Map<String, String> originalExpected = ImmutableMap.of(
@@ -425,12 +421,11 @@ public class SecretsManagerConfigProviderIT {
 
     // Now update the secret
     PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(updatedJson)
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.updateSecret(updateRequest);
+    provider.update(updateRequest);
 
     // Verify updated value
     Map<String, String> updatedExpected = ImmutableMap.of(
@@ -453,22 +448,20 @@ public class SecretsManagerConfigProviderIT {
 
     // Create initial secret
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value("{\"version\": \"1\"}")
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Update multiple times
     for (int i = 2; i <= 5; i++) {
       PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
-              .key(secretName)
               .value("{\"version\": \"" + i + "\"}")
               .path(secretName)
               .raw(secretName)
               .build();
-      provider.updateSecret(updateRequest);
+      provider.update(updateRequest);
     }
 
     // Verify final value
@@ -490,21 +483,19 @@ public class SecretsManagerConfigProviderIT {
 
     // Create
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(originalJson)
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Update with more fields
     PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(updatedJson)
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.updateSecret(updateRequest);
+    provider.update(updateRequest);
 
     // Verify
     Map<String, String> expected = ImmutableMap.of(
@@ -528,12 +519,11 @@ public class SecretsManagerConfigProviderIT {
 
     // Create secret first
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value(secretJson)
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     // Verify it exists
     ConfigData beforeDelete = provider.get(secretName, ImmutableSet.of());
@@ -544,7 +534,7 @@ public class SecretsManagerConfigProviderIT {
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.deleteSecret(deleteRequest);
+    provider.delete(deleteRequest);
 
     // Verify it's deleted (should throw exception)
     assertThrows(ConfigException.class, () -> {
@@ -565,7 +555,7 @@ public class SecretsManagerConfigProviderIT {
 
     // Deleting non-existent secret should throw ResourceNotFoundException
     assertThrows(ResourceNotFoundException.class, () -> {
-      provider.deleteSecret(deleteRequest);
+      provider.delete(deleteRequest);
     });
   }
 
@@ -577,24 +567,22 @@ public class SecretsManagerConfigProviderIT {
 
     // 1. CREATE
     PutSecretRequest createRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value("{\"step\": \"created\"}")
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.createSecret(createRequest);
+    provider.create(createRequest);
 
     ConfigData afterCreate = provider.get(secretName, ImmutableSet.of());
     assertEquals("created", afterCreate.data().get("step"));
 
     // 2. UPDATE
     PutSecretRequest updateRequest = ImmutablePutSecretRequest.builder()
-            .key(secretName)
             .value("{\"step\": \"updated\"}")
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.updateSecret(updateRequest);
+    provider.update(updateRequest);
 
     ConfigData afterUpdate = provider.get(secretName, ImmutableSet.of());
     assertEquals("updated", afterUpdate.data().get("step"));
@@ -604,7 +592,7 @@ public class SecretsManagerConfigProviderIT {
             .path(secretName)
             .raw(secretName)
             .build();
-    provider.deleteSecret(deleteRequest);
+    provider.delete(deleteRequest);
 
     // 4. VERIFY DELETED
     assertThrows(ConfigException.class, () -> {
@@ -619,8 +607,7 @@ public class SecretsManagerConfigProviderIT {
     final String secretName = "it-crud-" + System.currentTimeMillis();
 
     // CREATE
-    provider.createSecret(ImmutablePutSecretRequest.builder()
-            .key(secretName)
+    provider.create(ImmutablePutSecretRequest.builder()
             .value("{\"username\": \"user1\", \"password\": \"pass1\"}")
             .path(secretName)
             .raw(secretName)
@@ -632,8 +619,7 @@ public class SecretsManagerConfigProviderIT {
     assertEquals("pass1", read1.data().get("password"));
 
     // UPDATE
-    provider.updateSecret(ImmutablePutSecretRequest.builder()
-            .key(secretName)
+    provider.update(ImmutablePutSecretRequest.builder()
             .value("{\"username\": \"user2\", \"password\": \"pass2\"}")
             .path(secretName)
             .raw(secretName)
@@ -645,7 +631,7 @@ public class SecretsManagerConfigProviderIT {
     assertEquals("pass2", read2.data().get("password"));
 
     // DELETE
-    provider.deleteSecret(ImmutableSecretRequest.builder()
+    provider.delete(ImmutableSecretRequest.builder()
             .path(secretName)
             .raw(secretName)
             .build());
