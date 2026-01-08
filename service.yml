@@ -1,6 +1,6 @@
 name: csid-secrets-providers
 lang: java
-lang_version: 17
+lang_version: "17"
 git:
   enable: true
 semaphore:
