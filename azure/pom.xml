@@ -130,7 +130,7 @@
     </parent>
     <description>Secrets Provider for Azure Key Vault</description>
     <properties>
-        <azure-sdk.version>1.2.31</azure-sdk.version>
+        <azure-sdk.version>1.2.38</azure-sdk.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -146,7 +146,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-codec-http2</artifactId>
-                <version>4.1.125.Final</version>
+                <version>4.1.129.Final</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
