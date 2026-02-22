@@ -15,3 +15,8 @@ semaphore:
     - name: Publish to Maven Central
       branch: main
       pipeline_file: ".semaphore/publish_to_mavencentral.yml"
+  managed_sections:
+    - version
+    - name
+    - agent
+    - global_job_config
