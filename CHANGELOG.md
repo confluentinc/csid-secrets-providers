@@ -10,6 +10,92 @@
 
 - **AWS Secrets Manager**: Deprecated `secret.ttl.ms` configuration option. This configuration is no longer used and will be removed in a future release. A deprecation warning will be logged when this configuration is used.
 
+## Security [2026-03-12] — Trivy CVE Scan
+
+### Vulnerabilities Identified
+
+#### Maven (1 CVE - HIGH)
+
+- **GHSA-72hv-8253-57qq** (HIGH)
+  - Package: `com.fasterxml.jackson.core:jackson-core`
+  - Current Version: 2.18.2
+  - Fixed Version: 2.18.6
+  - Affected Files: pom.xml, aws/pom.xml, azure/pom.xml, common-testing/pom.xml, gcloud/pom.xml
+
+#### NPM (8 CVEs - 4 HIGH, 1 MEDIUM, 3 LOW)
+
+- **CVE-2026-22774** (HIGH)
+  - Package: `devalue`
+  - Current Version: 5.5.0
+  - Fixed Version: 5.6.2
+  - Affected File: astrodocs/package-lock.json
+
+- **CVE-2026-22775** (HIGH)
+  - Package: `devalue`
+  - Current Version: 5.5.0
+  - Fixed Version: 5.6.2
+  - Affected File: astrodocs/package-lock.json
+
+- **CVE-2026-23527** (HIGH)
+  - Package: `h3`
+  - Current Version: 1.15.4
+  - Fixed Version: 1.15.5
+  - Affected File: astrodocs/package-lock.json
+
+- **CVE-2026-27606** (HIGH)
+  - Package: `rollup`
+  - Current Version: 4.39.0
+  - Fixed Version: 4.59.0
+  - Affected File: astrodocs/package-lock.json
+
+- **CVE-2025-66400** (MEDIUM)
+  - Package: `mdast-util-to-hast`
+  - Current Version: 13.2.0
+  - Fixed Version: 13.2.1
+  - Affected File: astrodocs/package-lock.json
+
+- **GHSA-33hq-fvwr-56pm** (LOW)
+  - Package: `devalue`
+  - Current Version: 5.5.0
+  - Fixed Version: 5.6.3
+  - Affected File: astrodocs/package-lock.json
+
+- **GHSA-8qm3-746x-r74r** (LOW)
+  - Package: `devalue`
+  - Current Version: 5.5.0
+  - Fixed Version: 5.6.3
+  - Affected File: astrodocs/package-lock.json
+
+- **CVE-2026-24001** (LOW)
+  - Package: `diff`
+  - Current Version: 5.2.0
+  - Fixed Version: 5.2.2
+  - Affected File: astrodocs/package-lock.json
+
+### Remediation Actions
+
+- Updated `jackson.version` from 2.18.2 to 2.18.6 in root pom.xml
+- Ran `npm audit fix` in astrodocs/ directory to automatically update vulnerable NPM packages
+
+### Verification
+
+Post-fix Trivy scan confirmed all vulnerabilities have been successfully remediated:
+
+- **Maven:** 1 resolved, 0 unresolved, 0 no fix available
+  - ✅ GHSA-72hv-8253-57qq (jackson-core 2.18.2 → 2.18.6)
+
+- **NPM:** 8 resolved, 0 unresolved, 0 no fix available
+  - ✅ CVE-2026-22774 (devalue)
+  - ✅ CVE-2026-22775 (devalue)
+  - ✅ CVE-2026-23527 (h3)
+  - ✅ CVE-2026-27606 (rollup)
+  - ✅ CVE-2025-66400 (mdast-util-to-hast)
+  - ✅ GHSA-33hq-fvwr-56pm (devalue)
+  - ✅ GHSA-8qm3-746x-r74r (devalue)
+  - ✅ CVE-2026-24001 (diff)
+
+**Total:** 9 of 9 CVEs resolved (100%)
+
 ## [1.0.10](https://github.com/confluentinc/csid-secrets-providers/releases/tag/csid-secrets-providers-1.0.10)
 
 ### Features and Fixes
