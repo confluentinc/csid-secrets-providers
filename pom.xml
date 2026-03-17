@@ -184,6 +184,7 @@
     <module>gcloud</module>
     <module>k8s</module>
     <module>vault</module>
+    <module>cyberark</module>
   </modules>
   <licenses>
     <license>
