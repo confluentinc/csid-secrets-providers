@@ -28,6 +28,12 @@
             <artifactId>csid-secrets-provider-common-testing</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.confluent.csid</groupId>
             <artifactId>csid-secrets-provider-annotations</artifactId>
         </dependency>
