@@ -27,8 +27,6 @@ blocks:
           - checkout
           - . vault-setup
           - make docker-login-ci
-          - . vault-get-secret --vault-role=default -secret-key=SONATYPE_TOKEN_USERNAME --export-as=CENTRAL_TOKEN_USERNAME sonatype
-          - . vault-get-secret --vault-role=default -secret-key=SONATYPE_TOKEN_PASSWORD --export-as=CENTRAL_TOKEN_PASSWORD sonatype
       jobs:
         - name: Build without Tests
           commands:
