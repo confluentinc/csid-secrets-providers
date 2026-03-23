@@ -32,8 +32,9 @@ class CyberArkClientImpl implements CyberArkClient {
     String authnUri = authnUrl + "/" + config.account;
     String secretsUri = config.url + "/secrets/" + config.account + "/variable";
     Endpoints endpoints = new Endpoints(authnUri, secretsUri);
-    if (!config.sslVerifyEnabled) {
-      log.warn("SSL verification is disabled. This should only be used in development/test environments.");
+    if (!config.sslVerifyEnabled && config.url.startsWith("https")) {
+      log.warn("SSL verification is disabled. "
+          + "This should only be used in development/test environments.");
       SSLContext sslContext = createTrustAllSslContext();
       this.resourceClient = new ResourceClient(credentials, endpoints, sslContext);
     } else {
