@@ -14,6 +14,7 @@ In some cases, this can be used to store symmetric keys and asymmetric (public/p
 * [Google Secret Manager](gcloud)
 * [Microsoft Azure Key Vault](azure)
 * [Kubernetes Secrets](k8s)
+* [CyberArk Conjur](cyberark)
 * [File System](common)
 
 # Implementation
@@ -66,7 +67,8 @@ confluent-hub install confluentinc/csid-secrets-provider-aws:latest
 | csid-secrets-provider-azure-{version}.jar  | Azure KeyVault library for secrets management  |
 | csid-secrets-provider-gcloud-{version}.jar | Google Cloud library for secrets management    |
 | csid-secrets-provider-k8s-{version}.jar    | Kubernetes library for secrets management      |
-| csid-secrets-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management |
+| csid-secrets-provider-vault-{version}.jar  | Hashicorp Vault library for secrets management   |
+| csid-secrets-provider-cyberark-{version}.jar | CyberArk Conjur library for secrets management |
 
 ## Releasing
 
