@@ -147,7 +147,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-codec-http2</artifactId>
-                <version>4.1.125.Final</version>
+                <version>4.1.132.Final</version>
             </dependency>
             <!-- Ensure all Netty modules are aligned to 4.1.125.Final for consistency -->
             <dependency>
