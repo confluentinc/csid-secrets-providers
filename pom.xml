@@ -341,7 +341,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-codec-compression</artifactId>
-        <version>4.2.5.Final</version>
+        <version>4.2.13.Final</version>
       </dependency>
       <!-- CVE-2025-55163: Upgraded gRPC Netty shaded transport to 1.75.0 -->
       <dependency>
