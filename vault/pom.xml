@@ -130,7 +130,7 @@
     </parent>
     <description>Secrets Provider for Hashicorp Vault</description>
     <properties>
-        <vault-java-driver.version>6.2.0</vault-java-driver.version>
+        <vault-java-driver.version>6.2.1</vault-java-driver.version>
     </properties>
     <dependencies>
         <dependency>
@@ -196,7 +196,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

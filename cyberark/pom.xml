@@ -11,7 +11,7 @@
     </parent>
     <description>Secrets Provider for CyberArk Conjur</description>
     <properties>
-        <conjur-api.version>3.1.2</conjur-api.version>
+        <conjur-api.version>3.2.0</conjur-api.version>
     </properties>
     <dependencies>
         <dependency>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.0.0</version>
+            <version>5.23.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -61,7 +61,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>

@@ -143,31 +143,31 @@
   </developers>
   <properties>
     <license.path>${project.basedir}/LICENSE</license.path>
-    <confluent.hub.packaging.version>0.12.0</confluent.hub.packaging.version>
+    <confluent.hub.packaging.version>0.13.1</confluent.hub.packaging.version>
     <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
-    <guava.version>33.5.0-jre</guava.version>
-    <immutables.version>2.10.1</immutables.version>
-    <jackson.version>2.18.2</jackson.version>
-    <junit.version>5.13.0</junit.version>
+    <guava.version>33.6.0-jre</guava.version>
+    <immutables.version>2.12.2</immutables.version>
+    <jackson.version>2.21.3</jackson.version>
+    <junit.version>5.14.4</junit.version>
     <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
     <kafka-clients.version>4.1.0</kafka-clients.version>
-    <logback.version>1.5.18</logback.version>
+    <logback.version>1.5.32</logback.version>
     <maven.checkstyle.version>3.6.0</maven.checkstyle.version>
-    <maven.release.version>3.1.1</maven.release.version>
-    <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
+    <maven.release.version>3.3.1</maven.release.version>
+    <maven.compiler.plugin.version>3.15.0</maven.compiler.plugin.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.site.plugin.version>3.21.0</maven.site.plugin.version>
+    <maven.site.plugin.version>3.22.0</maven.site.plugin.version>
     <maven-s3-wagon.version>1.3.3</maven-s3-wagon.version>
-    <failsafe.version>3.5.4</failsafe.version>
-    <surefire.version>3.5.4</surefire.version>
-    <mockito.version>5.0.0</mockito.version>
+    <failsafe.version>3.5.5</failsafe.version>
+    <surefire.version>3.5.5</surefire.version>
+    <mockito.version>5.23.0</mockito.version>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <slf4j.version>2.0.17</slf4j.version>
-    <testcontainers.version>1.21.1</testcontainers.version>
+    <slf4j.version>2.0.18</slf4j.version>
+    <testcontainers.version>1.21.4</testcontainers.version>
     <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
-    <netty.version>4.2.2.Final</netty.version>
-    <json-smart.version>2.5.2</json-smart.version>
+    <netty.version>4.2.14.Final</netty.version>
+    <json-smart.version>2.6.0</json-smart.version>
   </properties>
   <scm>
     <connection>scm:git:git://github.com:confluentinc/csid-secrets-providers.git</connection>
@@ -214,7 +214,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -258,7 +258,7 @@
             <plugin>
               <groupId>org.sonatype.central</groupId>
               <artifactId>central-publishing-maven-plugin</artifactId>
-              <version>0.8.0</version>
+              <version>0.10.0</version>
               <extensions>true</extensions>
               <configuration>
                 <publishingServerId>central</publishingServerId>
@@ -347,7 +347,7 @@
       <dependency>
         <groupId>io.grpc</groupId>
         <artifactId>grpc-netty-shaded</artifactId>
-        <version>1.75.0</version>
+        <version>1.81.0</version>
       </dependency>
       <dependency>
         <groupId>net.minidev</groupId>

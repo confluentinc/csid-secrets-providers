@@ -130,8 +130,8 @@
     </parent>
     <description>Secrets Provider for Amazon Secrets Manager</description>
     <properties>
-        <aws-java-sdk.version>2.30.11</aws-java-sdk.version>
-        <system-stubs-jupiter.version>2.1.7</system-stubs-jupiter.version>
+        <aws-java-sdk.version>2.44.12</aws-java-sdk.version>
+        <system-stubs-jupiter.version>2.1.8</system-stubs-jupiter.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -163,32 +163,32 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-transport</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-buffer</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-transport-classes-epoll</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-resolver</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-common</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.14.Final</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -268,7 +268,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
