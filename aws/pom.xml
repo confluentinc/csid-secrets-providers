@@ -173,7 +173,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler</artifactId>
-                <version>4.1.124.Final</version>
+                <version>4.2.15.Final</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
