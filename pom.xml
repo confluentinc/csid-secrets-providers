@@ -158,7 +158,6 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.site.plugin.version>3.21.0</maven.site.plugin.version>
-    <maven-s3-wagon.version>1.3.3</maven-s3-wagon.version>
     <failsafe.version>3.5.4</failsafe.version>
     <surefire.version>3.5.4</surefire.version>
     <mockito.version>5.0.0</mockito.version>
@@ -194,19 +193,6 @@
     </license>
   </licenses>
   <profiles>
-    <profile>
-      <id>publish-to-s3</id>
-      <distributionManagement>
-        <repository>
-          <id>confluent-csid-repo</id>
-          <url>s3://confluent-csid-maven/releases</url>
-        </repository>
-        <snapshotRepository>
-          <id>confluent-csid-repo</id>
-          <url>s3://confluent-csid-maven/snapshots</url>
-        </snapshotRepository>
-      </distributionManagement>
-    </profile>
     <profile>
       <id>publish-to-central</id>
       <build>
@@ -459,13 +445,6 @@
     </dependency>
   </dependencies>
   <build>
-    <extensions>
-      <extension>
-        <groupId>com.github.seahen</groupId>
-        <artifactId>maven-s3-wagon</artifactId>
-        <version>${maven-s3-wagon.version}</version>
-      </extension>
-    </extensions>
     <pluginManagement>
       <plugins>
         <plugin>
