@@ -196,6 +196,20 @@
   <profiles>
     <profile>
       <id>publish-to-s3</id>
+      <!-- The maven-s3-wagon extension is only needed when publishing to S3, so it
+           lives here rather than in the top-level build: it pulls in EOL log4j 1.2.17
+           (removed from the CodeArtifact mirror), which would otherwise break every
+           normal build. Scoping it to this profile keeps the S3 release path working
+           while unblocking regular builds. -->
+      <build>
+        <extensions>
+          <extension>
+            <groupId>com.github.seahen</groupId>
+            <artifactId>maven-s3-wagon</artifactId>
+            <version>${maven-s3-wagon.version}</version>
+          </extension>
+        </extensions>
+      </build>
       <distributionManagement>
         <repository>
           <id>confluent-csid-repo</id>
@@ -459,13 +473,6 @@
     </dependency>
   </dependencies>
   <build>
-    <extensions>
-      <extension>
-        <groupId>com.github.seahen</groupId>
-        <artifactId>maven-s3-wagon</artifactId>
-        <version>${maven-s3-wagon.version}</version>
-      </extension>
-    </extensions>
     <pluginManagement>
       <plugins>
         <plugin>
