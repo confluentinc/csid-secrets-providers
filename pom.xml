@@ -147,7 +147,7 @@
     <connect-utils.version>[0.7.166,0.7.2000)</connect-utils.version>
     <guava.version>33.5.0-jre</guava.version>
     <immutables.version>2.10.1</immutables.version>
-    <jackson.version>2.18.2</jackson.version>
+    <jackson.version>2.18.8</jackson.version>
     <junit.version>5.13.0</junit.version>
     <kafka-connect-style.version>[1.1.0,1.1.1000)</kafka-connect-style.version>
     <kafka-clients.version>4.1.0</kafka-clients.version>
@@ -166,7 +166,7 @@
     <slf4j.version>2.0.17</slf4j.version>
     <testcontainers.version>1.21.1</testcontainers.version>
     <documentationUrl>https://confluentinc.github.io/csid-secrets-providers/guides/plugins</documentationUrl>
-    <netty.version>4.2.2.Final</netty.version>
+    <netty.version>4.2.17.Final</netty.version>
     <json-smart.version>2.5.2</json-smart.version>
   </properties>
   <scm>
@@ -196,6 +196,20 @@
   <profiles>
     <profile>
       <id>publish-to-s3</id>
+      <!-- The maven-s3-wagon extension is only needed when publishing to S3, so it
+           lives here rather than in the top-level build: it pulls in EOL log4j 1.2.17
+           (removed from the CodeArtifact mirror), which would otherwise break every
+           normal build. Scoping it to this profile keeps the S3 release path working
+           while unblocking regular builds. -->
+      <build>
+        <extensions>
+          <extension>
+            <groupId>com.github.seahen</groupId>
+            <artifactId>maven-s3-wagon</artifactId>
+            <version>${maven-s3-wagon.version}</version>
+          </extension>
+        </extensions>
+      </build>
       <distributionManagement>
         <repository>
           <id>confluent-csid-repo</id>
@@ -318,30 +332,60 @@
         <artifactId>netty-handler</artifactId>
         <version>${netty.version}</version>
       </dependency>
-      <!-- CVE-2025-55163: Upgraded Netty HTTP/2 codec to 4.1.125.Final -->
-      <!-- CVE-2025-58057: Upgraded Netty codec dependencies to 4.1.125.Final -->
+      <!-- Force all netty modules to ${netty.version}, including the DNS/resolver and
+           proxy modules pulled in transitively by the Azure SDK, to remediate the 2026
+           netty advisories: DNS cache poisoning (CVE-2026-45674/-47691, CVE-2026-42579),
+           HTTP request smuggling / response desync (CVE-2026-42581 and related), and
+           TLS hostname verification bypass (CVE-2026-50010). -->
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-codec-http2</artifactId>
-        <version>4.1.132.Final</version>
+        <version>${netty.version}</version>
       </dependency>
-      <!-- CVE-2025-58057: Force netty-codec to fixed version for transitive dependencies -->
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-codec</artifactId>
-        <version>4.1.125.Final</version>
+        <version>${netty.version}</version>
       </dependency>
-      <!-- CVE-2025-58057: Force netty-codec-http to fixed version for transitive dependencies -->
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-codec-http</artifactId>
-        <version>4.1.132.Final</version>
+        <version>${netty.version}</version>
       </dependency>
-      <!-- CVE-2025-58057: Force netty-codec-compression to fixed version (4.2.5.Final) -->
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-codec-compression</artifactId>
-        <version>4.2.5.Final</version>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-codec-dns</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver-dns</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-handler-proxy</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-buffer</artifactId>
+        <version>${netty.version}</version>
       </dependency>
       <!-- CVE-2025-55163: Upgraded gRPC Netty shaded transport to 1.75.0 -->
       <dependency>
@@ -429,13 +473,6 @@
     </dependency>
   </dependencies>
   <build>
-    <extensions>
-      <extension>
-        <groupId>com.github.seahen</groupId>
-        <artifactId>maven-s3-wagon</artifactId>
-        <version>${maven-s3-wagon.version}</version>
-      </extension>
-    </extensions>
     <pluginManagement>
       <plugins>
         <plugin>
