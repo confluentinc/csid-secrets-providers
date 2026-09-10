@@ -372,6 +372,45 @@
         <artifactId>netty-buffer</artifactId>
         <version>${netty.version}</version>
       </dependency>
+      <!-- Pin the remaining netty transport/resolver native + classes modules to
+           ${netty.version} too. They were floating in transitively at 4.1.x, which
+           leaves stale netty jars in the plugin package that dependency scanners flag
+           against the netty CVE family even though the vulnerable core modules are fixed. -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-epoll</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-kqueue</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-unix-common</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-classes-epoll</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-classes-kqueue</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver-dns-classes-macos</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver-dns-native-macos</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
       <!-- CVE-2025-55163: Upgraded gRPC Netty shaded transport to 1.75.0 -->
       <dependency>
         <groupId>io.grpc</groupId>
