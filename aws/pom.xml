@@ -130,7 +130,7 @@
     </parent>
     <description>Secrets Provider for Amazon Secrets Manager</description>
     <properties>
-        <aws-java-sdk.version>2.30.11</aws-java-sdk.version>
+        <aws-java-sdk.version>2.54.16</aws-java-sdk.version>
         <system-stubs-jupiter.version>2.1.7</system-stubs-jupiter.version>
     </properties>
     <dependencyManagement>
