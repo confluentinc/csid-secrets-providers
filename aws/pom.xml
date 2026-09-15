@@ -130,8 +130,8 @@
     </parent>
     <description>Secrets Provider for Amazon Secrets Manager</description>
     <properties>
-        <aws-java-sdk.version>2.30.11</aws-java-sdk.version>
-        <system-stubs-jupiter.version>2.1.7</system-stubs-jupiter.version>
+        <aws-java-sdk.version>2.54.13</aws-java-sdk.version>
+        <system-stubs-jupiter.version>2.1.8</system-stubs-jupiter.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -294,7 +294,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
