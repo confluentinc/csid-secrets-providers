@@ -11,7 +11,7 @@
     </parent>
     <description>Secrets Provider for CyberArk Conjur</description>
     <properties>
-        <conjur-api.version>3.1.2</conjur-api.version>
+        <conjur-api.version>3.3.0</conjur-api.version>
     </properties>
     <dependencies>
         <dependency>
