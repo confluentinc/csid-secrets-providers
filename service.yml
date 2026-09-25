@@ -7,8 +7,6 @@ semaphore:
   enable: true
   pipeline_enable: false
   maven_build_goals: "clean verify install dependency:analyze validate"
-  github_write_targets:
-    - confluentinc/csid-secrets-providers
   tasks:
     - name: Upload to Codeartifact
       branch: main
