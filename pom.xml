@@ -157,7 +157,7 @@
     <maven.compiler.plugin.version>3.14.0</maven.compiler.plugin.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.site.plugin.version>3.21.0</maven.site.plugin.version>
+    <maven.site.plugin.version>3.22.0</maven.site.plugin.version>
     <failsafe.version>3.6.0</failsafe.version>
     <surefire.version>3.5.4</surefire.version>
     <mockito.version>5.0.0</mockito.version>
