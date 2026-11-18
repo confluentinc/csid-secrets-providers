@@ -130,7 +130,7 @@
     </parent>
     <description>Secrets Provider for Hashicorp Vault</description>
     <properties>
-        <vault-java-driver.version>6.2.0</vault-java-driver.version>
+        <vault-java-driver.version>7.0.0</vault-java-driver.version>
     </properties>
     <dependencies>
         <dependency>
